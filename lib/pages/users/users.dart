@@ -1,7 +1,6 @@
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
-import 'package:app/components/text_field_container.dart';
 import 'package:app/mixins/delete_dialog.dart';
 import 'package:app/mixins/format_price.dart';
 import 'package:app/models/user.dart';
@@ -20,7 +19,6 @@ class Users extends StatefulWidget {
 class _UsersState extends State<Users> {
   // TODO => Slice data table into a component
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
-  String _search = "";
 
   @override
   Widget build(BuildContext context) {
@@ -29,34 +27,34 @@ class _UsersState extends State<Users> {
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
-      return Middleware();
+      return const Middleware();
     }
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      drawer: Drawer(
+      drawer: const Drawer(
         child: DrawerList(index: 4),
       ),
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.all(25),
+                margin: const EdgeInsets.all(25),
                 child: PaginatedDataTable(
                   header: Row(
                     children: [
-                      Text('Korisnici'),
-                      SizedBox(
+                      const Text('Korisnici'),
+                      const SizedBox(
                           width: 10
                       ),
                       SizedBox(
                           width: 30,
                           child: Tooltip(
                               message: 'Dodaj novog korisnika',
-                              textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                              textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(5),
@@ -65,7 +63,7 @@ class _UsersState extends State<Users> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 1,
-                                    offset: Offset(0, 1),
+                                    offset: const Offset(0, 1),
                                   ),
                                 ],
                               ),
@@ -73,40 +71,17 @@ class _UsersState extends State<Users> {
                                 onPressed: () {
                                   // TODO => Create new user
                                 },
-                                child: Text('+'),
+                                child: const Text('+'),
                                 backgroundColor: Colors.orange,
                                 elevation: 3,
                                 hoverElevation: 4,
                               )
                           )
                       ),
-                      Spacer(),
-                      SizedBox(
-                        width: 400,
-                        child: TextFieldContainer(
-                          child: TextFormField(
-                            onSaved: (value) => _search = value!,
-                            cursorColor: Colors.orange,
-                            decoration: InputDecoration(
-                              hintText: "Pretražite korisnike",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.orange, width: 2),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.orange,
-                              ),
-                            ),
-                          )
-                        ),
-                      )
+                      const Spacer(),
                     ]
                   ),
-                  columns: [
+                  columns: const [
                     DataColumn(
                       label: Text('Korisničko ime'),
                     ),
@@ -155,7 +130,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
       index: index,
       cells: [
         DataCell(
-            Text('${user.username}')
+            Text(user.username)
         ),
         DataCell(
             Text('${user.type}')
@@ -163,13 +138,13 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
         DataCell(
           Row(
             children: <Widget>[
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
                   message: 'Pregledaj korisnika ${user.username}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -178,7 +153,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -186,14 +161,14 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                     onPressed: () {
                       // TODO => Push to view
                     },
-                    child: Icon(Icons.preview, size: 15.0),
+                    child: const Icon(Icons.preview, size: 15.0),
                     backgroundColor: Colors.orange,
                     elevation: 3,
                     hoverElevation: 4,
                   )
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5.0
               ),
               SizedBox(
@@ -201,7 +176,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 height: 30.0,
                 child: Tooltip(
                   message: 'Uredi korisnika ${user.username}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -210,7 +185,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -218,14 +193,14 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                     onPressed: () {
                       // TODO => Push to edit
                     },
-                    child: Icon(Icons.edit, size: 15.0),
+                    child: const Icon(Icons.edit, size: 15.0),
                     backgroundColor: Colors.blue,
                     elevation: 3,
                     hoverElevation: 4,
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5.0
               ),
               SizedBox(
@@ -233,7 +208,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 height: 30.0,
                 child: Tooltip(
                   message: 'Obriši korisnika ${user.username}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -242,7 +217,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -256,7 +231,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                           "Uspješno izbrisan korisnik"
                       );
                     },
-                    child: Icon(Icons.restore, size: 15.0),
+                    child: const Icon(Icons.restore, size: 15.0),
                     backgroundColor: Colors.red,
                     elevation: 3,
                     hoverElevation: 4,
