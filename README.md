@@ -1,16 +1,20 @@
-# app
+# App
 
-A cash register application.
+Cash register application for restaurants & coffee shops.
 
-## Getting Started
+## Start the Shop microservice
+`php -S localhost:8000 -t public`
 
-This project is a starting point for a Flutter application.
+## Start the Finance microservice
+`php -S localhost:8002 -t public`
 
-A few resources to get you started if this is your first Flutter project:
+## Start the Corporate microservice
+`./mvnw spring-boot:run`
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Run the app and choose the platform (Linux or Web)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+`flutter run`
+
+## Run the app directly on web with images enabled
+
+`flutter run -d chrome --web-renderer html`
