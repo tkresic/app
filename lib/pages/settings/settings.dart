@@ -33,7 +33,7 @@ class _SettingsState extends State<Settings> {
     final snackBar = SnackBar(
       width: 300.0,
       behavior: SnackBarBehavior.floating,
-      content: Text("Spremam postavke..."),
+      content: const Text("Spremam postavke..."),
       backgroundColor: Colors.green,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -44,23 +44,23 @@ class _SettingsState extends State<Settings> {
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
-      return Middleware();
+      return const Middleware();
     }
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      drawer: Drawer(
+      drawer: const Drawer(
         child: DrawerList(index: 6),
       ),
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.all(25),
-                padding: EdgeInsets.all(25),
+                margin: const EdgeInsets.all(25),
+                padding: const EdgeInsets.all(25),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
@@ -69,41 +69,40 @@ class _SettingsState extends State<Settings> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 1,
-                      offset: Offset(0, 1),
+                      offset: const Offset(0, 1),
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
                     Row(
-                      children: [
+                      children: const [
                         Text(
                           "Postavke",
                           style: TextStyle(fontSize: 20),
                         ),
                       ]
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Form(
                       key: _formKey,
                       child: FutureBuilder<Company>(
                         future: fetchCompany(),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
-                            print(snapshot.error);
-                            return Center(child: Text("Došlo je do greške."));
+                            return const Center(child: Text("Došlo je do greške."));
                           }
                           if (snapshot.hasData) {
                             return SingleChildScrollView(
                               child: Container(
-                                margin: EdgeInsets.all(25),
+                                margin: const EdgeInsets.all(25),
                                 child: Column(
                                   children: <Widget>[
                                     Row(
                                       children: [
                                         Container(
                                           width: MediaQuery.of(context).size.width * 0.15,
-                                          child: Text('Ime tvrtke'),
+                                          child: const Text('Ime tvrtke'),
                                         ),
                                         Container(
                                           width: MediaQuery.of(context).size.width * 0.7,
@@ -124,10 +123,10 @@ class _SettingsState extends State<Settings> {
                                                 borderRadius: BorderRadius.circular(25),
                                               ),
                                               focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                 borderRadius: BorderRadius.circular(25),
                                               ),
-                                              prefixIcon: Icon(
+                                              prefixIcon: const Icon(
                                                 Icons.person,
                                                 color: Colors.orange,
                                               ),
@@ -136,12 +135,12 @@ class _SettingsState extends State<Settings> {
                                         )
                                       ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: Text('OIB tvrtke'),
+                                            child: const Text('OIB tvrtke'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -162,10 +161,10 @@ class _SettingsState extends State<Settings> {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
-                                                prefixIcon: Icon(
+                                                prefixIcon: const Icon(
                                                   Icons.person,
                                                   color: Colors.orange,
                                                 ),
@@ -174,12 +173,12 @@ class _SettingsState extends State<Settings> {
                                           )
                                         ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: Text('Ulica objekta'),
+                                            child: const Text('Ulica objekta'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -200,10 +199,10 @@ class _SettingsState extends State<Settings> {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
-                                                prefixIcon: Icon(
+                                                prefixIcon: const Icon(
                                                   Icons.person,
                                                   color: Colors.orange,
                                                 ),
@@ -212,12 +211,12 @@ class _SettingsState extends State<Settings> {
                                           )
                                         ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: Text('Poštanski broj objekta'),
+                                            child: const Text('Poštanski broj objekta'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -238,10 +237,10 @@ class _SettingsState extends State<Settings> {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
-                                                prefixIcon: Icon(
+                                                prefixIcon: const Icon(
                                                   Icons.person,
                                                   color: Colors.orange,
                                                 ),
@@ -250,12 +249,12 @@ class _SettingsState extends State<Settings> {
                                           )
                                         ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: Text('Broj objekta'),
+                                            child: const Text('Broj objekta'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -276,10 +275,10 @@ class _SettingsState extends State<Settings> {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
-                                                prefixIcon: Icon(
+                                                prefixIcon: const Icon(
                                                   Icons.person,
                                                   color: Colors.orange,
                                                 ),
@@ -288,12 +287,12 @@ class _SettingsState extends State<Settings> {
                                           )
                                         ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: Text('Grad objekta'),
+                                            child: const Text('Grad objekta'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -314,10 +313,10 @@ class _SettingsState extends State<Settings> {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
-                                                prefixIcon: Icon(
+                                                prefixIcon: const Icon(
                                                   Icons.person,
                                                   color: Colors.orange,
                                                 ),
@@ -326,12 +325,12 @@ class _SettingsState extends State<Settings> {
                                           )
                                         ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: Text('Telefonski broj objekta'),
+                                            child: const Text('Telefonski broj objekta'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -352,10 +351,10 @@ class _SettingsState extends State<Settings> {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
-                                                prefixIcon: Icon(
+                                                prefixIcon: const Icon(
                                                   Icons.person,
                                                   color: Colors.orange,
                                                 ),
@@ -364,7 +363,7 @@ class _SettingsState extends State<Settings> {
                                           )
                                         ]
                                     ),
-                                    SizedBox(height: 10),
+                                    const SizedBox(height: 10),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
@@ -377,18 +376,18 @@ class _SettingsState extends State<Settings> {
                                                 _formKey.currentState!.reset();
                                               });
                                             },
-                                            child: Text(
+                                            child: const Text(
                                               'Odustani',
                                             ),
                                             style: TextButton.styleFrom(
-                                              padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                              padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                                               primary: Colors.white,
                                               backgroundColor: Colors.grey,
-                                              textStyle: TextStyle(fontSize: 18),
+                                              textStyle: const TextStyle(fontSize: 18),
                                             ),
                                           ),
-                                        ) : Text(''),
-                                        SizedBox(width: 50), // give it width
+                                        ) : const Text(''),
+                                        const SizedBox(width: 50), // give it width
                                         ClipRRect(
                                           borderRadius: BorderRadius.circular(40),
                                           child: TextButton(
@@ -406,10 +405,10 @@ class _SettingsState extends State<Settings> {
                                             },
                                             child: Text(enabled ? 'Spremi' : 'Uredi'),
                                             style: TextButton.styleFrom(
-                                              padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                              padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                                               primary: Colors.white,
                                               backgroundColor: Colors.orange,
-                                              textStyle: TextStyle(fontSize: 18),
+                                              textStyle: const TextStyle(fontSize: 18),
                                             ),
                                           ),
                                         ),
@@ -420,7 +419,7 @@ class _SettingsState extends State<Settings> {
                               )
                             );
                           } else {
-                            return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                            return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
                           }
                         },
                       )

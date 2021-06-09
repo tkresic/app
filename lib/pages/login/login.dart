@@ -99,10 +99,10 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange, width: 2),
+                            borderSide: const BorderSide(color: Colors.orange, width: 2),
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.person,
                             color: Colors.orange,
                           ),
@@ -128,14 +128,14 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(29),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange, width: 2),
+                            borderSide: const BorderSide(color: Colors.orange, width: 2),
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.lock,
                             color: Colors.orange,
                           ),
-                          suffixIcon: new GestureDetector(
+                          suffixIcon: GestureDetector(
                             onTap: () {
                               setState(() {
                                 _obscurePassword = !_obscurePassword;
@@ -158,26 +158,26 @@ class _LoginState extends State<Login> {
                                 Navigator.push(
                                   context,
                                   PageRouteBuilder(
-                                    pageBuilder: (context, animation1, animation2) => Index(),
-                                    transitionDuration: Duration(seconds: 0),
+                                    pageBuilder: (context, animation1, animation2) => const Index(),
+                                    transitionDuration: const Duration(seconds: 0),
                                   ),
                                 );
                               } else {
-                                return null;
+                                return;
                               }
                             },
-                            child: Text(
+                            child: const Text(
                               'Natrag',
                             ),
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                              padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                               primary: Colors.white,
                               backgroundColor: Colors.orange,
-                              textStyle: TextStyle(fontSize: 18),
+                              textStyle: const TextStyle(fontSize: 18),
                             ),
                           ),
                         ),
-                        SizedBox(width: 50), // give it width
+                        const SizedBox(width: 50), // give it width
                         ClipRRect(
                           borderRadius: BorderRadius.circular(40),
                           child: TextButton(
@@ -185,17 +185,17 @@ class _LoginState extends State<Login> {
                               if (!_loggingIn) {
                                 doLogin();
                               } else {
-                                return null;
+                                return;
                               }
                             },
                             child: Text(
                               auth.loggedInStatus == Status.Authenticating ? 'Prijavljujem se...' : 'Prijava'
                             ),
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                              padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                               primary: Colors.white,
                               backgroundColor: Colors.orange,
-                              textStyle: TextStyle(fontSize: 18),
+                              textStyle: const TextStyle(fontSize: 18),
                             ),
                           ),
                         ),

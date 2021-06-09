@@ -31,15 +31,15 @@ class _ProductsState extends State<Products> {
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
-      return Middleware();
+      return const Middleware();
     }
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      drawer: Drawer(
+      drawer: const Drawer(
         child: DrawerList(index: 2),
       ),
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: Row(
         children: <Widget>[
           Expanded(
@@ -47,18 +47,17 @@ class _ProductsState extends State<Products> {
               future: fetchProducts(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return Center(child: Text("Došlo je do greške."));
+                  return const Center(child: Text("Došlo je do greške."));
                 }
-                if (snapshot.hasData){
+                if (snapshot.hasData) {
                   return SingleChildScrollView(
                     child: Container(
-                      margin: EdgeInsets.all(25),
+                      margin: const EdgeInsets.all(25),
                       child: ProductsList(context: context, products: snapshot.data)
                     )
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
                 }
               },
             )
@@ -89,6 +88,7 @@ class _ProductsListState extends State<ProductsList> {
     required this.products
   });
 
+  @override
   final BuildContext context;
   final List<Product>? products;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
@@ -99,15 +99,15 @@ class _ProductsListState extends State<ProductsList> {
     return PaginatedDataTable(
         header: Row(
             children: [
-              Text('Proizvodi'),
-              SizedBox(
+              const Text('Proizvodi'),
+              const SizedBox(
                 width: 10
               ),
               SizedBox(
                 width: 30,
                 child: Tooltip(
                     message: 'Dodaj novi proizvod',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -116,7 +116,7 @@ class _ProductsListState extends State<ProductsList> {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -124,14 +124,14 @@ class _ProductsListState extends State<ProductsList> {
                     onPressed: () {
                       // TODO => Create new product
                     },
-                    child: Text('+'),
+                    child: const Text('+'),
                     backgroundColor: Colors.orange,
                     elevation: 3,
                     hoverElevation: 4,
                   )
                 )
               ),
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: 400,
                 child: TextFieldContainer(
@@ -144,10 +144,10 @@ class _ProductsListState extends State<ProductsList> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.orange, width: 2),
+                        borderSide: const BorderSide(color: Colors.orange, width: 2),
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.search,
                         color: Colors.orange,
                       ),
@@ -157,7 +157,7 @@ class _ProductsListState extends State<ProductsList> {
               )
             ]
         ),
-        columns: [
+        columns: const [
           DataColumn(
             label: Text('Naziv'),
           ),
@@ -206,27 +206,27 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
           Row(
             children: <Widget>[
               Image.network(product.image, width: 50),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(product.name)
             ],
           )
         ),
         DataCell(
-          Text('${formatPrice(product.price)}')
+          Text(formatPrice(product.price))
         ),
         DataCell(
-          Text('${product.subcategory.name}')
+          Text(product.subcategory.name)
         ),
         DataCell(
           Row(
             children: <Widget>[
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
                     message: 'Pregledaj proizvod ${product.name}',
-                    textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                    textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
@@ -235,7 +235,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 1,
                           blurRadius: 1,
-                          offset: Offset(0, 1),
+                          offset: const Offset(0, 1),
                         ),
                       ],
                     ),
@@ -243,14 +243,14 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                       onPressed: () {
                         // TODO => Push to view
                       },
-                      child: Icon(Icons.preview, size: 15.0),
+                      child: const Icon(Icons.preview, size: 15.0),
                       backgroundColor: Colors.orange,
                       elevation: 3,
                       hoverElevation: 4,
                     )
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                   width: 5.0
               ),
               SizedBox(
@@ -258,7 +258,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 height: 30.0,
                 child: Tooltip(
                   message: 'Uredi proizvod ${product.name}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -267,7 +267,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -275,14 +275,14 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                     onPressed: () {
                       // TODO => Push to edit
                     },
-                    child: Icon(Icons.edit, size: 15.0),
+                    child: const Icon(Icons.edit, size: 15.0),
                     backgroundColor: Colors.blue,
                     elevation: 3,
                     hoverElevation: 4,
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                   width: 5.0
               ),
               SizedBox(
@@ -290,7 +290,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 height: 30.0,
                 child: Tooltip(
                   message: 'Obriši proizvod ${product.name}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -299,7 +299,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -313,7 +313,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                           "Uspješno izbrisan proizvod"
                       );
                     },
-                    child: Icon(Icons.delete, size: 15.0),
+                    child: const Icon(Icons.delete, size: 15.0),
                     backgroundColor: Colors.red,
                     elevation: 3,
                     hoverElevation: 4,

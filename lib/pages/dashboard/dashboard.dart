@@ -89,7 +89,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
       final snackBar = SnackBar(
         width: 300.0,
         behavior: SnackBarBehavior.floating,
-        content: Text("Uspješno kreiran novi račun"),
+        content: const Text("Uspješno kreiran novi račun"),
         backgroundColor: Colors.green,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -101,12 +101,12 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
-      return Middleware();
+      return const Middleware();
     }
 
     return Scaffold(
-      appBar: CustomAppBar(),
-      drawer: Drawer(
+      appBar: const CustomAppBar(),
+      drawer: const Drawer(
         child: DrawerList(index: 0),
       ),
       drawerScrimColor: Colors.transparent,
@@ -118,8 +118,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
               future: fetchGroupedData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return Center(child: Text("Došlo je do greške."));
+                  return const Center(child: Text("Došlo je do greške."));
                 }
                 if (snapshot.hasData){
                   return DefaultTabController(
@@ -130,14 +129,14 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                         automaticallyImplyLeading: false,
                         elevation: 0,
                         bottom: PreferredSize(
-                          preferredSize: Size(0, 0),
+                          preferredSize: const Size(0, 0),
                           child: ColoredBox(
                             color: Colors.orange,
                             child: TabBar(
                               tabs: <Widget>[
                                 for (String key in snapshot.data!.keys)
                                   Tab(
-                                      text: key
+                                    text: key
                                   )
                               ],
                               labelColor: Colors.white,
@@ -158,7 +157,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                   automaticallyImplyLeading: false,
                                   elevation: 1,
                                   bottom: PreferredSize(
-                                    preferredSize: Size(0, 0),
+                                    preferredSize: const Size(0, 0),
                                     child: ColoredBox(
                                       color: Colors.orange,
                                       child: TabBar(
@@ -180,7 +179,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                   children: <Widget>[
                                     for (String subKey in snapshot.data![key].keys)
                                       Container(
-                                        margin: EdgeInsets.only(top: 10),
+                                        margin: const EdgeInsets.only(top: 10),
                                         child: GridView.count(
                                           crossAxisCount: 3,
                                           childAspectRatio: 2.5,
@@ -190,14 +189,14 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                                 _addToCart(snapshot.data![key][subKey][index]);
                                               },
                                               child: Container(
-                                                margin: EdgeInsets.all(5),
+                                                margin: const EdgeInsets.all(5),
                                                 child: ListTile(
                                                     leading: ClipRRect(
                                                         borderRadius: BorderRadius.circular(8.0),
                                                         child: Image.network(snapshot.data![key][subKey][index].image, width: 50)
                                                     ),
                                                     title: Text('${snapshot.data![key][subKey][index].name}'),
-                                                    subtitle: Text('${formatPrice(snapshot.data![key][subKey][index].price)}')
+                                                    subtitle: Text(formatPrice(snapshot.data![key][subKey][index].price))
                                                 ),
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
@@ -207,7 +206,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                                       color: Colors.grey.withOpacity(0.5),
                                                       spreadRadius: 2,
                                                       blurRadius: 2,
-                                                      offset: Offset(0, 1),
+                                                      offset: const Offset(0, 1),
                                                     ),
                                                   ],
                                                 ),
@@ -225,7 +224,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                     ),
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
                 }
               },
             )
@@ -233,7 +232,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFFD2D2D2))
+                border: Border.all(color: const Color(0xFFD2D2D2))
               ),
               child: Column(
                 children: <Widget>[
@@ -243,7 +242,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                       crossAxisAlignment: cart.length > 0 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                       children: [
                         Expanded(
-                          child: cart.length > 0 ? SingleChildScrollView(
+                          child: cart.isNotEmpty ? SingleChildScrollView(
                             child: DataTable(
                               columns: const <DataColumn>[
                                 DataColumn(
@@ -256,9 +255,9 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                   label: Text('Količina'),
                                 ),
                                 DataColumn(
-                                    label: Expanded(
-                                        child: Text('Ukupno', textAlign: TextAlign.right)
-                                    )
+                                  label: Expanded(
+                                    child: Text('Ukupno', textAlign: TextAlign.right)
+                                  )
                                 ),
                               ],
                               rows: <DataRow>[
@@ -268,62 +267,62 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                       Row(
                                         children: <Widget>[
                                           Image.network(product.image, width: 50),
-                                          SizedBox(width: 10),
+                                          const SizedBox(width: 10),
                                           Text(product.name)
                                         ],
                                       )
                                     ),
                                     DataCell(
-                                        Text('${formatPrice(product.price)}')
+                                        Text(formatPrice(product.price))
                                     ),
                                     DataCell(
                                         Row(
                                           children: <Widget>[
                                             Container(
-                                              margin: EdgeInsets.only(right: 10.0),
+                                              margin: const EdgeInsets.only(right: 10.0),
                                               width: 20,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   _changeQuantity(product, 'decrement');
                                                 },
-                                                child: Text("-"),
+                                                child: const Text("-"),
                                                 style: ElevatedButton.styleFrom(
                                                   primary: Colors.orange,
-                                                  padding: EdgeInsets.all(0)
+                                                  padding: const EdgeInsets.all(0)
                                                 ),
                                               )
                                             ),
                                             Flexible(
                                               child: Container(
-                                                margin: EdgeInsets.only(right: 10.0),
+                                                margin: const EdgeInsets.only(right: 10.0),
                                                 child: Text('${product.quantity}'),
                                               ),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.only(right: 10.0),
+                                              margin: const EdgeInsets.only(right: 10.0),
                                               width: 22,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   _changeQuantity(product, 'increment');
                                                 },
-                                                child: Text("+"),
+                                                child: const Text("+"),
                                                 style: ElevatedButton.styleFrom(
                                                   primary: Colors.orange,
-                                                  padding: EdgeInsets.all(0)
+                                                  padding: const EdgeInsets.all(0)
                                                 ),
                                               )
                                             ),
                                             Container(
-                                              margin: EdgeInsets.only(right: 10.0),
+                                              margin: const EdgeInsets.only(right: 10.0),
                                               width: 22,
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   _removeFromCart(product);
                                                 },
-                                                child: Text("x"),
+                                                child: const Text("x"),
                                                 style: ElevatedButton.styleFrom(
                                                   primary: Colors.orange,
-                                                  padding: EdgeInsets.all(0)
+                                                  padding: const EdgeInsets.all(0)
                                                 ),
                                               )
                                             ),
@@ -333,8 +332,8 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                     DataCell(
                                       Row(
                                         children: <Widget>[
-                                          Spacer(),
-                                          Text('${formatPrice(product.price * product.quantity)}')
+                                          const Spacer(),
+                                          Text(formatPrice(product.price * product.quantity))
                                         ],
                                       )
                                     ),
@@ -344,7 +343,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                             )
                             )
                           :
-                          Center(
+                          const Center(
                             child: Text("Košarica je trenutno prazna.", textAlign: TextAlign.center),
                           ),
                         )
@@ -355,9 +354,9 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                     flex: 1,
                     child: Container(
                       alignment: Alignment.bottomCenter,
-                      constraints: BoxConstraints.expand(),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
+                      constraints: const BoxConstraints.expand(),
+                      padding: const EdgeInsets.all(10.0),
+                      decoration: const BoxDecoration(
                         border: Border(
                           top: BorderSide(color: Color(0xFFD2D2D2)),
                         ),
@@ -366,8 +365,8 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                         children: <Widget>[
                           Row(
                             children: [
-                              Text('Način plaćanja'),
-                              Spacer(),
+                              const Text('Način plaćanja'),
+                              const Spacer(),
                               ChoiceChip(
                                 label: Text('Gotovina'),
                                 selected: _selectedPaymentMethod == 1,
@@ -380,15 +379,15 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                                   });
                                 },
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                                 child: ChoiceChip(
-                                  label: Text('Kartica'),
+                                  label: const Text('Kartica'),
                                   selected: _selectedPaymentMethod == 2,
                                   selectedColor: Colors.orange,
                                   pressElevation: 0,
-                                  labelStyle: TextStyle(color: Colors.white),
+                                  labelStyle: const TextStyle(color: Colors.white),
                                   onSelected: (bool selected) {
                                     setState(() {
                                       _selectedPaymentMethod = 2;
@@ -398,31 +397,31 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
                               )
                             ]
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Row(
                             children: <Widget>[
-                              Text('Ukupno'),
-                              Spacer(),
+                              const Text('Ukupno'),
+                              const Spacer(),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                child: Text('${formatPrice(_sum, symbol: 'HRK')}'),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                child: Text(formatPrice(_sum, symbol: 'HRK')),
                               )
                             ],
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Row(
                             children: <Widget>[
                               ElevatedButton(
                                 onPressed: (cart.isNotEmpty) ? () =>  _clearCart() : null,
-                                child: Text("Odustani"),
+                                child: const Text("Odustani"),
                                 style: ElevatedButton.styleFrom(primary: Colors.orange),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                                 child: ElevatedButton(
                                   onPressed: (cart.isNotEmpty) ? () =>  _finishPurchase() : null,
-                                  child: Text("Naplati"),
+                                  child: const Text("Naplati"),
                                   style: ElevatedButton.styleFrom(primary: Colors.orange),
                                 ),
                               )

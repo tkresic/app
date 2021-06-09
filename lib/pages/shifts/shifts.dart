@@ -39,26 +39,25 @@ class _ShiftsState extends State<Shifts> {
       ),
       appBar: const CustomAppBar(),
       body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(25),
-                child: FutureBuilder<List<Shift>>(
-                  future: fetchShifts(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return const Center(child: Text("Došlo je do greške."));
-                    }
-                    if (snapshot.hasData) {
-                      return ShiftsList(context: context, shifts: snapshot.data);
-                    } else {
-                      return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
-                    }
-                  }
-                )
-              )
+            child: FutureBuilder<List<Shift>>(
+              future: fetchShifts(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text("Došlo je do greške."));
+                }
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      margin: const EdgeInsets.all(25),
+                      child: ShiftsList(context: context, shifts: snapshot.data)
+                    )
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                }
+              }
             )
           )
         ]

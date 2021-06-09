@@ -33,9 +33,9 @@ class User {
   // TODO => Remove. Used for demonstration purposes.
   static List<User> getData() {
     return [
-      new User(id: 1, username: 'tkresic', type: 'Administrator'),
-      new User(id: 2, username: 'ihorvat', type: 'Zaposlenik'),
-      new User(id: 3, username: 'mmikic', type: 'Zaposlenik'),
+      // new User(id: 1, username: 'tkresic', type: 'Administrator'),
+      // new User(id: 2, username: 'ihorvat', type: 'Zaposlenik'),
+      // new User(id: 3, username: 'mmikic', type: 'Zaposlenik'),
     ];
   }
 }

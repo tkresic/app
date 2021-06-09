@@ -6,7 +6,7 @@ import 'package:app/pages/index/components/background.dart';
 class Index extends StatelessWidget {
   final User? user;
 
-  Index({Key? key, this.user}) : super(key: key);
+  const Index({Key? key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class Index extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
+              const Text(
                 "Fiskalna Blagajna",
                 style: TextStyle(fontFamily: 'Roboto', fontWeight: FontWeight.bold, fontSize: 30, color: Color(0xFFB3B3B3)),
               ),
@@ -35,18 +35,18 @@ class Index extends StatelessWidget {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) => Login(),
-                        transitionDuration: Duration(seconds: 0),
+                        transitionDuration: const Duration(seconds: 0),
                       ),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Prijava',
                   ),
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                    padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                     primary: Colors.white,
                     backgroundColor: Colors.orange,
-                    textStyle: TextStyle(fontSize: 18),
+                    textStyle: const TextStyle(fontSize: 18),
                   ),
                 ),
               ),
