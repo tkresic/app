@@ -49,7 +49,6 @@ class _ShiftsState extends State<Shifts> {
                   future: fetchShifts(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      print(snapshot);
                       return const Center(child: Text("Došlo je do greške."));
                     }
                     if (snapshot.hasData) {
@@ -99,12 +98,12 @@ class _ShiftsListState extends State<ShiftsList> {
     var dts = DTS(context: context, shifts: shifts);
     return PaginatedDataTable(
         header: Row(
-            children: const [
-              Text('Smjene'),
-              SizedBox(
-                  width: 10
-              ),
-            ]
+          children: const [
+            Text('Smjene'),
+            SizedBox(
+              width: 10
+            ),
+          ]
         ),
         columns: const [
           DataColumn(

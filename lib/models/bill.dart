@@ -1,56 +1,58 @@
+import 'dart:convert';
+import 'payment_method.dart';
+import 'product.dart';
+import 'user.dart';
+
 class Bill {
   int id;
-  String number;
-  String paymentMethod;
-  String byUser;
-  String jir;
-  String zki;
-  int gross;
-  int net;
-  String taxes;
+  int paymentMethodId;
+  PaymentMethod paymentMethod;
+  // Bill? restoredBill;
+  int? restoredBillId;
+  User user;
+  // // Branch branch
+  // List<Product> products;
+  int number;
   int businessPlaceLabel;
-  int cashRegisterLabel;
-  String billedAt;
+  String label;
+  int gross;
+  String createdAt;
+  String? restoringReason;
 
   Bill({
     required this.id,
-    required this.number,
+    required this.paymentMethodId,
     required this.paymentMethod,
-    required this.byUser,
-    required this.jir,
-    required this.zki,
-    required this.gross,
-    required this.net,
-    required this.taxes,
+    this.restoredBillId,
+    required this.user,
+    // required this.products,
     required this.businessPlaceLabel,
-    required this.cashRegisterLabel,
-    required this.billedAt,
+    required this.label,
+    required this.number,
+    required this.gross,
+    this.restoringReason,
+    required this.createdAt
   });
 
-  // TODO => Remove. Used for demonstration purposes.
-  static List<Bill> getData() {
-    return [
-      new Bill(id: 1, number: '1-1-1', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 2, number: '1-1-2', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 3, number: '1-1-3', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 4, number: '1-1-4', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 5, number: '1-1-5', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 6, number: '1-1-6', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 7, number: '1-1-7', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 8, number: '1-1-8', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 9, number: '1-1-9', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 10, number: '1-1-10', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 11, number: '1-1-11', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 12, number: '1-1-12', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 13, number: '1-1-13', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 14, number: '1-1-14', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 15, number: '1-1-15', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 16, number: '1-1-16', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 17, number: '1-1-17', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 18, number: '1-1-18', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 19, number: '1-1-19', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 20, number: '1-1-20', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-      new Bill(id: 21, number: '1-1-21', paymentMethod: 'Gotovina', byUser: 'Toni Krešić', jir: 'cawjcewacemawcewa', zki: 'feawjfeawjfjewa', gross: 1250, net: 1000, taxes: '250', businessPlaceLabel: 1, cashRegisterLabel: 1, billedAt: '01.06.2021 12:00:00'),
-    ];
+  factory Bill.fromJson(Map<String, dynamic> json) {
+    return Bill(
+      id: json['id'],
+      paymentMethodId: json['payment_method_id'],
+      paymentMethod: PaymentMethod.fromJson(json['payment_method']),
+      restoredBillId: json['restored_bill_id'],
+      user: User.fromJson(json['user']),
+      // products: Product.parseProducts(json['products']),
+      businessPlaceLabel: json['business_place_label'],
+      label: json['label'],
+      number: json['number'],
+      gross: json['gross'],
+      restoringReason: json['restoring_reason'],
+      createdAt: json['created_at'],
+    );
+  }
+
+  static List<Bill> parseBills(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Bill>((json) => Bill.fromJson(json)).toList();
   }
 }
