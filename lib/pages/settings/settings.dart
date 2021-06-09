@@ -5,6 +5,7 @@ import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
 import 'package:app/models/company.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,7 +22,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
 
   Future<Company> fetchCompany() async {
-    var response = await http.get(Uri.parse("http://localhost:8080/api/company"));
+    var response = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
     return Company.fromJson(jsonDecode(response.body));
   }
 

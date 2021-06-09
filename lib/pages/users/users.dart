@@ -5,6 +5,7 @@ import 'package:app/mixins/delete_dialog.dart';
 import 'package:app/mixins/format_price.dart';
 import 'package:app/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'package:app/providers/user_provider.dart';
@@ -227,7 +228,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                           context,
                           "Obriši korisnika ${user.username}",
                           "Jeste li sigurni da želite obrisati korisnika ${user.username}?",
-                          "http://localhost:8000/api/users/${user.id}",
+                          "${dotenv.env['ACCOUNTS_API_URI']}/api/users/${user.id}",
                           "Uspješno izbrisan korisnik"
                       );
                     },

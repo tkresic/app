@@ -4,6 +4,7 @@ import 'package:app/components/middleware.dart';
 import 'package:app/mixins/format_price.dart';
 import 'package:app/models/bill.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
 import 'package:app/models/user.dart';
@@ -21,7 +22,7 @@ class _BillsState extends State<Bills> {
   // TODO => Slice data table into a component
 
   Future<List<Bill>> fetchBills() async {
-    var response = await http.get(Uri.parse("http://localhost:8002/api/bills"));
+    var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"));
     return Bill.parseBills(response.body);
   }
 

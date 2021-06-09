@@ -7,6 +7,7 @@ import 'package:app/models/subcategory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,8 +26,8 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
   final _formKey = GlobalKey<FormState>();
 
   Future<Map<String, List>> fetchData() async {
-    var categories = await http.get(Uri.parse("http://localhost:8000/api/categories"));
-    var subcategories = await http.get(Uri.parse("http://localhost:8000/api/subcategories"));
+    var categories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"));
+    var subcategories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
     return {
       "categories" : Category.parseCategories(categories.body),
       "subcategories" : Subcategory.parseSubcategories(subcategories.body)
@@ -224,7 +225,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                   context,
                                                                   "Obriši kategoriju ${snapshot.data!['categories']![index].name}",
                                                                   "Jeste li sigurni da želite obrisati kategoriju ${snapshot.data!['categories']![index].name}?",
-                                                                  "http://localhost:8000/api/categories/${snapshot.data!['categories']![index].id}",
+                                                                  "${dotenv.env['SHOP_API_URI']}/api/categories/${snapshot.data!['categories']![index].id}",
                                                                   "Uspješno izbrisana kategorija",
                                                                 );
                                                                 if (fetchAgain) {
@@ -481,7 +482,7 @@ class DTS extends DataTableSource with DeleteDialog {
                         context,
                         "Obriši potkategoriju ${subcategory.name}",
                         "Jeste li sigurni da želite obrisati potkategoriju ${subcategory.name}?",
-                        "http://localhost:8000/api/subcategories/${subcategory.id}",
+                        "${dotenv.env['SHOP_API_URI']}/api/subcategories/${subcategory.id}",
                         "Uspješno izbrisana potkategorija"
                       );
                       if (fetchAgain) {

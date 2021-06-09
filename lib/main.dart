@@ -5,10 +5,12 @@ import 'package:window_size/window_size.dart';
 import 'package:app/pages/index/index.dart';
 import 'package:app/providers/auth_provider.dart';
 import 'package:app/providers/user_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: "assets/env/.env");
   WidgetsFlutterBinding.ensureInitialized();
   if (!kIsWeb && (Platform.isLinux || Platform.isWindows || Platform.isMacOS)) {
     setWindowTitle('Fiskalna Blagajna');
@@ -26,15 +28,15 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: dotenv.env['APP_ENV'] == 'dev',
         title: 'Fiskalna Blagajna',
-        localizationsDelegates: [
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        locale: Locale('hr', ''),
-        supportedLocales: [
+        locale: const Locale('hr', ''),
+        supportedLocales: const [
           Locale('hr', ''),
         ],
         theme: ThemeData(
@@ -42,7 +44,7 @@ class App extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: Index()
+        home: const Index()
       )
     );
   }

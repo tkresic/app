@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -18,7 +19,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with FormatPrice {
   Future<Map> fetchGroupedData() async {
-    var response = await http.get(Uri.parse("http://localhost:8000/api/dashboard"));
+    var response = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/dashboard"));
     return Product.parseGroupedData(response.body);
   }
 

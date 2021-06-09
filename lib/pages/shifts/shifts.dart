@@ -6,6 +6,7 @@ import 'package:app/models/shift.dart';
 import 'package:app/models/user.dart';
 import 'package:app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,7 +21,7 @@ class _ShiftsState extends State<Shifts> {
   // TODO => Slice data table into a component
 
   Future<List<Shift>> fetchShifts() async {
-    var response = await http.get(Uri.parse("http://localhost:8002/api/shifts"));
+    var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"));
     return Shift.parseShifts(response.body);
   }
 

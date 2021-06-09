@@ -6,6 +6,7 @@ import 'package:app/mixins/delete_dialog.dart';
 import 'package:app/mixins/format_price.dart';
 import 'package:app/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +23,7 @@ class Products extends StatefulWidget {
 
 class _ProductsState extends State<Products> {
   Future<List<Product>> fetchProducts() async {
-    var response = await http.get(Uri.parse("http://localhost:8000/api/products"));
+    var response = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"));
     return Product.parseProducts(response.body);
   }
 
@@ -309,7 +310,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                           context,
                           "Obriši proizvod ${product.name}",
                           "Jeste li sigurni da želite obrisati proizvod ${product.name}?",
-                          "http://localhost:8000/api/products/${product.id}",
+                          "${dotenv.env['SHOP_API_URI']}/api/products/${product.id}",
                           "Uspješno izbrisan proizvod"
                       );
                     },

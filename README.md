@@ -2,6 +2,15 @@
 
 Cash register application for restaurants & coffee shops.
 
+## Create .env file in assets/env with following setup
+```
+APP_ENV=dev
+SHOP_API_URI=http://localhost:8000
+FINANCE_API_URI=http://localhost:8002
+CORPORATE_API_URI=http://localhost:8080
+ACCOUNTS_API_URI=http://localhost:8081
+```
+
 ## Start the Shop microservice
 `php -S localhost:8000 -t public`
 
