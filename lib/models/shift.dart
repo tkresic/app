@@ -1,33 +1,27 @@
+import 'dart:convert';
+import 'user.dart';
+
 class Shift {
   int id;
   String start;
   String? end;
-  String user;
-  int income;
+  User user;
+  int gross;
 
-  Shift({required this.id, required this.start, required this.end, required this.user, required this.income});
+  Shift({required this.id, required this.start, required this.end, required this.user, required this.gross});
 
-  // TODO => Remove. Used for demonstration purposes.
-  static List<Shift> getData() {
-    return [
-      new Shift(id: 1, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 2, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 3, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 4, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 5, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 6, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 7, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 8, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 9, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 10, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 11, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 12, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 13, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 14, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 15, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 16, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 17, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-      new Shift(id: 18, start: '01.06.2021. 12:00:00', end: '01.06.2021 18:00:00', user: 'tkresic', income: 521621),
-    ];
+  factory Shift.fromJson(Map<String, dynamic> json) {
+    return Shift(
+        id: json['id'],
+        start: json['start'],
+        end: json['end'],
+        user: User.fromJson(json['user']),
+        gross: json['gross'],
+    );
+  }
+
+  static List<Shift> parseShifts(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+    return parsed.map<Shift>((json) => Shift.fromJson(json)).toList();
   }
 }

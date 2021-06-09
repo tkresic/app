@@ -4,7 +4,7 @@ class User {
   // String surname;
   String username;
   // String password;
-  String type;
+  String? type;
   // String address;
   // String city;
   // String postalCode;

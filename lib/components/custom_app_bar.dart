@@ -41,7 +41,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     void _startShift() {
       // TODO => Start shift
       setState(() {
-        shift = new Shift(id: 1, start: _getCurrentDateTimeString(), end: null, user: user.username, income: 0);
+        shift = new Shift(id: 1, start: _getCurrentDateTimeString(), end: null, user: user, gross: 0);
         text = Text('Smjena započeta u ${shift!.start}', style: TextStyle(fontSize: 14, color: Colors.white));
       });
     }
@@ -50,7 +50,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       // TODO => End shift
       setState(() {
         shift!.end = _getCurrentDateTimeString();
-        Shift.getData().add(shift!);
+        // Shift.getData().add(shift!);
         shift = null;
         text = Text('Smjena trenutno nije aktivna', style: TextStyle(fontSize: 14, color: Colors.white));
       });

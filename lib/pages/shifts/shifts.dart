@@ -1,13 +1,13 @@
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
-import 'package:app/components/text_field_container.dart';
 import 'package:app/mixins/format_price.dart';
 import 'package:app/models/shift.dart';
 import 'package:app/models/user.dart';
 import 'package:app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class Shifts extends StatefulWidget {
   const Shifts({Key? key}) : super(key: key);
@@ -18,85 +18,45 @@ class Shifts extends StatefulWidget {
 
 class _ShiftsState extends State<Shifts> {
   // TODO => Slice data table into a component
-  var dts = DTS();
-  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
-  String _search = "";
+
+  Future<List<Shift>> fetchShifts() async {
+    var response = await http.get(Uri.parse("http://localhost:8002/api/shifts"));
+    return Shift.parseShifts(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
-      return Middleware();
+      return const Middleware();
     }
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      drawer: Drawer(
+      drawer: const Drawer(
         child: DrawerList(index: 5),
       ),
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: SingleChildScrollView(
               child: Container(
-                margin: EdgeInsets.all(25),
-                child: PaginatedDataTable(
-                  header: Row(
-                    children: [
-                      Text('Smjene'),
-                      SizedBox(
-                          width: 10
-                      ),
-                      Spacer(),
-                      SizedBox(
-                        width: 400,
-                        child: TextFieldContainer(
-                          child: TextFormField(
-                            onSaved: (value) => _search = value!,
-                            cursorColor: Colors.orange,
-                            decoration: InputDecoration(
-                              hintText: "Pretražite smjene",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.orange, width: 2),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: Colors.orange,
-                              ),
-                            ),
-                          )
-                        ),
-                      )
-                    ]
-                  ),
-                  columns: [
-                    DataColumn(
-                      label: Text('Početak'),
-                    ),
-                    DataColumn(
-                      label: Text('Kraj'),
-                    ),
-                    DataColumn(
-                      label: Text('Korisnik'),
-                    ),
-                    DataColumn(
-                      label: Text('Prihod'),
-                    ),
-                  ],
-                  source: dts,
-                  rowsPerPage: _rowsPerPage,
-                  showFirstLastButtons: true,
-                  onRowsPerPageChanged: (r) {
-                    setState(() {
-                      _rowsPerPage = r!;
-                    });
+                margin: const EdgeInsets.all(25),
+                child: FutureBuilder<List<Shift>>(
+                  future: fetchShifts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      print(snapshot);
+                      return const Center(child: Text("Došlo je do greške."));
+                    }
+                    if (snapshot.hasData) {
+                      return ShiftsList(context: context, shifts: snapshot.data);
+                    } else {
+                      return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                    }
                   }
                 )
               )
@@ -108,36 +68,105 @@ class _ShiftsState extends State<Shifts> {
   }
 }
 
+class ShiftsList extends StatefulWidget {
+  const ShiftsList({
+    Key? key,
+    required this.context,
+    this.shifts
+  }) : super(key: key);
+
+  final BuildContext context;
+  final List<dynamic>? shifts;
+
+  @override
+  _ShiftsListState createState() => _ShiftsListState(context: this.context, shifts: this.shifts);
+}
+
+class _ShiftsListState extends State<ShiftsList> {
+  _ShiftsListState({
+    required this.context,
+    required this.shifts
+  });
+
+  @override
+  final BuildContext context;
+  List<dynamic>? shifts;
+  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+
+  @override
+  Widget build(BuildContext context) {
+    shifts = widget.shifts;
+    var dts = DTS(context: context, shifts: shifts);
+    return PaginatedDataTable(
+        header: Row(
+            children: const [
+              Text('Smjene'),
+              SizedBox(
+                  width: 10
+              ),
+            ]
+        ),
+        columns: const [
+          DataColumn(
+            label: Text('Početak'),
+          ),
+          DataColumn(
+            label: Text('Kraj'),
+          ),
+          DataColumn(
+            label: Text('Korisnik'),
+          ),
+          DataColumn(
+            label: Text('Prihod'),
+          ),
+        ],
+        source: dts,
+        rowsPerPage: _rowsPerPage,
+        showFirstLastButtons: true,
+        onRowsPerPageChanged: (r) {
+          setState(() {
+            _rowsPerPage = r!;
+          });
+        }
+    );
+  }
+}
+
 class DTS extends DataTableSource with FormatPrice {
-  // TODO => Fetch data.
-  final List<Shift> shifts = Shift.getData();
+  DTS({
+    required this.context,
+    required this.shifts
+  });
+
+  final BuildContext context;
+  final List<dynamic>? shifts;
 
   @override
   DataRow? getRow(int index) {
     assert(index >= 0);
-    if (index >= shifts.length) return null;
-    final shift = shifts[index];
+    if (index >= shifts!.length) return null;
+    final shift = shifts![index];
     return DataRow.byIndex(
       index: index,
       cells: [
         DataCell(
-          Text('${shift.start}')
+          Text(shift.start)
         ),
         DataCell(
           Text('${shift.end}')
         ),
         DataCell(
-          Text('${shift.user}')
+          Text(shift.user.username)
         ),
         DataCell(
-          Text('${formatPrice(shift.income)}')
+          Text(formatPrice(shift.gross))
         ),
       ],
     );
   }
 
   @override
-  int get rowCount => shifts.length;
+  int get rowCount => shifts!.length;
 
   @override
   bool get isRowCountApproximate => false;
