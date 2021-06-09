@@ -305,7 +305,13 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                   ),
                   child: FloatingActionButton(
                     onPressed: () {
-                      deleteDialog(context, "Obriši proizvod ${product.name}", "Jeste li sigurni da želite obrisati proizvod ${product.name}?");
+                      deleteDialog(
+                          context,
+                          "Obriši proizvod ${product.name}",
+                          "Jeste li sigurni da želite obrisati proizvod ${product.name}?",
+                          "http://localhost:8000/api/products/${product.id}",
+                          "Uspješno izbrisan proizvod"
+                      );
                     },
                     child: Icon(Icons.delete, size: 15.0),
                     backgroundColor: Colors.red,

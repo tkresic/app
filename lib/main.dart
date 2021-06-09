@@ -28,21 +28,21 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Fiskalna Blagajna',
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          locale: Locale('hr', ''),
-          supportedLocales: [
-            Locale('hr', ''),
-          ],
-          theme: ThemeData(
-            primaryColor: Colors.orange,
-            scaffoldBackgroundColor: Colors.white,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: Index()
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: Locale('hr', ''),
+        supportedLocales: [
+          Locale('hr', ''),
+        ],
+        theme: ThemeData(
+          primaryColor: Colors.orange,
+          scaffoldBackgroundColor: Colors.white,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: Index()
       )
     );
   }

@@ -6,6 +6,7 @@ import 'package:app/models/category.dart';
 import 'package:app/models/subcategory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,15 +38,15 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
-      return Middleware();
+      return const Middleware();
     }
 
     return Scaffold(
       drawerScrimColor: Colors.transparent,
-      drawer: Drawer(
+      drawer: const Drawer(
         child: DrawerList(index: 1),
       ),
-      appBar: CustomAppBar(),
+      appBar: const CustomAppBar(),
       body: Row(
         children: <Widget>[
           Expanded(
@@ -53,10 +54,9 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
               future: fetchData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return Center(child: Text("Došlo je do greške."));
+                  return const Center(child: Text("Došlo je do greške."));
                 }
-                if (snapshot.hasData){
+                if (snapshot.hasData) {
                   return SingleChildScrollView(
                     child: Row(
                       children: [
@@ -66,8 +66,8 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                               Row(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(left: 25, top: 25, bottom: 10),
-                                    child: Text(
+                                    margin: const EdgeInsets.only(left: 25, top: 25, bottom: 10),
+                                    child: const Text(
                                       "Kategorije",
                                       style: TextStyle(fontSize: 20),
                                     ),
@@ -78,15 +78,15 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                 children: [
                                   Container(
                                     height: 80,
-                                    margin: EdgeInsets.only(left: 25),
+                                    margin: const EdgeInsets.only(left: 25),
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: snapshot.data!['categories']!.length,
                                       itemBuilder: (BuildContext context, int index) {
                                         return Container(
-                                          margin: EdgeInsets.all(5),
-                                          padding: EdgeInsets.only(top: 5),
+                                          margin: const EdgeInsets.all(5),
+                                          padding: const EdgeInsets.only(top: 5),
                                           width: 120,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
@@ -96,14 +96,14 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                 color: Colors.grey.withOpacity(0.5),
                                                 spreadRadius: 1,
                                                 blurRadius: 1,
-                                                offset: Offset(0, 1),
+                                                offset: const Offset(0, 1),
                                               ),
                                             ],
                                           ),
                                           child: ListTile(
                                               title: Text('${snapshot.data!['categories']![index].name}'),
                                               subtitle: Container(
-                                                  margin: EdgeInsets.only(top: 7),
+                                                  margin: const EdgeInsets.only(top: 7),
                                                   child: Row(
                                                       children: [
                                                         SizedBox(
@@ -111,7 +111,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                           height: 25.0,
                                                           child: Tooltip(
                                                             message: 'Uredi kategoriju ${snapshot.data!['categories']![index].name}',
-                                                            textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                                                            textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                                                             decoration: BoxDecoration(
                                                               color: Colors.white,
                                                               borderRadius: BorderRadius.circular(5),
@@ -120,7 +120,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                   color: Colors.grey.withOpacity(0.5),
                                                                   spreadRadius: 1,
                                                                   blurRadius: 1,
-                                                                  offset: Offset(0, 1),
+                                                                  offset: const Offset(0, 1),
                                                                 ),
                                                               ],
                                                             ),
@@ -130,14 +130,14 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                     context: context,
                                                                     builder: (BuildContext context) {
                                                                       return AlertDialog(
-                                                                        title: Text('Uredi kategoriju'),
+                                                                        title: const Text('Uredi kategoriju'),
                                                                         content: Form(
                                                                           key: _formKey,
                                                                           child: Column(
                                                                             mainAxisSize: MainAxisSize.min,
                                                                             children: <Widget>[
                                                                               Padding(
-                                                                                padding: EdgeInsets.all(8.0),
+                                                                                padding: const EdgeInsets.all(8.0),
                                                                                 child: TextFormField(
                                                                                   validator: (value) {
                                                                                     if (value == null || value.isEmpty) {
@@ -154,17 +154,17 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                                       borderRadius: BorderRadius.circular(25),
                                                                                     ),
                                                                                     focusedBorder: OutlineInputBorder(
-                                                                                      borderSide: BorderSide(color: Colors.orange, width: 2),
+                                                                                      borderSide: const BorderSide(color: Colors.orange, width: 2),
                                                                                       borderRadius: BorderRadius.circular(25),
                                                                                     ),
-                                                                                    prefixIcon: Icon(
+                                                                                    prefixIcon: const Icon(
                                                                                       Icons.person,
                                                                                       color: Colors.orange,
                                                                                     ),
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                              SizedBox(height: 10),
+                                                                              const SizedBox(height: 10),
                                                                               ClipRRect(
                                                                                 borderRadius: BorderRadius.circular(40),
                                                                                 child: TextButton(
@@ -175,12 +175,12 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                                       Navigator.of(context).pop();
                                                                                     }
                                                                                   },
-                                                                                  child: Text('Spremi'),
+                                                                                  child: const Text('Spremi'),
                                                                                   style: TextButton.styleFrom(
-                                                                                    padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                                                                    padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                                                                                     primary: Colors.white,
                                                                                     backgroundColor: Colors.orange,
-                                                                                    textStyle: TextStyle(fontSize: 18),
+                                                                                    textStyle: const TextStyle(fontSize: 18),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -190,14 +190,14 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                       );
                                                                     });
                                                               },
-                                                              child: Icon(Icons.edit, size: 12.0),
+                                                              child: const Icon(Icons.edit, size: 12.0),
                                                               backgroundColor: Colors.blue,
                                                               elevation: 3,
                                                               hoverElevation: 4,
                                                             ),
                                                           ),
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                             width: 5.0
                                                         ),
                                                         SizedBox(
@@ -205,7 +205,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                           height: 25.0,
                                                           child: Tooltip(
                                                             message: 'Obriši kategoriju ${snapshot.data!['categories']![index].name}',
-                                                            textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                                                            textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                                                             decoration: BoxDecoration(
                                                               color: Colors.white,
                                                               borderRadius: BorderRadius.circular(5),
@@ -214,15 +214,24 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                   color: Colors.grey.withOpacity(0.5),
                                                                   spreadRadius: 1,
                                                                   blurRadius: 1,
-                                                                  offset: Offset(0, 1),
+                                                                  offset: const Offset(0, 1),
                                                                 ),
                                                               ],
                                                             ),
                                                             child: FloatingActionButton(
-                                                              onPressed: () {
-                                                                deleteDialog(context, "Obriši kategoriju ${snapshot.data!['categories']![index].name}", "Jeste li sigurni da želite obrisati kategoriju ${snapshot.data!['categories']![index].name}?");
+                                                              onPressed: () async {
+                                                                bool fetchAgain = await deleteDialog(
+                                                                  context,
+                                                                  "Obriši kategoriju ${snapshot.data!['categories']![index].name}",
+                                                                  "Jeste li sigurni da želite obrisati kategoriju ${snapshot.data!['categories']![index].name}?",
+                                                                  "http://localhost:8000/api/categories/${snapshot.data!['categories']![index].id}",
+                                                                  "Uspješno izbrisana kategorija",
+                                                                );
+                                                                if (fetchAgain) {
+                                                                  setState(() {});
+                                                                }
                                                               },
-                                                              child: Icon(Icons.delete, size: 12.0),
+                                                              child: const Icon(Icons.delete, size: 12.0),
                                                               backgroundColor: Colors.red,
                                                               elevation: 3,
                                                               hoverElevation: 4,
@@ -238,12 +247,12 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                     )
                                   ),
                                   Container(
-                                      margin: EdgeInsets.only(left: 10),
+                                      margin: const EdgeInsets.only(left: 10),
                                       child: SizedBox(
                                         width: 30,
                                         child: Tooltip(
                                             message: 'Dodaj novu kategoriju',
-                                            textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                                            textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                                             decoration: BoxDecoration(
                                               color: Colors.white,
                                               borderRadius: BorderRadius.circular(5),
@@ -252,7 +261,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                   color: Colors.grey.withOpacity(0.5),
                                                   spreadRadius: 1,
                                                   blurRadius: 1,
-                                                  offset: Offset(0, 1),
+                                                  offset: const Offset(0, 1),
                                                 ),
                                               ],
                                             ),
@@ -260,7 +269,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                               onPressed: () {
                                                 // TODO => Create new category
                                               },
-                                              child: Icon(Icons.add, size: 15.0),
+                                              child: const Icon(Icons.add, size: 15.0),
                                               backgroundColor: Colors.orange,
                                               elevation: 3,
                                               hoverElevation: 4,
@@ -274,7 +283,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      margin: EdgeInsets.all(25),
+                                      margin: const EdgeInsets.all(25),
                                       child: SubcategoriesList(context: context, subcategories: snapshot.data!['subcategories'])
                                     )
                                   )
@@ -287,7 +296,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                     )
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
                 }
               },
             )
@@ -299,7 +308,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
 }
 
 class SubcategoriesList extends StatefulWidget {
-  SubcategoriesList({
+  const SubcategoriesList({
     Key? key,
     required this.context,
     this.subcategories
@@ -318,25 +327,27 @@ class _SubcategoriesListState extends State<SubcategoriesList> {
     required this.subcategories
   });
 
+  @override
   final BuildContext context;
-  final List<dynamic>? subcategories;
+  List<dynamic>? subcategories;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
 
   @override
   Widget build(BuildContext context) {
+    subcategories = widget.subcategories;
     var dts = DTS(context: context, subcategories: subcategories);
     return PaginatedDataTable(
         header: Row(
           children: [
-            Text('Potkategorije'),
-            SizedBox(
+            const Text('Potkategorije'),
+            const SizedBox(
               width: 10
             ),
             SizedBox(
               width: 30,
               child: Tooltip(
                 message: 'Dodaj novu potkategoriju',
-                textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),
@@ -345,7 +356,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 1,
                       blurRadius: 1,
-                      offset: Offset(0, 1),
+                      offset: const Offset(0, 1),
                     ),
                   ],
                 ),
@@ -353,7 +364,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> {
                   onPressed: () {
                     // TODO => Create new subcategory
                   },
-                  child: Text('+'),
+                  child: const Text('+'),
                   backgroundColor: Colors.orange,
                   elevation: 3,
                   hoverElevation: 4,
@@ -362,7 +373,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> {
             ),
           ]
       ),
-      columns: [
+      columns: const [
         DataColumn(
           label: Text('Naziv'),
         ),
@@ -413,13 +424,13 @@ class DTS extends DataTableSource with DeleteDialog {
         DataCell(
           Row(
             children: <Widget>[
-              Spacer(),
+              const Spacer(),
               SizedBox(
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
                   message: 'Uredi potkategoriju ${subcategory.name}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -428,7 +439,7 @@ class DTS extends DataTableSource with DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
@@ -436,14 +447,14 @@ class DTS extends DataTableSource with DeleteDialog {
                     onPressed: () {
                       // TODO => Push to edit
                     },
-                    child: Icon(Icons.edit, size: 15.0),
+                    child: const Icon(Icons.edit, size: 15.0),
                     backgroundColor: Colors.blue,
                     elevation: 3,
                     hoverElevation: 4,
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5.0
               ),
               SizedBox(
@@ -451,7 +462,7 @@ class DTS extends DataTableSource with DeleteDialog {
                 height: 30.0,
                 child: Tooltip(
                   message: 'Obriši potkategoriju ${subcategory.name}',
-                  textStyle: TextStyle(color: Colors.black, fontSize: 12),
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
@@ -460,15 +471,26 @@ class DTS extends DataTableSource with DeleteDialog {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: Offset(0, 1),
+                        offset: const Offset(0, 1),
                       ),
                     ],
                   ),
                   child: FloatingActionButton(
-                    onPressed: () {
-                      deleteDialog(context, "Obriši potkategoriju ${subcategory.name}", "Jeste li sigurni da želite obrisati potkategoriju ${subcategory.name}?");
+                    onPressed: () async {
+                      bool fetchAgain = await deleteDialog(
+                        context,
+                        "Obriši potkategoriju ${subcategory.name}",
+                        "Jeste li sigurni da želite obrisati potkategoriju ${subcategory.name}?",
+                        "http://localhost:8000/api/subcategories/${subcategory.id}",
+                        "Uspješno izbrisana potkategorija"
+                      );
+                      if (fetchAgain) {
+                        // TODO => Reset state of the main widget
+                        // resetState();
+                        // fetchData();
+                      }
                     },
-                    child: Icon(Icons.delete, size: 15.0),
+                    child: const Icon(Icons.delete, size: 15.0),
                     backgroundColor: Colors.red,
                     elevation: 3,
                     hoverElevation: 4,
