@@ -228,7 +228,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                                   },
                                                                                   child: const Text('Spremi'),
                                                                                   style: TextButton.styleFrom(
-                                                                                    padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                                                                    padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
                                                                                     primary: Colors.white,
                                                                                     backgroundColor: Colors.orange,
                                                                                     textStyle: const TextStyle(fontSize: 18),
@@ -366,9 +366,9 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                       Navigator.of(context).pop();
                                                                     }
                                                                   },
-                                                                  child: const Text('Spremi'),
+                                                                  child: const Text('Dodaj'),
                                                                   style: TextButton.styleFrom(
-                                                                    padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                                                    padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
                                                                     primary: Colors.white,
                                                                     backgroundColor: Colors.orange,
                                                                     textStyle: const TextStyle(fontSize: 18),
@@ -396,7 +396,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                   Expanded(
                                     child: Container(
                                       margin: const EdgeInsets.all(25),
-                                      child: SubcategoriesList(context: context, subcategories: snapshot.data!['subcategories'], callback: callback)
+                                      child: SubcategoriesList(context: context, categories: snapshot.data!['categories'], subcategories: snapshot.data!['subcategories'], callback: callback)
                                     )
                                   )
                                 ]
@@ -424,34 +424,66 @@ class SubcategoriesList extends StatefulWidget {
     Key? key,
     required this.context,
     required this.callback,
+    this.categories,
     this.subcategories,
   }) : super(key: key);
 
   final BuildContext context;
+  final List<dynamic>? categories;
   final List<dynamic>? subcategories;
   final Function callback;
 
   @override
-  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, subcategories: subcategories, callback: callback);
+  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, categories: categories, subcategories: subcategories, callback: callback);
 }
 
-class _SubcategoriesListState extends State<SubcategoriesList> {
+class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackBar {
   _SubcategoriesListState({
     required this.context,
     required this.callback,
+    required this.categories,
     required this.subcategories,
   });
 
+  final _formKey = GlobalKey<FormState>();
+  Subcategory subcategory = Subcategory();
+
   @override
   final BuildContext context;
+  List<dynamic>? categories;
   List<dynamic>? subcategories;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   Function callback;
 
+  void createSubcategory(Subcategory subcategory) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // // TODO => Append token for authentication/authorization check.
+    Response response = await post(
+      Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"),
+      body: json.encode({
+        "category_id" : subcategory.id,
+        "name" : subcategory.name,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodana nova potkategorija", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+    callback();
+  }
+
   @override
   Widget build(BuildContext context) {
+    subcategory.id = null;
     subcategories = widget.subcategories;
+    categories = widget.categories;
+
     var dts = DTS(context: context, subcategories: subcategories, callback: callback);
+
     return PaginatedDataTable(
         header: Row(
           children: [
@@ -476,15 +508,99 @@ class _SubcategoriesListState extends State<SubcategoriesList> {
                     ),
                   ],
                 ),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    // TODO => Create new subcategory
-                  },
-                  child: const Text('+'),
-                  backgroundColor: Colors.orange,
-                  elevation: 3,
-                  hoverElevation: 4,
-                )
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Dodaj novu potkategoriju'),
+                            content: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Molimo unesite ime potkategorije';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) => subcategory.name = value!,
+                                      cursorColor: Colors.orange,
+                                      decoration: InputDecoration(
+                                        hintText: "Unesite ime potkategorije",
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        prefixIcon: const Icon(
+                                          Icons.person,
+                                          color: Colors.orange,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: DropdownButtonFormField(
+                                      value: subcategory.id,
+                                      hint: const Text('Odaberite kategoriju'),
+                                      isExpanded: true,
+                                      onChanged: (value) {
+                                        subcategory.id = int.parse(value.toString());
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Molimo odaberite kategoriju';
+                                        }
+                                        return null;
+                                      },
+                                      items: categories!.map((category){
+                                        return DropdownMenuItem(
+                                            value: category.id.toString(),
+                                            child: Text(category.name)
+                                        );
+                                      }).toList(),
+                                    )
+                                  ),
+                                  const SizedBox(height: 10),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState!.save();
+                                          createSubcategory(subcategory);
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: const Text('Dodaj'),
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                        primary: Colors.white,
+                                        backgroundColor: Colors.orange,
+                                        textStyle: const TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                    },
+                    child: const Text("+"),
+                    backgroundColor: Colors.orange,
+                    elevation: 3,
+                    hoverElevation: 4,
+                  )
               )
             ),
           ]

@@ -216,7 +216,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
           Text(formatPrice(product.price))
         ),
         DataCell(
-          Text(product.subcategory.name)
+          Text("${product.subcategory.name}")
         ),
         DataCell(
           Row(

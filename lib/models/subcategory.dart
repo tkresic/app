@@ -3,13 +3,13 @@ import 'package:app/models/product.dart';
 import 'dart:convert';
 
 class Subcategory {
-  int id;
-  Category category;
-  int categoryId;
-  String name;
+  int? id;
+  Category? category;
+  int? categoryId;
+  String? name;
   List<Product>? products;
 
-  Subcategory({required this.id, required this.categoryId, required this.name, required this.category, this.products});
+  Subcategory({this.id, this.categoryId, this.name, this.category, this.products});
 
   factory Subcategory.fromJson(Map<String, dynamic> json) {
     return Subcategory(
@@ -23,7 +23,7 @@ class Subcategory {
   Map<String, dynamic> toJson() => {
     'id': id,
     'categoryId': categoryId,
-    'category': category.toJson(),
+    'category': category!.toJson(),
     'name': name,
   };
 
