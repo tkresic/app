@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
 import 'package:app/mixins/delete_dialog.dart';
+import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/category.dart';
 import 'package:app/models/subcategory.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,7 +25,7 @@ class Categories extends StatefulWidget {
   _CategoriesState createState() => _CategoriesState();
 }
 
-class _CategoriesState extends State<Categories> with DeleteDialog {
+class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackBar {
   // TODO => Slice data table into a component
   final _formKey = GlobalKey<FormState>();
 
@@ -35,6 +39,27 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
   }
 
   void callback() {
+    setState(() {});
+  }
+
+  void updateCategory(Category category) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // TODO => Append token for authentication/authorization check.
+    Response response = await put(
+      Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories/${category.id}"),
+      body: json.encode({
+        "name" : category.name,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirana kategorija", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+
     setState(() {});
   }
 
@@ -174,9 +199,9 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                                                                 borderRadius: BorderRadius.circular(40),
                                                                                 child: TextButton(
                                                                                   onPressed: () {
-                                                                                    // TODO => Save category
                                                                                     if (_formKey.currentState!.validate()) {
                                                                                       _formKey.currentState!.save();
+                                                                                      updateCategory(snapshot.data!['categories']![index]);
                                                                                       Navigator.of(context).pop();
                                                                                     }
                                                                                   },

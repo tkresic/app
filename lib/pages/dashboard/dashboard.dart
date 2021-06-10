@@ -159,7 +159,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
     // TODO => Append token for authentication/authorization check.
     Response response = await post(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"),
-        body:json.encode({
+        body: json.encode({
           "user" : userData,
           "products" : cart,
           "payment_method_id" : selectedPaymentMethodId,
