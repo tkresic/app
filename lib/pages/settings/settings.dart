@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
+import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/company.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,7 +20,7 @@ class Settings extends StatefulWidget {
   _SettingsState createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState extends State<Settings> with CustomSnackBar {
 
   Future<Company> fetchCompany() async {
     var response = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
@@ -30,14 +31,8 @@ class _SettingsState extends State<Settings> {
   bool enabled = false;
 
   _showDialog(BuildContext context) {
-    // TODO => Save settings. Slice snackbar
-    final snackBar = SnackBar(
-      width: 300.0,
-      behavior: SnackBarBehavior.floating,
-      content: const Text("Spremam postavke..."),
-      backgroundColor: Colors.green,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // TODO => Save settings.
+    ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Spremam postavke...", Colors.green));
   }
 
   @override

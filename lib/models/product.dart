@@ -24,6 +24,16 @@ class Product {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'subcategoryId': subcategoryId,
+    'subcategory': subcategory.toJson(),
+    'name': name,
+    'price': price,
+    'quantity': quantity,
+    'image': image,
+  };
+
   static List<Product> parseProducts(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Product>((json) => Product.fromJson(json)).toList();

@@ -29,31 +29,24 @@ class AuthProvider with ChangeNotifier {
       "password": password
     };
 
-    // TODO => Replace URI
+    // TODO => Replace URI with accounts ms
     Response response = await post(
       Uri.parse("https://admin.fenjer.hr/api/auth/login"),
       body: json.encode(loginData),
       headers: {'Content-Type': 'application/json', 'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP'},
     );
 
-    // Example with paginated resources TODO => Products provider
-    // Response responseProducts = await get(
-    //   Uri.parse("https://admin.fenjer.hr/api/categories/bozic"),
-    //   headers: {'Content-Type': 'application/json', 'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP'},
-    // );
-
     // final Map<String, dynamic> responseProductsData = json.decode(responseProducts.body);
 
     if (response.statusCode == 200) {
-      // TODO => Not used
-      // final Map<String, dynamic> responseData = json.decode(response.body);
-
       // TODO => Replace with real data
+      // final Map<String, dynamic> responseData = json.decode(response.body);
       // var userData = responseData['data'];
 
       final Map<String, dynamic> userData = {
         "id": 1,
         "username": "tkresic",
+        "name": "Toni Krešić",
         "type": "employee",
         "token": "token_example",
         "renewalToken": "token_renewal_example"

@@ -119,7 +119,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
   });
 
   // TODO => Fetch data.
-  final List<User> users = User.getData();
+  final List<User> users = [];
   final BuildContext context;
 
   @override

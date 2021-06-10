@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -50,7 +53,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
             return const Center(child: Text("Došlo je do greške."));
           }
           if (snapshot.hasData) {
-            return DashboardComponentWidget(products: snapshot.data!["products"], paymentMethods: snapshot.data!["paymentMethods"]);
+            return DashboardComponentWidget(products: snapshot.data!["products"], paymentMethods: snapshot.data!["paymentMethods"], user: user);
           } else {
             return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
           }
@@ -65,27 +68,31 @@ class DashboardComponentWidget extends StatefulWidget {
     Key? key,
     required this.products,
     required this.paymentMethods,
+    required this.user,
   }) : super(key: key);
 
   Map<dynamic, dynamic> products;
   List<PaymentMethod> paymentMethods;
+  User user;
 
   @override
-  _DashboardComponentWidgetState createState() => _DashboardComponentWidgetState(products: products, paymentMethods: paymentMethods);
+  _DashboardComponentWidgetState createState() => _DashboardComponentWidgetState(products: products, paymentMethods: paymentMethods, user: user);
 }
 
-class _DashboardComponentWidgetState extends State<DashboardComponentWidget> with FormatPrice {
+class _DashboardComponentWidgetState extends State<DashboardComponentWidget> with FormatPrice, CustomSnackBar {
   _DashboardComponentWidgetState({
     required this.products,
     required this.paymentMethods,
+    required this.user,
   });
 
   Map<dynamic, dynamic> products;
   List<PaymentMethod> paymentMethods;
+  User user;
 
   final List<Product> cart = <Product>[];
   int sum = 0;
-  int selectedPaymentMethod = 1;
+  int selectedPaymentMethodId = 1;
 
   void _addToCart(Product product) {
     setState(() {
@@ -130,7 +137,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
     });
   }
 
-  void _clearCart() {
+  void clearCart() {
     setState(() {
       for (var product in cart) {
         product.quantity = 0;
@@ -140,20 +147,36 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
     });
   }
 
-  void _finishPurchase() {
-    setState(() {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      _clearCart();
-      selectedPaymentMethod = paymentMethods.isNotEmpty ? paymentMethods[0].id : 0;
+  void createBill() async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-      // TODO => Finish purchase. Slice snackbar
-      final snackBar = SnackBar(
-        width: 300.0,
-        behavior: SnackBarBehavior.floating,
-        content: const Text("Uspješno kreiran novi račun"),
-        backgroundColor: Colors.green,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    final userData = {
+      "id" : user.id,
+      "username" : user.username,
+      "name" : user.name,
+    };
+
+    // TODO => Append token for authentication/authorization check.
+    Response response = await post(
+      Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"),
+        body:json.encode({
+          "user" : userData,
+          "products" : cart,
+          "payment_method_id" : selectedPaymentMethodId,
+          "business_place_label" : 1, // TODO => Update with real business place label
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno kreiran novi račun", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+
+    setState(() {
+      clearCart();
+      selectedPaymentMethodId = paymentMethods.isNotEmpty ? paymentMethods[0].id : 0;
     });
   }
 
@@ -409,13 +432,13 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                                         child: ChoiceChip(
                                           label: Text(pm.name),
-                                          selected: selectedPaymentMethod == pm.id,
+                                          selected: selectedPaymentMethodId == pm.id,
                                           selectedColor: Colors.orange,
                                           pressElevation: 0,
                                           labelStyle: const TextStyle(color: Colors.white),
                                           onSelected: (bool selected) {
                                             setState(() {
-                                              selectedPaymentMethod = pm.id;
+                                              selectedPaymentMethodId = pm.id;
                                             });
                                           },
                                         )
@@ -437,7 +460,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                             Row(
                               children: <Widget>[
                                 ElevatedButton(
-                                  onPressed: (cart.isNotEmpty) ? () =>  _clearCart() : null,
+                                  onPressed: (cart.isNotEmpty) ? () =>  clearCart() : null,
                                   child: const Text("Odustani"),
                                   style: ElevatedButton.styleFrom(primary: Colors.orange),
                                 ),
@@ -445,7 +468,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                                   child: ElevatedButton(
-                                    onPressed: (cart.isNotEmpty) ? () =>  _finishPurchase() : null,
+                                    onPressed: (cart.isNotEmpty) ? () =>  createBill() : null,
                                     child: const Text("Naplati"),
                                     style: ElevatedButton.styleFrom(primary: Colors.orange),
                                   ),

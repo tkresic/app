@@ -53,9 +53,9 @@ class _LoginState extends State<Login> {
                 onPressed: () {},
               ),
               content: Row(
-                  children: const [
-                     Text("Prijava neuspješna. Molimo provjerite unesene vrijednosti")
-                  ]
+                children: const [
+                   Text("Prijava neuspješna. Molimo provjerite unesene vrijednosti")
+                ]
               ),
               backgroundColor: Colors.blue,
             );

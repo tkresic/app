@@ -14,11 +14,18 @@ class Subcategory {
   factory Subcategory.fromJson(Map<String, dynamic> json) {
     return Subcategory(
       id: json['id'],
+      category: Category.fromJson(json['category']),
       categoryId: json['category_id'],
       name: json['name'],
-      category: Category.fromJson(json['category']),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'categoryId': categoryId,
+    'category': category.toJson(),
+    'name': name,
+  };
 
   static List<Subcategory> parseSubcategories(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();

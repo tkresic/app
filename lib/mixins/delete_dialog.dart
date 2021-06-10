@@ -43,23 +43,20 @@ mixin DeleteDialog {
       },
     ).then((val) {
       bool fetchAgain = success;
-      // TODO => Slice snackbar.
       if (error) {
-        final snackBar = SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           width: 300.0,
           behavior: SnackBarBehavior.floating,
           content: const Text("Došlo je do greške"),
           backgroundColor: Colors.red,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ));
       } else if (success) {
-        final snackBar = SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           width: 300.0,
           behavior: SnackBarBehavior.floating,
           content: Text(message),
           backgroundColor: Colors.green,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ));
       }
       success = false;
       error = false;

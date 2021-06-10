@@ -15,6 +15,11 @@ class Category {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+  };
+
   static List<Category> parseCategories(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Category>((json) => Category.fromJson(json)).toList();
