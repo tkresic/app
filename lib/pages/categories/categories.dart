@@ -178,68 +178,68 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                             child: FloatingActionButton(
                                                               onPressed: () {
                                                                 showDialog(
-                                                                    context: context,
-                                                                    builder: (BuildContext context) {
-                                                                      return AlertDialog(
-                                                                        title: const Text('Uredi kategoriju'),
-                                                                        content: Form(
-                                                                          key: _formKey,
-                                                                          child: Column(
-                                                                            mainAxisSize: MainAxisSize.min,
-                                                                            children: <Widget>[
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.all(8.0),
-                                                                                child: TextFormField(
-                                                                                  validator: (value) {
-                                                                                    if (value == null || value.isEmpty) {
-                                                                                      return 'Molimo unesite ime kategorije';
-                                                                                    }
-                                                                                    return null;
-                                                                                  },
-                                                                                  onSaved: (value) => snapshot.data!['categories']![index].name = value!,
-                                                                                  initialValue: snapshot.data!['categories']![index].name,
-                                                                                  cursorColor: Colors.orange,
-                                                                                  decoration: InputDecoration(
-                                                                                    hintText: "Unesite ime kategorije",
-                                                                                    border: OutlineInputBorder(
-                                                                                      borderRadius: BorderRadius.circular(25),
-                                                                                    ),
-                                                                                    focusedBorder: OutlineInputBorder(
-                                                                                      borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                                                      borderRadius: BorderRadius.circular(25),
-                                                                                    ),
-                                                                                    prefixIcon: const Icon(
-                                                                                      Icons.person,
-                                                                                      color: Colors.orange,
-                                                                                    ),
+                                                                  context: context,
+                                                                  builder: (BuildContext context) {
+                                                                    return AlertDialog(
+                                                                      title: const Text('Uredi kategoriju'),
+                                                                      content: Form(
+                                                                        key: _formKey,
+                                                                        child: Column(
+                                                                          mainAxisSize: MainAxisSize.min,
+                                                                          children: <Widget>[
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.all(8.0),
+                                                                              child: TextFormField(
+                                                                                validator: (value) {
+                                                                                  if (value == null || value.isEmpty) {
+                                                                                    return 'Molimo unesite ime kategorije';
+                                                                                  }
+                                                                                  return null;
+                                                                                },
+                                                                                onSaved: (value) => snapshot.data!['categories']![index].name = value!,
+                                                                                initialValue: snapshot.data!['categories']![index].name,
+                                                                                cursorColor: Colors.orange,
+                                                                                decoration: InputDecoration(
+                                                                                  hintText: "Unesite ime kategorije",
+                                                                                  border: OutlineInputBorder(
+                                                                                    borderRadius: BorderRadius.circular(25),
+                                                                                  ),
+                                                                                  focusedBorder: OutlineInputBorder(
+                                                                                    borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                    borderRadius: BorderRadius.circular(25),
+                                                                                  ),
+                                                                                  prefixIcon: const Icon(
+                                                                                    Icons.person,
+                                                                                    color: Colors.orange,
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                              const SizedBox(height: 10),
-                                                                              ClipRRect(
-                                                                                borderRadius: BorderRadius.circular(40),
-                                                                                child: TextButton(
-                                                                                  onPressed: () {
-                                                                                    if (_formKey.currentState!.validate()) {
-                                                                                      _formKey.currentState!.save();
-                                                                                      updateCategory(snapshot.data!['categories']![index]);
-                                                                                      Navigator.of(context).pop();
-                                                                                    }
-                                                                                  },
-                                                                                  child: const Text('Spremi'),
-                                                                                  style: TextButton.styleFrom(
-                                                                                    padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                                                                    primary: Colors.white,
-                                                                                    backgroundColor: Colors.orange,
-                                                                                    textStyle: const TextStyle(fontSize: 18),
-                                                                                  ),
+                                                                            ),
+                                                                            const SizedBox(height: 10),
+                                                                            ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(40),
+                                                                              child: TextButton(
+                                                                                onPressed: () {
+                                                                                  if (_formKey.currentState!.validate()) {
+                                                                                    _formKey.currentState!.save();
+                                                                                    updateCategory(snapshot.data!['categories']![index]);
+                                                                                    Navigator.of(context).pop();
+                                                                                  }
+                                                                                },
+                                                                                child: const Text('Spremi'),
+                                                                                style: TextButton.styleFrom(
+                                                                                  padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                                                                  primary: Colors.white,
+                                                                                  backgroundColor: Colors.orange,
+                                                                                  textStyle: const TextStyle(fontSize: 18),
                                                                                 ),
                                                                               ),
-                                                                            ],
-                                                                          ),
+                                                                            ),
+                                                                          ],
                                                                         ),
-                                                                      );
-                                                                    });
+                                                                      ),
+                                                                    );
+                                                                  });
                                                               },
                                                               child: const Icon(Icons.edit, size: 12.0),
                                                               backgroundColor: Colors.blue,
@@ -462,7 +462,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
     Response response = await post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"),
       body: json.encode({
-        "category_id" : subcategory.id,
+        "category_id" : subcategory.categoryId,
         "name" : subcategory.name,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -478,11 +478,11 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
 
   @override
   Widget build(BuildContext context) {
-    subcategory.id = null;
+    subcategory.categoryId = null;
     subcategories = widget.subcategories;
     categories = widget.categories;
 
-    var dts = DTS(context: context, subcategories: subcategories, callback: callback);
+    var dts = DTS(context: context, categories: categories, subcategories: subcategories, callback: callback);
 
     return PaginatedDataTable(
         header: Row(
@@ -550,11 +550,11 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: DropdownButtonFormField(
-                                      value: subcategory.id,
+                                      value: subcategory.categoryId,
                                       hint: const Text('Odaberite kategoriju'),
                                       isExpanded: true,
                                       onChanged: (value) {
-                                        subcategory.id = int.parse(value.toString());
+                                        subcategory.categoryId = int.parse(value.toString());
                                       },
                                       validator: (value) {
                                         if (value == null) {
@@ -564,8 +564,8 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                       },
                                       items: categories!.map((category){
                                         return DropdownMenuItem(
-                                            value: category.id.toString(),
-                                            child: Text(category.name)
+                                          value: category.id.toString(),
+                                          child: Text(category.name)
                                         );
                                       }).toList(),
                                     )
@@ -630,22 +630,48 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
   }
 }
 
-class DTS extends DataTableSource with DeleteDialog {
+class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
   DTS({
     required this.context,
     required this.callback,
+    required this.categories,
     required this.subcategories,
   });
 
+  final _formKey = GlobalKey<FormState>();
   final BuildContext context;
   Function callback;
+  List<dynamic>? categories;
   final List<dynamic>? subcategories;
+
+  void updateSubcategory(Subcategory subcategory) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // TODO => Append token for authentication/authorization check.
+    Response response = await put(
+      Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories/${subcategory.id}"),
+      body: json.encode({
+        "category_id" : subcategory.categoryId,
+        "name" : subcategory.name,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirana potkategorija", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+
+    callback();
+  }
 
   @override
   DataRow? getRow(int index) {
     assert(index >= 0);
     if (index >= subcategories!.length) return null;
     final subcategory = subcategories![index];
+
     return DataRow.byIndex(
       index: index,
       cells: [
@@ -679,7 +705,93 @@ class DTS extends DataTableSource with DeleteDialog {
                   ),
                   child: FloatingActionButton(
                     onPressed: () {
-                      // TODO => Push to edit
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Uredi potkategoriju'),
+                            content: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Molimo unesite ime potkategorije';
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) => subcategory.name = value!,
+                                      initialValue: subcategory.name,
+                                      cursorColor: Colors.orange,
+                                      decoration: InputDecoration(
+                                        hintText: "Unesite ime kategorije",
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                          borderRadius: BorderRadius.circular(25),
+                                        ),
+                                        prefixIcon: const Icon(
+                                          Icons.person,
+                                          color: Colors.orange,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: DropdownButtonFormField(
+                                      value: subcategory.categoryId.toString(),
+                                      hint: const Text('Odaberite kategoriju'),
+                                      isExpanded: true,
+                                      onChanged: (value) {
+                                        subcategory.categoryId = int.parse(value.toString());
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Molimo odaberite kategoriju';
+                                        }
+                                        return null;
+                                      },
+                                      items: categories!.map((category) {
+                                        return DropdownMenuItem(
+                                          value: category.id.toString(),
+                                          child: Text(category.name)
+                                        );
+                                      }).toList(),
+                                    )
+                                  ),
+                                  const SizedBox(height: 10),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          _formKey.currentState!.save();
+                                          updateSubcategory(subcategory);
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
+                                      child: const Text('Spremi'),
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                        primary: Colors.white,
+                                        backgroundColor: Colors.orange,
+                                        textStyle: const TextStyle(fontSize: 18),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        );
                     },
                     child: const Icon(Icons.edit, size: 15.0),
                     backgroundColor: Colors.blue,
