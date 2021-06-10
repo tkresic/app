@@ -7,21 +7,21 @@ import 'package:http/http.dart';
 import 'package:app/models/user.dart';
 
 enum Status {
-  NotLoggedIn,
-  Authenticating,
-  LoggedIn,
-  LoggedOut
+  notLoggedIn,
+  authenticating,
+  loggedIn,
+  loggedOut
 }
 
 class AuthProvider with ChangeNotifier {
-  Status _loggedInStatus = Status.NotLoggedIn;
+  Status _loggedInStatus = Status.notLoggedIn;
   Status get loggedInStatus => _loggedInStatus;
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    _loggedInStatus = Status.Authenticating;
+    _loggedInStatus = Status.authenticating;
     notifyListeners();
 
-    var result;
+    Map<String, dynamic> result;
 
     // TODO => Send username instead of email
     final Map<String, dynamic> loginData = {
@@ -37,12 +37,12 @@ class AuthProvider with ChangeNotifier {
     );
 
     // Example with paginated resources TODO => Products provider
-    Response responseProducts = await get(
-      Uri.parse("https://admin.fenjer.hr/api/categories/bozic"),
-      headers: {'Content-Type': 'application/json', 'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP'},
-    );
+    // Response responseProducts = await get(
+    //   Uri.parse("https://admin.fenjer.hr/api/categories/bozic"),
+    //   headers: {'Content-Type': 'application/json', 'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP'},
+    // );
 
-    final Map<String, dynamic> responseProductsData = json.decode(responseProducts.body);
+    // final Map<String, dynamic> responseProductsData = json.decode(responseProducts.body);
 
     if (response.statusCode == 200) {
       // TODO => Not used
@@ -64,12 +64,12 @@ class AuthProvider with ChangeNotifier {
       SharedPref sharedPref = SharedPref();
       sharedPref.save("user", authUser);
 
-      _loggedInStatus = Status.LoggedIn;
+      _loggedInStatus = Status.loggedIn;
       notifyListeners();
 
       result = {'status': true, 'message': 'Successful', 'user': authUser};
     } else {
-      _loggedInStatus = Status.NotLoggedIn;
+      _loggedInStatus = Status.notLoggedIn;
       notifyListeners();
       result = {
         'status': false,

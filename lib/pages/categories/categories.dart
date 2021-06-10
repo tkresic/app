@@ -319,7 +319,7 @@ class SubcategoriesList extends StatefulWidget {
   final List<dynamic>? subcategories;
 
   @override
-  _SubcategoriesListState createState() => _SubcategoriesListState(context: this.context, subcategories: this.subcategories);
+  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, subcategories: subcategories);
 }
 
 class _SubcategoriesListState extends State<SubcategoriesList> {

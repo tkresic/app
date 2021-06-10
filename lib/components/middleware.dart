@@ -13,7 +13,7 @@ class Middleware extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Pristup nedozvoljen", style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text("Pristup nedozvoljen", style: TextStyle(fontWeight: FontWeight.bold)),
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: TextButton(
@@ -23,19 +23,19 @@ class Middleware extends StatelessWidget {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (context, animation1, animation2) => Index(),
-                        transitionDuration: Duration(seconds: 0),
+                        pageBuilder: (context, animation1, animation2) => const Index(),
+                        transitionDuration: const Duration(seconds: 0),
                       ),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     'Početna',
                   ),
                   style: TextButton.styleFrom(
-                    padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
+                    padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                     primary: Colors.white,
                     backgroundColor: Colors.orange,
-                    textStyle: TextStyle(fontSize: 18),
+                    textStyle: const TextStyle(fontSize: 18),
                   ),
                 ),
               ),

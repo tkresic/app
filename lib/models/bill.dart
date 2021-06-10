@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'payment_method.dart';
-import 'product.dart';
 import 'user.dart';
 
 class Bill {

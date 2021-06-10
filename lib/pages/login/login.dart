@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
     AuthProvider auth = Provider.of<AuthProvider>(context);
     Size size = MediaQuery.of(context).size;
 
-    var doLogin = () {
+    void doLogin() {
       _loggingIn = true;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       final form = _formKey.currentState;
@@ -40,8 +40,8 @@ class _LoginState extends State<Login> {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => Dashboard(),
-                transitionDuration: Duration(seconds: 0),
+                pageBuilder: (context, animation1, animation2) => const Dashboard(),
+                transitionDuration: const Duration(seconds: 0),
               ),
             );
           } else {
@@ -53,8 +53,8 @@ class _LoginState extends State<Login> {
                 onPressed: () {},
               ),
               content: Row(
-                  children: <Widget>[
-                    Text("Prijava neuspješna. Molimo provjerite unesene vrijednosti")
+                  children: const [
+                     Text("Prijava neuspješna. Molimo provjerite unesene vrijednosti")
                   ]
               ),
               backgroundColor: Colors.blue,
@@ -64,7 +64,7 @@ class _LoginState extends State<Login> {
           _loggingIn = false;
         });
       }
-    };
+    }
 
     return Scaffold(
       body: Background(
@@ -189,7 +189,7 @@ class _LoginState extends State<Login> {
                               }
                             },
                             child: Text(
-                              auth.loggedInStatus == Status.Authenticating ? 'Prijavljujem se...' : 'Prijava'
+                              auth.loggedInStatus == Status.authenticating ? 'Prijavljujem se...' : 'Prijava'
                             ),
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),

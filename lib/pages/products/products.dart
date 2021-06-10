@@ -80,7 +80,7 @@ class ProductsList extends StatefulWidget {
   final List<Product>? products;
 
   @override
-  _ProductsListState createState() => _ProductsListState(context: this.context, products: this.products);
+  _ProductsListState createState() => _ProductsListState(context: context, products: products);
 }
 
 class _ProductsListState extends State<ProductsList> {

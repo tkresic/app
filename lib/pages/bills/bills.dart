@@ -79,7 +79,7 @@ class BillsList extends StatefulWidget {
   final List<dynamic>? bills;
 
   @override
-  _BillsListState createState() => _BillsListState(context: this.context, bills: this.bills);
+  _BillsListState createState() => _BillsListState(context: context, bills: bills);
 }
 
 class _BillsListState extends State<BillsList> {

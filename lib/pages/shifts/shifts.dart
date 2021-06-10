@@ -78,7 +78,7 @@ class ShiftsList extends StatefulWidget {
   final List<dynamic>? shifts;
 
   @override
-  _ShiftsListState createState() => _ShiftsListState(context: this.context, shifts: this.shifts);
+  _ShiftsListState createState() => _ShiftsListState(context: context, shifts: shifts);
 }
 
 class _ShiftsListState extends State<ShiftsList> {

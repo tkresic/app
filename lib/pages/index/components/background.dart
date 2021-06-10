@@ -31,7 +31,7 @@ class Background extends StatelessWidget {
               "assets/images/MainBottom.png",
             ),
           ),
-          Positioned(
+          const Positioned(
             bottom: 5,
             right: 5,
             child: Text('v0.1.0'),

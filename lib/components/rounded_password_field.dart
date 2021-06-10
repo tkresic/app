@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app/components/text_field_container.dart';
 
 class RoundedPasswordField extends StatefulWidget{
-
   // TODO => Not being used
-
-
   final ValueChanged<String> onChanged;
 
   RoundedPasswordField({
@@ -13,6 +10,7 @@ class RoundedPasswordField extends StatefulWidget{
     required this.onChanged,
   }) : super(key: key);
 
+  @override
   PasswordField createState()=> PasswordField();
 }
 
@@ -39,14 +37,14 @@ class PasswordField extends State<RoundedPasswordField>{
               borderRadius: BorderRadius.circular(29),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.orange, width: 2),
+              borderSide: const BorderSide(color: Colors.orange, width: 2),
               borderRadius: BorderRadius.circular(25),
             ),
-            prefixIcon: Icon(
+            prefixIcon: const Icon(
               Icons.lock,
               color: Colors.orange,
             ),
-            suffixIcon: new GestureDetector(
+            suffixIcon: GestureDetector(
               onTap: () {
                 setState(() {
                   _obscurePassword = !_obscurePassword;

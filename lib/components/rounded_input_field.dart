@@ -32,10 +32,10 @@ class RoundedInputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(25),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.orange, width: 2),
+            borderSide: const BorderSide(color: Colors.orange, width: 2),
             borderRadius: BorderRadius.circular(25),
           ),
-          prefixIcon: Icon(
+          prefixIcon: const Icon(
             Icons.person,
             color: Colors.orange,
           ),
