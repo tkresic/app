@@ -26,8 +26,8 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackBar {
-  // TODO => Slice data table into a component
   final _formKey = GlobalKey<FormState>();
+  Category category = Category();
 
   Future<Map<String, List>> fetchData() async {
     var categories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"));
@@ -39,6 +39,27 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
   }
 
   void callback() {
+    setState(() {});
+  }
+
+  void createCategory(Category category) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // // TODO => Append token for authentication/authorization check.
+    Response response = await post(
+      Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"),
+      body: json.encode({
+        "name" : category.name,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodana nova kategorija", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+
     setState(() {});
   }
 
@@ -297,7 +318,68 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                             ),
                                             child: FloatingActionButton(
                                               onPressed: () {
-                                                // TODO => Create new category
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text('Dodaj novu kategoriju'),
+                                                        content: Form(
+                                                          key: _formKey,
+                                                          child: Column(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: <Widget>[
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: TextFormField(
+                                                                  validator: (value) {
+                                                                    if (value == null || value.isEmpty) {
+                                                                      return 'Molimo unesite ime kategorije';
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) => category.name = value!,
+                                                                  cursorColor: Colors.orange,
+                                                                  decoration: InputDecoration(
+                                                                    hintText: "Unesite ime kategorije",
+                                                                    border: OutlineInputBorder(
+                                                                      borderRadius: BorderRadius.circular(25),
+                                                                    ),
+                                                                    focusedBorder: OutlineInputBorder(
+                                                                      borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                      borderRadius: BorderRadius.circular(25),
+                                                                    ),
+                                                                    prefixIcon: const Icon(
+                                                                      Icons.person,
+                                                                      color: Colors.orange,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(height: 10),
+                                                              ClipRRect(
+                                                                borderRadius: BorderRadius.circular(40),
+                                                                child: TextButton(
+                                                                  onPressed: () {
+                                                                    if (_formKey.currentState!.validate()) {
+                                                                      _formKey.currentState!.save();
+                                                                      createCategory(category);
+                                                                      Navigator.of(context).pop();
+                                                                    }
+                                                                  },
+                                                                  child: const Text('Spremi'),
+                                                                  style: TextButton.styleFrom(
+                                                                    padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                                                    primary: Colors.white,
+                                                                    backgroundColor: Colors.orange,
+                                                                    textStyle: const TextStyle(fontSize: 18),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    });
                                               },
                                               child: const Icon(Icons.add, size: 15.0),
                                               backgroundColor: Colors.orange,

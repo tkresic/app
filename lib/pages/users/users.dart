@@ -18,7 +18,7 @@ class Users extends StatefulWidget {
 }
 
 class _UsersState extends State<Users> {
-  // TODO => Slice data table into a component
+
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
 
   @override

@@ -2,11 +2,11 @@ import 'package:app/models/subcategory.dart';
 import 'dart:convert';
 
 class Category {
-  int id;
-  String name;
+  int? id;
+  String? name;
   List<Subcategory>? subcategories;
 
-  Category({required this.id, required this.name, this.subcategories});
+  Category({this.id, this.name, this.subcategories});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(

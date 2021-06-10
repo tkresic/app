@@ -18,7 +18,6 @@ class Shifts extends StatefulWidget {
 }
 
 class _ShiftsState extends State<Shifts> {
-  // TODO => Slice data table into a component
 
   Future<List<Shift>> fetchShifts() async {
     var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"));

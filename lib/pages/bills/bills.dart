@@ -19,7 +19,6 @@ class Bills extends StatefulWidget {
 }
 
 class _BillsState extends State<Bills> {
-  // TODO => Slice data table into a component
 
   Future<List<Bill>> fetchBills() async {
     var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"));
