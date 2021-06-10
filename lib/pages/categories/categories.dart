@@ -34,6 +34,10 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
     };
   }
 
+  void callback() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     User? user = Provider.of<UserProvider>(context).user;
@@ -285,7 +289,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog {
                                   Expanded(
                                     child: Container(
                                       margin: const EdgeInsets.all(25),
-                                      child: SubcategoriesList(context: context, subcategories: snapshot.data!['subcategories'])
+                                      child: SubcategoriesList(context: context, subcategories: snapshot.data!['subcategories'], callback: callback)
                                     )
                                   )
                                 ]
@@ -312,31 +316,35 @@ class SubcategoriesList extends StatefulWidget {
   const SubcategoriesList({
     Key? key,
     required this.context,
-    this.subcategories
+    required this.callback,
+    this.subcategories,
   }) : super(key: key);
 
   final BuildContext context;
   final List<dynamic>? subcategories;
+  final Function callback;
 
   @override
-  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, subcategories: subcategories);
+  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, subcategories: subcategories, callback: callback);
 }
 
 class _SubcategoriesListState extends State<SubcategoriesList> {
   _SubcategoriesListState({
     required this.context,
-    required this.subcategories
+    required this.callback,
+    required this.subcategories,
   });
 
   @override
   final BuildContext context;
   List<dynamic>? subcategories;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  Function callback;
 
   @override
   Widget build(BuildContext context) {
     subcategories = widget.subcategories;
-    var dts = DTS(context: context, subcategories: subcategories);
+    var dts = DTS(context: context, subcategories: subcategories, callback: callback);
     return PaginatedDataTable(
         header: Row(
           children: [
@@ -402,10 +410,12 @@ class _SubcategoriesListState extends State<SubcategoriesList> {
 class DTS extends DataTableSource with DeleteDialog {
   DTS({
     required this.context,
-    required this.subcategories
+    required this.callback,
+    required this.subcategories,
   });
 
   final BuildContext context;
+  Function callback;
   final List<dynamic>? subcategories;
 
   @override
@@ -486,9 +496,7 @@ class DTS extends DataTableSource with DeleteDialog {
                         "Uspješno izbrisana potkategorija"
                       );
                       if (fetchAgain) {
-                        // TODO => Reset state of the main widget
-                        // resetState();
-                        // fetchData();
+                        callback();
                       }
                     },
                     child: const Icon(Icons.delete, size: 15.0),
