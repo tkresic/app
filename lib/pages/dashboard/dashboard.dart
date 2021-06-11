@@ -186,302 +186,302 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
-            child: DefaultTabController(
-              initialIndex: 0,
-              length: products.length,
-              child: Scaffold(
-                appBar: AppBar(
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                  bottom: PreferredSize(
-                    preferredSize: const Size(0, 0),
-                    child: ColoredBox(
-                      color: Colors.orange,
-                      child: TabBar(
-                        tabs: <Widget>[
-                          for (String key in products.keys)
-                            Tab(
-                                text: key
-                            )
-                        ],
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.black,
-                        indicatorColor: Colors.white,
-                      ),
+          child: DefaultTabController(
+            initialIndex: 0,
+            length: products.length,
+            child: Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                elevation: 0,
+                bottom: PreferredSize(
+                  preferredSize: const Size(0, 0),
+                  child: ColoredBox(
+                    color: Colors.orange,
+                    child: TabBar(
+                      tabs: <Widget>[
+                        for (String key in products.keys)
+                          Tab(
+                              text: key
+                          )
+                      ],
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black,
+                      indicatorColor: Colors.white,
                     ),
                   ),
                 ),
-                body: TabBarView(
-                  children: <Widget>[
-                    for (String key in products.keys)
-                      DefaultTabController(
-                        initialIndex: 0,
-                        length: products[key].length,
-                        child: Scaffold(
-                          appBar: AppBar(
-                            automaticallyImplyLeading: false,
-                            elevation: 1,
-                            bottom: PreferredSize(
-                              preferredSize: const Size(0, 0),
-                              child: ColoredBox(
-                                color: Colors.orange,
-                                child: TabBar(
-                                  isScrollable: true,
-                                  tabs: <Widget>[
-                                    for (String subKey in products[key].keys)
-                                      Tab(
-                                        text: subKey,
-                                      ),
-                                  ],
-                                  labelColor: Colors.white,
-                                  unselectedLabelColor: Colors.black,
-                                  indicatorColor: Colors.white,
-                                ),
+              ),
+              body: TabBarView(
+                children: <Widget>[
+                  for (String key in products.keys)
+                    DefaultTabController(
+                      initialIndex: 0,
+                      length: products[key].length,
+                      child: Scaffold(
+                        appBar: AppBar(
+                          automaticallyImplyLeading: false,
+                          elevation: 1,
+                          bottom: PreferredSize(
+                            preferredSize: const Size(0, 0),
+                            child: ColoredBox(
+                              color: Colors.orange,
+                              child: TabBar(
+                                isScrollable: true,
+                                tabs: <Widget>[
+                                  for (String subKey in products[key].keys)
+                                    Tab(
+                                      text: subKey,
+                                    ),
+                                ],
+                                labelColor: Colors.white,
+                                unselectedLabelColor: Colors.black,
+                                indicatorColor: Colors.white,
                               ),
                             ),
                           ),
-                          body: TabBarView(
-                            children: <Widget>[
-                              for (String subKey in products[key].keys)
-                                Container(
-                                  margin: const EdgeInsets.only(top: 10),
-                                  child: GridView.count(
-                                    crossAxisCount: 3,
-                                    childAspectRatio: 2.5,
-                                    children: List.generate(products[key][subKey].length, (index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          _addToCart(products[key][subKey][index]);
-                                        },
-                                        child: Container(
-                                          margin: const EdgeInsets.all(5),
-                                          child: ListTile(
-                                              leading: ClipRRect(
-                                                  borderRadius: BorderRadius.circular(8.0),
-                                                  child: Image.network(products[key][subKey][index].image, width: 50)
-                                              ),
-                                              title: Text('${products[key][subKey][index].name}'),
-                                              subtitle: Text(formatPrice(products[key][subKey][index].price))
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(5),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.withOpacity(0.5),
-                                                spreadRadius: 2,
-                                                blurRadius: 2,
-                                                offset: const Offset(0, 1),
-                                              ),
-                                            ],
-                                          ),
+                        ),
+                        body: TabBarView(
+                          children: <Widget>[
+                            for (String subKey in products[key].keys)
+                              Container(
+                                margin: const EdgeInsets.only(top: 10),
+                                child: GridView.count(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 2.5,
+                                  children: List.generate(products[key][subKey].length, (index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        _addToCart(products[key][subKey][index]);
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.all(5),
+                                        child: ListTile(
+                                            leading: ClipRRect(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                                child: Image.network(products[key][subKey][index].image, width: 50)
+                                            ),
+                                            title: Text('${products[key][subKey][index].name}'),
+                                            subtitle: Text(formatPrice(products[key][subKey][index].price))
                                         ),
-                                      );
-                                    }),
-                                  ),
-                                )
-                            ],
-                          ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(5),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 2,
+                                              blurRadius: 2,
+                                              offset: const Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              )
+                          ],
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
-            )
+            ),
+          )
         ),
         Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFD2D2D2))
-              ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                      flex: 4,
-                      child: Row(
-                          crossAxisAlignment: cart.isNotEmpty ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: cart.isNotEmpty ? SingleChildScrollView(
-                                  child: DataTable(
-                                    columns: const <DataColumn>[
-                                      DataColumn(
-                                        label: Text('Naziv'),
-                                      ),
-                                      DataColumn(
-                                        label: Text('Cijena'),
-                                      ),
-                                      DataColumn(
-                                        label: Text('Količina'),
-                                      ),
-                                      DataColumn(
-                                          label: Expanded(
-                                              child: Text('Ukupno', textAlign: TextAlign.right)
-                                          )
-                                      ),
-                                    ],
-                                    rows: <DataRow>[
-                                      for (var product in cart) DataRow(
-                                        cells: <DataCell>[
-                                          DataCell(
-                                              Row(
-                                                children: <Widget>[
-                                                  Image.network(product.image, width: 50),
-                                                  const SizedBox(width: 10),
-                                                  Text(product.name)
-                                                ],
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFD2D2D2))
+            ),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 4,
+                  child: Row(
+                    crossAxisAlignment: cart.isNotEmpty ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: cart.isNotEmpty ? SingleChildScrollView(
+                          child: DataTable(
+                            columns: const <DataColumn>[
+                              DataColumn(
+                                label: Text('Naziv'),
+                              ),
+                              DataColumn(
+                                label: Text('Cijena'),
+                              ),
+                              DataColumn(
+                                label: Text('Količina'),
+                              ),
+                              DataColumn(
+                                label: Expanded(
+                                    child: Text('Ukupno', textAlign: TextAlign.right)
+                                )
+                              ),
+                            ],
+                            rows: <DataRow>[
+                              for (var product in cart) DataRow(
+                                cells: <DataCell>[
+                                  DataCell(
+                                      Row(
+                                        children: <Widget>[
+                                          Image.network(product.image, width: 50),
+                                          const SizedBox(width: 10),
+                                          Text(product.name)
+                                        ],
+                                      )
+                                  ),
+                                  DataCell(
+                                      Text(formatPrice(product.price))
+                                  ),
+                                  DataCell(
+                                      Row(
+                                        children: <Widget>[
+                                          Container(
+                                              margin: const EdgeInsets.only(right: 10.0),
+                                              width: 20,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  _changeQuantity(product, 'decrement');
+                                                },
+                                                child: const Text("-"),
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Colors.orange,
+                                                    padding: const EdgeInsets.all(0)
+                                                ),
                                               )
                                           ),
-                                          DataCell(
-                                              Text(formatPrice(product.price))
+                                          Flexible(
+                                            child: Container(
+                                              margin: const EdgeInsets.only(right: 10.0),
+                                              child: Text('${product.quantity}'),
+                                            ),
                                           ),
-                                          DataCell(
-                                              Row(
-                                                children: <Widget>[
-                                                  Container(
-                                                      margin: const EdgeInsets.only(right: 10.0),
-                                                      width: 20,
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          _changeQuantity(product, 'decrement');
-                                                        },
-                                                        child: const Text("-"),
-                                                        style: ElevatedButton.styleFrom(
-                                                            primary: Colors.orange,
-                                                            padding: const EdgeInsets.all(0)
-                                                        ),
-                                                      )
-                                                  ),
-                                                  Flexible(
-                                                    child: Container(
-                                                      margin: const EdgeInsets.only(right: 10.0),
-                                                      child: Text('${product.quantity}'),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                      margin: const EdgeInsets.only(right: 10.0),
-                                                      width: 22,
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          _changeQuantity(product, 'increment');
-                                                        },
-                                                        child: const Text("+"),
-                                                        style: ElevatedButton.styleFrom(
-                                                            primary: Colors.orange,
-                                                            padding: const EdgeInsets.all(0)
-                                                        ),
-                                                      )
-                                                  ),
-                                                  Container(
-                                                      margin: const EdgeInsets.only(right: 10.0),
-                                                      width: 22,
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          _removeFromCart(product);
-                                                        },
-                                                        child: const Text("x"),
-                                                        style: ElevatedButton.styleFrom(
-                                                            primary: Colors.orange,
-                                                            padding: const EdgeInsets.all(0)
-                                                        ),
-                                                      )
-                                                  ),
-                                                ],
+                                          Container(
+                                              margin: const EdgeInsets.only(right: 10.0),
+                                              width: 22,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  _changeQuantity(product, 'increment');
+                                                },
+                                                child: const Text("+"),
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Colors.orange,
+                                                    padding: const EdgeInsets.all(0)
+                                                ),
                                               )
                                           ),
-                                          DataCell(
-                                              Row(
-                                                children: <Widget>[
-                                                  const Spacer(),
-                                                  Text(formatPrice(product.price * product.quantity))
-                                                ],
+                                          Container(
+                                              margin: const EdgeInsets.only(right: 10.0),
+                                              width: 22,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  _removeFromCart(product);
+                                                },
+                                                child: const Text("x"),
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Colors.orange,
+                                                    padding: const EdgeInsets.all(0)
+                                                ),
                                               )
                                           ),
                                         ],
-                                      ),
-                                    ],
-                                  )
-                              )
-                                  :
-                              const Center(
-                                child: Text("Košarica je trenutno prazna.", textAlign: TextAlign.center),
-                              ),
-                            )
-                          ]
-                      )
-                  ),
-                  Expanded(
-                      flex: 1,
-                      child: Container(
-                        alignment: Alignment.bottomCenter,
-                        constraints: const BoxConstraints.expand(),
-                        padding: const EdgeInsets.all(10.0),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(color: Color(0xFFD2D2D2)),
-                          ),
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                                children: [
-                                  const Text('Način plaćanja'),
-                                  const Spacer(),
-                                  for (PaymentMethod pm in paymentMethods)
-                                    Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                        child: ChoiceChip(
-                                          label: Text(pm.name),
-                                          selected: selectedPaymentMethodId == pm.id,
-                                          selectedColor: Colors.orange,
-                                          pressElevation: 0,
-                                          labelStyle: const TextStyle(color: Colors.white),
-                                          onSelected: (bool selected) {
-                                            setState(() {
-                                              selectedPaymentMethodId = pm.id;
-                                            });
-                                          },
-                                        )
-                                    )
-                                ]
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                const Text('Ukupno'),
-                                const Spacer(),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                  child: Text(formatPrice(sum, symbol: 'HRK')),
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: <Widget>[
-                                ElevatedButton(
-                                  onPressed: (cart.isNotEmpty) ? () =>  clearCart() : null,
-                                  child: const Text("Odustani"),
-                                  style: ElevatedButton.styleFrom(primary: Colors.orange),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                  child: ElevatedButton(
-                                    onPressed: (cart.isNotEmpty) ? () =>  createBill() : null,
-                                    child: const Text("Naplati"),
-                                    style: ElevatedButton.styleFrom(primary: Colors.orange),
+                                      )
                                   ),
+                                  DataCell(
+                                      Row(
+                                        children: <Widget>[
+                                          const Spacer(),
+                                          Text(formatPrice(product.price * product.quantity))
+                                        ],
+                                      )
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        )
+                        :
+                        const Center(
+                          child: Text("Košarica je trenutno prazna.", textAlign: TextAlign.center),
+                        ),
+                      )
+                    ]
+                  )
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    constraints: const BoxConstraints.expand(),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: Color(0xFFD2D2D2)),
+                      ),
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            const Text('Način plaćanja'),
+                            const Spacer(),
+                            for (PaymentMethod pm in paymentMethods)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                child: ChoiceChip(
+                                  label: Text(pm.name),
+                                  selected: selectedPaymentMethodId == pm.id,
+                                  selectedColor: Colors.orange,
+                                  pressElevation: 0,
+                                  labelStyle: const TextStyle(color: Colors.white),
+                                  onSelected: (bool selected) {
+                                    setState(() {
+                                      selectedPaymentMethodId = pm.id;
+                                    });
+                                  },
                                 )
-                              ],
-                            ),
+                              )
+                          ]
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            const Text('Ukupno'),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                              child: Text(formatPrice(sum, symbol: 'HRK')),
+                            )
                           ],
                         ),
-                      )
+                        const SizedBox(height: 10),
+                        Row(
+                          children: <Widget>[
+                            ElevatedButton(
+                              onPressed: (cart.isNotEmpty) ? () =>  clearCart() : null,
+                              child: const Text("Odustani"),
+                              style: ElevatedButton.styleFrom(primary: Colors.orange),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                              child: ElevatedButton(
+                                onPressed: (cart.isNotEmpty) ? () =>  createBill() : null,
+                                child: const Text("Naplati"),
+                                style: ElevatedButton.styleFrom(primary: Colors.orange),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   )
-                ],
-              ),
-            )
+                )
+              ],
+            ),
+          )
         ),
       ],
     );

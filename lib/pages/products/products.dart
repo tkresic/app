@@ -267,7 +267,66 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                     ),
                     child: FloatingActionButton(
                       onPressed: () {
-                        // TODO => Push to view
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context)
+                        {
+                          return AlertDialog(
+                            title: const Text('Pregled proizvoda'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.network(product.image, width: 200)
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Ime: ${product.name}", textAlign: TextAlign.left,)
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Potkategorija: ${product.subcategory.name}", textAlign: TextAlign.left)
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Kategorija: ${product.subcategory.category!.name}")
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Cijena: ${formatPrice(product.price)}")
+                                        ),
+                                        const SizedBox(height: 10),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(40),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('U redu'),
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
+                                              primary: Colors.white,
+                                              backgroundColor: Colors.orange,
+                                              textStyle: const TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ]
+                            )
+                          );
+                        });
                       },
                       child: const Icon(Icons.preview, size: 15.0),
                       backgroundColor: Colors.orange,
