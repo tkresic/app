@@ -114,7 +114,7 @@ class _ProductsListState extends State<ProductsList> {
   Widget build(BuildContext context) {
 
     products = widget.products;
-    var dts = DTS(context: context, products: products);
+    var dts = DTS(context: context, products: products, callback: callback);
 
     return PaginatedDataTable(
         header: Row(
@@ -212,11 +212,13 @@ class _ProductsListState extends State<ProductsList> {
 class DTS extends DataTableSource with FormatPrice, DeleteDialog {
   DTS({
     required this.context,
-    required this.products
+    required this.products,
+    required this.callback,
   });
 
   final BuildContext context;
   final List<Product>? products;
+  Function callback;
 
   @override
   DataRow? getRow(int index) {
@@ -328,14 +330,17 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                     ],
                   ),
                   child: FloatingActionButton(
-                    onPressed: () {
-                      deleteDialog(
+                    onPressed: () async {
+                      bool fetchAgain = await deleteDialog(
                           context,
                           "Obriši proizvod ${product.name}",
                           "Jeste li sigurni da želite obrisati proizvod ${product.name}?",
                           "${dotenv.env['SHOP_API_URI']}/api/products/${product.id}",
                           "Uspješno izbrisan proizvod"
                       );
+                      if (fetchAgain) {
+                        callback("");
+                      }
                     },
                     child: const Icon(Icons.delete, size: 15.0),
                     backgroundColor: Colors.red,
