@@ -60,7 +60,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       leading: Builder(
         builder: (BuildContext context) {
           return Tooltip(
-            message: 'Navigacija',
+            message: 'Izbornik',
             textStyle: const TextStyle(color: Colors.black, fontSize: 12),
             decoration: BoxDecoration(
               color: Colors.white,

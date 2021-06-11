@@ -8,7 +8,7 @@ class Product {
   String? name;
   String? sku;
   int price;
-  int cost;
+  int? cost;
   int quantity;
   String? image;
 
@@ -19,7 +19,7 @@ class Product {
     this.name,
     this.sku,
     required this.price,
-    required this.cost,
+    this.cost,
     required this.quantity,
     this.image
   });
@@ -44,6 +44,7 @@ class Product {
     'subcategory': subcategory!.toJson(),
     'name': name,
     'price': price,
+    'cost': cost,
     'quantity': quantity,
     'image': image,
   };

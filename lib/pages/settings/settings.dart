@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -86,7 +87,11 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                         future: fetchCompany(),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
-                            return const Center(child: Text("Došlo je do greške."));
+                            if (snapshot.error.runtimeType == SocketException) {
+                              return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
+                            } else {
+                              return const Center(child: Text("Došlo je do greške."));
+                            }
                           }
                           if (snapshot.hasData) {
                             return SingleChildScrollView(

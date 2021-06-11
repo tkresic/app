@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/payment_method.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,11 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
         future: fetchData(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(child: Text("Došlo je do greške."));
+            if (snapshot.error.runtimeType == SocketException) {
+              return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
+            } else {
+              return const Center(child: Text("Došlo je do greške."));
+            }
           }
           if (snapshot.hasData) {
             return DashboardComponentWidget(products: snapshot.data!["products"], paymentMethods: snapshot.data!["paymentMethods"], user: user);
@@ -324,13 +329,13 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                               for (var product in cart) DataRow(
                                 cells: <DataCell>[
                                   DataCell(
-                                      Row(
-                                        children: <Widget>[
-                                          Image.network("${product.image}", width: 50),
-                                          const SizedBox(width: 10),
-                                          Text("${product.name}")
-                                        ],
-                                      )
+                                    Row(
+                                      children: <Widget>[
+                                        Image.network("${product.image}", width: 50),
+                                        const SizedBox(width: 10),
+                                        Text("${product.name}")
+                                      ],
+                                    )
                                   ),
                                   DataCell(
                                       Text(formatPrice(product.price))

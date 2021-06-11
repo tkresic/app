@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
@@ -71,7 +73,11 @@ class _ProductsState extends State<Products> {
               future: fetchData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child: Text("Došlo je do greške."));
+                  if (snapshot.error.runtimeType == SocketException) {
+                    return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
+                  } else {
+                    return const Center(child: Text("Došlo je do greške."));
+                  }
                 }
                 if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -236,7 +242,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             borderRadius: BorderRadius.circular(25),
                                           ),
                                           prefixIcon: const Icon(
-                                            Icons.person,
+                                            Icons.liquor,
                                             color: Colors.orange,
                                           ),
                                         ),
@@ -263,7 +269,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             borderRadius: BorderRadius.circular(25),
                                           ),
                                           prefixIcon: const Icon(
-                                            Icons.person,
+                                            Icons.confirmation_number,
                                             color: Colors.orange,
                                           ),
                                         ),
@@ -298,7 +304,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             borderRadius: BorderRadius.circular(25),
                                           ),
                                           prefixIcon: const Icon(
-                                            Icons.person,
+                                            Icons.money,
                                             color: Colors.orange,
                                           ),
                                         ),
@@ -333,7 +339,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             borderRadius: BorderRadius.circular(25),
                                           ),
                                           prefixIcon: const Icon(
-                                            Icons.person,
+                                            Icons.monetization_on,
                                             color: Colors.orange,
                                           ),
                                         ),
@@ -597,11 +603,11 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                         const SizedBox(height: 10),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text("Ime: ${product.name}", textAlign: TextAlign.left,)
+                                          child: Text("Ime: ${product.name}")
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text("Potkategorija: ${product.subcategory!.name}", textAlign: TextAlign.left)
+                                          child: Text("Potkategorija: ${product.subcategory!.name}")
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -706,7 +712,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           borderRadius: BorderRadius.circular(25),
                                         ),
                                         prefixIcon: const Icon(
-                                          Icons.person,
+                                          Icons.liquor,
                                           color: Colors.orange,
                                         ),
                                       ),
@@ -734,7 +740,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           borderRadius: BorderRadius.circular(25),
                                         ),
                                         prefixIcon: const Icon(
-                                          Icons.person,
+                                          Icons.confirmation_number,
                                           color: Colors.orange,
                                         ),
                                       ),
@@ -770,7 +776,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           borderRadius: BorderRadius.circular(25),
                                         ),
                                         prefixIcon: const Icon(
-                                          Icons.person,
+                                          Icons.money,
                                           color: Colors.orange,
                                         ),
                                       ),
@@ -806,7 +812,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           borderRadius: BorderRadius.circular(25),
                                         ),
                                         prefixIcon: const Icon(
-                                          Icons.person,
+                                          Icons.monetization_on,
                                           color: Colors.orange,
                                         ),
                                       ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -105,7 +106,11 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
               future: fetchData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child: Text("Došlo je do greške."));
+                  if (snapshot.error.runtimeType == SocketException) {
+                    return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
+                  } else {
+                    return const Center(child: Text("Došlo je do greške."));
+                  }
                 }
                 if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -209,7 +214,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                                     borderRadius: BorderRadius.circular(25),
                                                                                   ),
                                                                                   prefixIcon: const Icon(
-                                                                                    Icons.person,
+                                                                                    Icons.category,
                                                                                     color: Colors.orange,
                                                                                   ),
                                                                                 ),
@@ -349,7 +354,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                       borderRadius: BorderRadius.circular(25),
                                                                     ),
                                                                     prefixIcon: const Icon(
-                                                                      Icons.person,
+                                                                      Icons.category,
                                                                       color: Colors.orange,
                                                                     ),
                                                                   ),
@@ -541,7 +546,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                           borderRadius: BorderRadius.circular(25),
                                         ),
                                         prefixIcon: const Icon(
-                                          Icons.person,
+                                          Icons.category_outlined,
                                           color: Colors.orange,
                                         ),
                                       ),
@@ -728,7 +733,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                       initialValue: subcategory.name,
                                       cursorColor: Colors.orange,
                                       decoration: InputDecoration(
-                                        hintText: "Ime kategorije",
+                                        hintText: "Ime potkategorije",
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(25),
                                         ),
@@ -737,7 +742,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                           borderRadius: BorderRadius.circular(25),
                                         ),
                                         prefixIcon: const Icon(
-                                          Icons.person,
+                                          Icons.category_outlined,
                                           color: Colors.orange,
                                         ),
                                       ),
@@ -747,6 +752,10 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                     padding: const EdgeInsets.all(8.0),
                                     child: DropdownButtonFormField(
                                       value: subcategory.categoryId.toString(),
+                                      icon: const Icon(
+                                        Icons.category,
+                                        color: Colors.orange,
+                                      ),
                                       hint: const Text('Odaberite kategoriju'),
                                       isExpanded: true,
                                       onChanged: (value) {

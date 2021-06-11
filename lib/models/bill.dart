@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'payment_method.dart';
+import 'product.dart';
 import 'user.dart';
 
 class Bill {
@@ -10,7 +11,7 @@ class Bill {
   int? restoredBillId;
   User user;
   // // Branch branch
-  // List<Product> products;
+  List<Product> products;
   int number;
   int businessPlaceLabel;
   String label;
@@ -24,7 +25,7 @@ class Bill {
     required this.paymentMethod,
     this.restoredBillId,
     required this.user,
-    // required this.products,
+    required this.products,
     required this.businessPlaceLabel,
     required this.label,
     required this.number,
@@ -40,7 +41,7 @@ class Bill {
       paymentMethod: PaymentMethod.fromJson(json['payment_method']),
       restoredBillId: json['restored_bill_id'],
       user: User.fromJson(json['user']),
-      // products: Product.parseProducts(json['products']),
+      products: parseProducts(json["products"]),
       businessPlaceLabel: json['business_place_label'],
       label: json['label'],
       number: json['number'],
@@ -48,6 +49,20 @@ class Bill {
       restoringReason: json['restoring_reason'],
       createdAt: json['created_at'],
     );
+  }
+
+  static List<Product> parseProducts(List<dynamic> products) {
+    List<Product> list = products.map((json) => Product(
+        id: json['id'],
+        subcategoryId: json['subcategory_id'],
+        name: json['name'],
+        sku: json['sku'],
+        price: json['price'],
+        cost: json['cost'],
+        quantity: json['quantity'],
+        image: json['image']
+    )).toList();
+    return list;
   }
 
   static List<Bill> parseBills(String responseBody) {

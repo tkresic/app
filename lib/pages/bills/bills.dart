@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/middleware.dart';
@@ -46,7 +48,11 @@ class _BillsState extends State<Bills> {
               future: fetchBills(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child: Text("Došlo je do greške."));
+                  if (snapshot.error.runtimeType == SocketException) {
+                    return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
+                  } else {
+                    return const Center(child: Text("Došlo je do greške."));
+                  }
                 }
                 if (snapshot.hasData) {
                   return SingleChildScrollView(
@@ -167,7 +173,7 @@ class DTS extends DataTableSource with FormatPrice {
             Text('${bill.paymentMethod.name}')
         ),
         DataCell(
-            Text('${bill.user.username}')
+            Text('${bill.user.name}')
         ),
         DataCell(
             Text('${bill.createdAt}')
@@ -196,7 +202,102 @@ class DTS extends DataTableSource with FormatPrice {
                       ),
                       child: FloatingActionButton(
                         onPressed: () {
-                          // TODO => Push to view
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context)
+                            {
+                              return AlertDialog(
+                                  title: const Text('Pregled računa'),
+                                  content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Način plaćanja: ${bill.paymentMethod.name}")
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Izdao: ${bill.user.name} (${bill.createdAt})")
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Broj: ${bill.number}")
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Oznaka: ${bill.label}")
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Iznos: ${formatPrice(bill.gross)}")
+                                                ),
+                                                Card(
+                                                  child: DataTable(
+                                                    columns: const [
+                                                      DataColumn(
+                                                        label: Text('Proizvod'),
+                                                      ),
+                                                      DataColumn(
+                                                        label: Text('Cijena'),
+                                                      ),
+                                                      DataColumn(
+                                                        label: Text('Količina'),
+                                                      ),
+                                                      DataColumn(
+                                                        label: Text('Ukupno'),
+                                                      ),
+                                                    ],
+                                                    rows: [
+                                                      for (var product in bill.products)
+                                                        DataRow(
+                                                          cells: [
+                                                            DataCell(
+                                                                Row(
+                                                                  children: [
+                                                                    Image.network("${product.image}", width: 50),
+                                                                    const SizedBox(width: 10),
+                                                                    Text("${product.name}")
+                                                                  ],
+                                                                )
+                                                            ),
+                                                            DataCell(Text(formatPrice(product.price))),
+                                                            DataCell(Text("${product.quantity}")),
+                                                            DataCell(Text(formatPrice(product.price * product.quantity))),
+                                                          ],
+                                                        ),
+                                                    ]
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 10),
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(40),
+                                                  child: TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    child: const Text('U redu'),
+                                                    style: TextButton.styleFrom(
+                                                      padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
+                                                      primary: Colors.white,
+                                                      backgroundColor: Colors.orange,
+                                                      textStyle: const TextStyle(fontSize: 18),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ]
+                                  )
+                              );
+                            });
                         },
                         child: const Icon(Icons.preview, size: 15.0),
                         backgroundColor: Colors.orange,
