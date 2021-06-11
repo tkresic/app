@@ -35,7 +35,7 @@ class _ShiftsState extends State<Shifts> {
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       drawer: const Drawer(
-        child: DrawerList(index: 5),
+        child: DrawerList(index: 4),
       ),
       appBar: const CustomAppBar(),
       body: Row(

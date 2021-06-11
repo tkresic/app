@@ -132,10 +132,10 @@ class _DrawerListState extends State<DrawerList> {
           selectedTileColor: Colors.orange.withOpacity(0.75),
           title: Row(
             children: <Widget>[
-              Icon(Icons.person, color: widget.index == 4 ? Colors.white : Colors.black),
+              Icon(Icons.payment, color: widget.index == 4 ? Colors.white : Colors.black),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text('Korisnici', style: TextStyle(color: widget.index == 4 ? Colors.white : Colors.black)),
+                child: Text('Smjene', style: TextStyle(color: widget.index == 4 ? Colors.white : Colors.black)),
               )
             ],
           ),
@@ -143,7 +143,7 @@ class _DrawerListState extends State<DrawerList> {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => const Users(),
+                pageBuilder: (context, animation1, animation2) => const Shifts(),
                 transitionDuration: const Duration(seconds: 0),
               ),
             );
@@ -154,10 +154,10 @@ class _DrawerListState extends State<DrawerList> {
           selectedTileColor: Colors.orange.withOpacity(0.75),
           title: Row(
             children: <Widget>[
-              Icon(Icons.payment, color: widget.index == 5 ? Colors.white : Colors.black),
+              Icon(Icons.person, color: widget.index == 5 ? Colors.white : Colors.black),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text('Smjene', style: TextStyle(color: widget.index == 5 ? Colors.white : Colors.black)),
+                child: Text('Korisnici', style: TextStyle(color: widget.index == 5 ? Colors.white : Colors.black)),
               )
             ],
           ),
@@ -165,7 +165,7 @@ class _DrawerListState extends State<DrawerList> {
             Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (context, animation1, animation2) => const Shifts(),
+                pageBuilder: (context, animation1, animation2) => const Users(),
                 transitionDuration: const Duration(seconds: 0),
               ),
             );

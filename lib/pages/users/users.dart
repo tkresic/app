@@ -34,7 +34,7 @@ class _UsersState extends State<Users> {
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       drawer: const Drawer(
-        child: DrawerList(index: 4),
+        child: DrawerList(index: 5),
       ),
       appBar: const CustomAppBar(),
       body: Row(
