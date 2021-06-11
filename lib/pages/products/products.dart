@@ -246,14 +246,14 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                       child: TextFormField(
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Molimo unesite SKU proizvoda';
+                                            return 'Molimo unesite inventarni broj proizvoda';
                                           }
                                           return null;
                                         },
                                         onSaved: (value) => product.sku = value!,
                                         cursorColor: Colors.orange,
                                         decoration: InputDecoration(
-                                          hintText: "SKU proizvoda",
+                                          hintText: "Inventarni broj proizvoda",
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(25),
                                           ),
@@ -560,7 +560,15 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text("Cijena: ${formatPrice(product.price)}")
+                                          child: Text("Prodajna cijena: ${formatPrice(product.price)}")
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Nabavna cijena: ${formatPrice(product.cost)}")
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Inventarni broj: ${product.sku}")
                                         ),
                                         const SizedBox(height: 10),
                                         ClipRRect(
