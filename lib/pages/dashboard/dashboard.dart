@@ -326,9 +326,9 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                   DataCell(
                                       Row(
                                         children: <Widget>[
-                                          Image.network(product.image, width: 50),
+                                          Image.network("${product.image}", width: 50),
                                           const SizedBox(width: 10),
-                                          Text(product.name)
+                                          Text("${product.name}")
                                         ],
                                       )
                                   ),

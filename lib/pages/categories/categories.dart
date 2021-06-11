@@ -200,7 +200,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                                 initialValue: snapshot.data!['categories']![index].name,
                                                                                 cursorColor: Colors.orange,
                                                                                 decoration: InputDecoration(
-                                                                                  hintText: "Unesite ime kategorije",
+                                                                                  hintText: "Ime kategorije",
                                                                                   border: OutlineInputBorder(
                                                                                     borderRadius: BorderRadius.circular(25),
                                                                                   ),
@@ -340,7 +340,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                   onSaved: (value) => category.name = value!,
                                                                   cursorColor: Colors.orange,
                                                                   decoration: InputDecoration(
-                                                                    hintText: "Unesite ime kategorije",
+                                                                    hintText: "Ime kategorije",
                                                                     border: OutlineInputBorder(
                                                                       borderRadius: BorderRadius.circular(25),
                                                                     ),
@@ -532,7 +532,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                       onSaved: (value) => subcategory.name = value!,
                                       cursorColor: Colors.orange,
                                       decoration: InputDecoration(
-                                        hintText: "Unesite ime potkategorije",
+                                        hintText: "Ime potkategorije",
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(25),
                                         ),
@@ -728,7 +728,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                       initialValue: subcategory.name,
                                       cursorColor: Colors.orange,
                                       decoration: InputDecoration(
-                                        hintText: "Unesite ime kategorije",
+                                        hintText: "Ime kategorije",
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(25),
                                         ),

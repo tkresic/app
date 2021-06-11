@@ -2,15 +2,27 @@ import 'package:app/models/subcategory.dart';
 import 'dart:convert';
 
 class Product {
-  int id;
-  Subcategory subcategory;
-  int subcategoryId;
-  String name;
+  int? id;
+  Subcategory? subcategory;
+  int? subcategoryId;
+  String? name;
+  String? sku;
   int price;
+  int cost;
   int quantity;
-  String image;
+  String? image;
 
-  Product({required this.id, required this.subcategoryId, required this.subcategory, required this.name, required this.price, required this.quantity, required this.image});
+  Product({
+    this.id,
+    this.subcategoryId,
+    this.subcategory,
+    this.name,
+    this.sku,
+    required this.price,
+    required this.cost,
+    required this.quantity,
+    this.image
+  });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -18,7 +30,9 @@ class Product {
       subcategoryId: json['subcategory_id'],
       subcategory: Subcategory.fromJson(json['subcategory']),
       name: json['name'],
+      sku: json['sku'],
       price: json['price'],
+      cost: json['cost'],
       quantity: 0,
       image: json['image']
     );
@@ -27,7 +41,7 @@ class Product {
   Map<String, dynamic> toJson() => {
     'id': id,
     'subcategoryId': subcategoryId,
-    'subcategory': subcategory.toJson(),
+    'subcategory': subcategory!.toJson(),
     'name': name,
     'price': price,
     'quantity': quantity,

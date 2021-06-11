@@ -4,15 +4,20 @@ import 'package:app/components/middleware.dart';
 import 'package:app/components/text_field_container.dart';
 import 'package:app/mixins/delete_dialog.dart';
 import 'package:app/mixins/format_price.dart';
+import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/product.dart';
+import 'package:app/models/subcategory.dart';
+import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:app/models/user.dart';
 import 'package:app/providers/user_provider.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 class Products extends StatefulWidget {
   const Products({Key? key}) : super(key: key);
@@ -24,13 +29,19 @@ class Products extends StatefulWidget {
 class _ProductsState extends State<Products> {
   String search = "";
 
-  Future<List<Product>> fetchProducts() async {
+  Future<Map<String, List>> fetchData() async {
     String uri = "${dotenv.env['SHOP_API_URI']}/api/products";
     if (search.isNotEmpty) {
       uri += "?search=$search";
     }
-    var response = await http.get(Uri.parse(uri));
-    return Product.parseProducts(response.body);
+
+    var products = await http.get(Uri.parse(uri));
+    var subcategories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
+
+    return {
+      "products" : Product.parseProducts(products.body),
+      "subcategories" : Subcategory.parseSubcategories(subcategories.body)
+    };
   }
 
   void callback(String value) {
@@ -56,8 +67,8 @@ class _ProductsState extends State<Products> {
       body: Row(
         children: <Widget>[
           Expanded(
-            child: FutureBuilder<List<Product>>(
-              future: fetchProducts(),
+            child: FutureBuilder<Map<String, List>>(
+              future: fetchData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return const Center(child: Text("Došlo je do greške."));
@@ -66,7 +77,7 @@ class _ProductsState extends State<Products> {
                   return SingleChildScrollView(
                     child: Container(
                       margin: const EdgeInsets.all(25),
-                      child: ProductsList(context: context, products: snapshot.data, callback: callback)
+                      child: ProductsList(context: context, subcategories: snapshot.data!["subcategories"], products: snapshot.data!["products"], callback: callback)
                     )
                   );
                 } else {
@@ -85,34 +96,85 @@ class ProductsList extends StatefulWidget {
   ProductsList({
     Key? key,
     required this.context,
+    this.subcategories,
     this.products,
     required this.callback,
   }) : super(key: key);
 
   BuildContext context;
-  List<Product>? products;
+  List<dynamic>? subcategories;
+  List<dynamic>? products;
   Function callback;
 
   @override
-  _ProductsListState createState() => _ProductsListState(context: context, products: products, callback: callback);
+  _ProductsListState createState() => _ProductsListState(context: context, subcategories: subcategories, products: products, callback: callback);
 }
 
-class _ProductsListState extends State<ProductsList> {
+class _ProductsListState extends State<ProductsList> with CustomSnackBar, FormatPrice {
   _ProductsListState({
     required this.context,
+    required this.subcategories,
     required this.products,
     required this.callback
   });
 
+  final _formKey = GlobalKey<FormState>();
+  Product product = Product(price: 0, cost: 0, quantity: 0);
+
   @override
   BuildContext context;
-  List<Product>? products;
+  List<dynamic>? subcategories;
+  List<dynamic>? products;
   Function callback;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  FilePickerCross? file;
+
+  void createProduct(Product product) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    MultipartFile? image;
+
+    if (file != null) {
+      image = file!.toMultipartFile(filename: file!.fileName);
+    }
+
+    // // TODO => Append token for authentication/authorization check.
+    var request = http.MultipartRequest(
+        "POST",
+        Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"),
+    );
+
+    request.fields["name"] = product.name!;
+    request.fields["sku"] = product.sku!;
+    request.fields["price"] = product.price.toString();
+    request.fields["cost"] = product.cost.toString();
+    request.fields["subcategory_id"] = product.subcategoryId.toString();
+
+    if (image != null) {
+      request.files.add(image);
+    }
+
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodan novi proizvod", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+    callback("");
+  }
+
+  void uploadFile() async {
+    file = await FilePickerCross.importFromStorage(
+        type: FileTypeCross.image,
+        fileExtension: 'png, jpg, jpeg, bmp'
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
 
+    product.subcategoryId = null;
     products = widget.products;
     var dts = DTS(context: context, products: products, callback: callback);
 
@@ -140,15 +202,212 @@ class _ProductsListState extends State<ProductsList> {
                     ),
                   ],
                 ),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    // TODO => Create new product
-                  },
-                  child: const Text('+'),
-                  backgroundColor: Colors.orange,
-                  elevation: 3,
-                  hoverElevation: 4,
-                )
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Dodaj novi proizvod'),
+                              content: Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Molimo unesite ime proizvoda';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (value) => product.name = value!,
+                                        cursorColor: Colors.orange,
+                                        decoration: InputDecoration(
+                                          hintText: "Ime proizvoda",
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.person,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Molimo unesite SKU proizvoda';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (value) => product.sku = value!,
+                                        cursorColor: Colors.orange,
+                                        decoration: InputDecoration(
+                                          hintText: "SKU proizvoda",
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.person,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Molimo unesite prodajnu cijenu proizvoda';
+                                          }
+                                          return null;
+                                        },
+                                        inputFormatters: [
+                                          CurrencyTextInputFormatter(
+                                            locale: 'hr',
+                                            decimalDigits: 2,
+                                            symbol: 'HRK ',
+                                          )
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                        onSaved: (value) => product.price = unFormatPrice(value),
+                                        cursorColor: Colors.orange,
+                                        decoration: InputDecoration(
+                                          hintText: "Prodajna cijena proizvoda",
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.person,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Molimo unesite nabavnu cijenu proizvoda';
+                                          }
+                                          return null;
+                                        },
+                                        inputFormatters: [
+                                          CurrencyTextInputFormatter(
+                                            locale: 'hr',
+                                            decimalDigits: 2,
+                                            symbol: 'HRK ',
+                                          )
+                                        ],
+                                        keyboardType: TextInputType.number,
+                                        onSaved: (value) => product.cost = unFormatPrice(value),
+                                        cursorColor: Colors.orange,
+                                        decoration: InputDecoration(
+                                          hintText: "Nabavna cijena proizvoda",
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.person,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: DropdownButtonFormField(
+                                          value: product.subcategoryId,
+                                          hint: const Text('Odaberite potkategoriju'),
+                                          isExpanded: true,
+                                          onChanged: (value) {
+                                            product.subcategoryId = int.parse(value.toString());
+                                          },
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return 'Molimo odaberite potkategoriju';
+                                            }
+                                            return null;
+                                          },
+                                          items: subcategories!.map((subcategory){
+                                            return DropdownMenuItem(
+                                                value: subcategory.id.toString(),
+                                                child: Text(subcategory.name)
+                                            );
+                                          }).toList(),
+                                        )
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          uploadFile();
+                                        },
+                                        child: const Text('Priloži sliku'),
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                          primary: Colors.white,
+                                          backgroundColor: Colors.orange,
+                                          textStyle: const TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          if (_formKey.currentState!.validate()) {
+                                            _formKey.currentState!.save();
+                                            createProduct(product);
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: const Text('Dodaj'),
+                                        style: TextButton.styleFrom(
+                                          padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                          primary: Colors.white,
+                                          backgroundColor: Colors.orange,
+                                          textStyle: const TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    },
+                    child: const Text('+'),
+                    backgroundColor: Colors.orange,
+                    elevation: 3,
+                    hoverElevation: 4,
+                  )
               )
             ),
             const Spacer(),
@@ -217,7 +476,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
   });
 
   final BuildContext context;
-  final List<Product>? products;
+  final List<dynamic>? products;
   Function callback;
 
   @override
@@ -231,9 +490,9 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
         DataCell(
           Row(
             children: <Widget>[
-              Image.network(product.image, width: 50),
+              Image.network("${product.image}", width: 50),
               const SizedBox(width: 10),
-              Text(product.name)
+              Text("${product.name}")
             ],
           )
         ),
@@ -241,7 +500,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
           Text(formatPrice(product.price))
         ),
         DataCell(
-          Text("${product.subcategory.name}")
+          Text("${product.subcategory!.name}")
         ),
         DataCell(
           Row(
@@ -284,7 +543,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Image.network(product.image, width: 200)
+                                          child: Image.network("${product.image}", width: 200)
                                         ),
                                         const SizedBox(height: 10),
                                         Padding(
@@ -293,11 +552,11 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text("Potkategorija: ${product.subcategory.name}", textAlign: TextAlign.left)
+                                          child: Text("Potkategorija: ${product.subcategory!.name}", textAlign: TextAlign.left)
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text("Kategorija: ${product.subcategory.category!.name}")
+                                          child: Text("Kategorija: ${product.subcategory!.category!.name}")
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
