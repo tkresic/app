@@ -6,9 +6,9 @@ import 'user.dart';
 class Bill {
   int id;
   int paymentMethodId;
-  PaymentMethod paymentMethod;
-  // Bill? restoredBill;
-  int? restoredBillId;
+  PaymentMethod? paymentMethod;
+  Bill? restoredBill;
+  Bill? restoredByBill;
   User user;
   // // Branch branch
   List<Product> products;
@@ -22,8 +22,9 @@ class Bill {
   Bill({
     required this.id,
     required this.paymentMethodId,
-    required this.paymentMethod,
-    this.restoredBillId,
+    this.paymentMethod,
+    this.restoredBill,
+    this.restoredByBill,
     required this.user,
     required this.products,
     required this.businessPlaceLabel,
@@ -38,8 +39,9 @@ class Bill {
     return Bill(
       id: json['id'],
       paymentMethodId: json['payment_method_id'],
-      paymentMethod: PaymentMethod.fromJson(json['payment_method']),
-      restoredBillId: json['restored_bill_id'],
+      paymentMethod: json['payment_method'] == null ? null : PaymentMethod.fromJson(json['payment_method']),
+      restoredBill: json['restored_bill'] == null ? null : Bill.fromJson(json['restored_bill']),
+      restoredByBill: json['restored_by_bill'] == null ? null : Bill.fromJson(json['restored_by_bill']),
       user: User.fromJson(json['user']),
       products: parseProducts(json["products"]),
       businessPlaceLabel: json['business_place_label'],

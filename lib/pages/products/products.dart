@@ -12,7 +12,6 @@ import 'package:app/models/subcategory.dart';
 import 'package:file_picker_cross/file_picker_cross.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -138,7 +137,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
   void createProduct(Product product) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    MultipartFile? image;
+    http.MultipartFile? image;
 
     if (file != null) {
       image = file!.toMultipartFile(filename: file!.fileName);
@@ -500,7 +499,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
   void updateProduct(Product product) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    MultipartFile? image;
+    http.MultipartFile? image;
 
     if (file != null) {
       image = file!.toMultipartFile(filename: file!.fileName);

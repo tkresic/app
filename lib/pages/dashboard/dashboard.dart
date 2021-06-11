@@ -4,7 +4,6 @@ import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/payment_method.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -162,7 +161,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
     };
 
     // TODO => Append token for authentication/authorization check.
-    Response response = await post(
+    http.Response response = await http.post(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"),
         body: json.encode({
           "user" : userData,

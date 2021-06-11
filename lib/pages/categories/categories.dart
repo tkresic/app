@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,7 +46,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     // // TODO => Append token for authentication/authorization check.
-    Response response = await post(
+    http.Response response = await http.post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"),
       body: json.encode({
         "name" : category.name,
@@ -68,7 +67,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     // TODO => Append token for authentication/authorization check.
-    Response response = await put(
+    http.Response response = await http.put(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories/${category.id}"),
       body: json.encode({
         "name" : category.name,
@@ -464,7 +463,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     // // TODO => Append token for authentication/authorization check.
-    Response response = await post(
+    http.Response response = await http.post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"),
       body: json.encode({
         "category_id" : subcategory.categoryId,
@@ -653,7 +652,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
     // TODO => Append token for authentication/authorization check.
-    Response response = await put(
+    http.Response response = await http.put(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories/${subcategory.id}"),
       body: json.encode({
         "category_id" : subcategory.categoryId,
