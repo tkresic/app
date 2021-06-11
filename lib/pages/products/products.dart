@@ -22,9 +22,21 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
+  String search = "";
+
   Future<List<Product>> fetchProducts() async {
-    var response = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"));
+    String uri = "${dotenv.env['SHOP_API_URI']}/api/products";
+    if (search.isNotEmpty) {
+      uri += "?search=$search";
+    }
+    var response = await http.get(Uri.parse(uri));
     return Product.parseProducts(response.body);
+  }
+
+  void callback(String value) {
+    setState(() {
+      search = value;
+    });
   }
 
   @override
@@ -54,7 +66,7 @@ class _ProductsState extends State<Products> {
                   return SingleChildScrollView(
                     child: Container(
                       margin: const EdgeInsets.all(25),
-                      child: ProductsList(context: context, products: snapshot.data)
+                      child: ProductsList(context: context, products: snapshot.data, callback: callback)
                     )
                   );
                 } else {
@@ -73,90 +85,101 @@ class ProductsList extends StatefulWidget {
   ProductsList({
     Key? key,
     required this.context,
-    this.products
+    this.products,
+    required this.callback,
   }) : super(key: key);
 
-  final BuildContext context;
-  final List<Product>? products;
+  BuildContext context;
+  List<Product>? products;
+  Function callback;
 
   @override
-  _ProductsListState createState() => _ProductsListState(context: context, products: products);
+  _ProductsListState createState() => _ProductsListState(context: context, products: products, callback: callback);
 }
 
 class _ProductsListState extends State<ProductsList> {
   _ProductsListState({
     required this.context,
-    required this.products
+    required this.products,
+    required this.callback
   });
 
   @override
-  final BuildContext context;
-  final List<Product>? products;
+  BuildContext context;
+  List<Product>? products;
+  Function callback;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
 
   @override
   Widget build(BuildContext context) {
+
+    products = widget.products;
     var dts = DTS(context: context, products: products);
+
     return PaginatedDataTable(
         header: Row(
-            children: [
-              const Text('Proizvodi'),
-              const SizedBox(
-                width: 10
-              ),
-              SizedBox(
-                width: 30,
-                child: Tooltip(
-                    message: 'Dodaj novi proizvod',
-                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
+          children: [
+            const Text('Proizvodi'),
+            const SizedBox(
+              width: 10
+            ),
+            SizedBox(
+              width: 30,
+              child: Tooltip(
+                  message: 'Dodaj novi proizvod',
+                textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    // TODO => Create new product
+                  },
+                  child: const Text('+'),
+                  backgroundColor: Colors.orange,
+                  elevation: 3,
+                  hoverElevation: 4,
+                )
+              )
+            ),
+            const Spacer(),
+            SizedBox(
+              width: 400,
+              child: TextFieldContainer(
+                child: TextFormField(
+                  onChanged: (value) {
+                    setState(() {
+                      callback(value);
+                    });
+                  },
+                  cursorColor: Colors.orange,
+                  decoration: InputDecoration(
+                    hintText: "Pretražite proizvode",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.orange, width: 2),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: Colors.orange,
+                    ),
                   ),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      // TODO => Create new product
-                    },
-                    child: const Text('+'),
-                    backgroundColor: Colors.orange,
-                    elevation: 3,
-                    hoverElevation: 4,
-                  )
                 )
               ),
-              const Spacer(),
-              SizedBox(
-                width: 400,
-                child: TextFieldContainer(
-                  child: TextFormField(
-                    // onSaved: (value) => _search = value!,
-                    cursorColor: Colors.orange,
-                    decoration: InputDecoration(
-                      hintText: "Pretražite proizvode",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.orange, width: 2),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  )
-                ),
-              )
-            ]
+            )
+          ]
         ),
         columns: const [
           DataColumn(

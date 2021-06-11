@@ -478,10 +478,10 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
 
   @override
   Widget build(BuildContext context) {
+
     subcategory.categoryId = null;
     subcategories = widget.subcategories;
     categories = widget.categories;
-
     var dts = DTS(context: context, categories: categories, subcategories: subcategories, callback: callback);
 
     return PaginatedDataTable(
