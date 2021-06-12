@@ -14,7 +14,7 @@ class Shift {
     return Shift(
         id: json['id'],
         start: json['start'],
-        end: json['end'],
+        end: json['end'] ?? '/',
         user: User.fromJson(json['user']),
         gross: json['gross'],
     );
