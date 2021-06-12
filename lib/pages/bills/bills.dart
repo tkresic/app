@@ -311,41 +311,46 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Text("Iznos: ${formatPrice(bill.gross)}")
                                                 ),
-                                                Card(
-                                                  child: DataTable(
-                                                    columns: const [
-                                                      DataColumn(
-                                                        label: Text('Proizvod'),
-                                                      ),
-                                                      DataColumn(
-                                                        label: Text('Cijena'),
-                                                      ),
-                                                      DataColumn(
-                                                        label: Text('Količina'),
-                                                      ),
-                                                      DataColumn(
-                                                        label: Text('Ukupno'),
-                                                      ),
-                                                    ],
-                                                    rows: [
-                                                      for (var product in bill.products)
-                                                        DataRow(
-                                                          cells: [
-                                                            DataCell(
-                                                              Row(
-                                                                children: [
-                                                                  Image.network("${product.image}", width: 50),
-                                                                  const SizedBox(width: 10),
-                                                                  Text("${product.name}")
-                                                                ],
-                                                              )
+                                                Container(
+                                                  constraints: const BoxConstraints(minHeight: 100, maxHeight: 225),
+                                                  child: Card(
+                                                    child: SingleChildScrollView(
+                                                      child: DataTable(
+                                                        columns: const [
+                                                          DataColumn(
+                                                            label: Text('Proizvod'),
+                                                          ),
+                                                          DataColumn(
+                                                            label: Text('Cijena'),
+                                                          ),
+                                                          DataColumn(
+                                                            label: Text('Količina'),
+                                                          ),
+                                                          DataColumn(
+                                                            label: Text('Ukupno'),
+                                                          ),
+                                                        ],
+                                                        rows: [
+                                                          for (var product in bill.products)
+                                                            DataRow(
+                                                              cells: [
+                                                                DataCell(
+                                                                  Row(
+                                                                    children: [
+                                                                      Image.network("${product.image}", width: 45),
+                                                                      const SizedBox(width: 10),
+                                                                      Text("${product.name}")
+                                                                    ],
+                                                                  )
+                                                                ),
+                                                                DataCell(Text(formatPrice(product.price))),
+                                                                DataCell(Text("${product.quantity}")),
+                                                                DataCell(Text(formatPrice(product.price * product.quantity))),
+                                                              ],
                                                             ),
-                                                            DataCell(Text(formatPrice(product.price))),
-                                                            DataCell(Text("${product.quantity}")),
-                                                            DataCell(Text(formatPrice(product.price * product.quantity))),
-                                                          ],
-                                                        ),
-                                                    ]
+                                                        ]
+                                                      )
+                                                    )
                                                   ),
                                                 ),
                                                 const SizedBox(height: 10),
