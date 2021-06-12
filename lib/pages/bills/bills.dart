@@ -349,6 +349,25 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                       Row(
                                         children: [
                                           Container(
+                                            width: 250,
+                                            child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("Neto: ${formatPrice(bill.net)}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
                                             constraints: const BoxConstraints(minHeight: 100, maxHeight: 225),
                                             child: Card(
                                               child: SingleChildScrollView(

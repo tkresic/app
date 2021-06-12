@@ -174,6 +174,18 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno kreiran novi račun", Colors.green));
+    } else if (response.statusCode == 422) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+
+      String errors = "";
+
+      data.forEach((k,v) => {
+        for (final e in data[k]) {
+          errors += e
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške: $errors", Colors.deepOrange));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }

@@ -4,14 +4,16 @@ class Tax {
   int? id;
   String? name;
   int? amount;
+  int? total;
 
-  Tax({this.id, this.name, this.amount});
+  Tax({this.id, this.name, this.amount, this.total});
 
   factory Tax.fromJson(Map<String, dynamic> json) {
     return Tax(
       id: json['id'],
       name: json['name'],
       amount: json['amount'],
+      total: json['total'],
     );
   }
 
@@ -19,6 +21,7 @@ class Tax {
     'id': id,
     'name': name,
     'amount': amount,
+    'total': total,
   };
 
   static List<Tax> parseTaxes(String responseBody) {
