@@ -1,10 +1,13 @@
-import 'package:app/models/subcategory.dart';
 import 'dart:convert';
+import 'subcategory.dart';
+import 'tax.dart';
 
 class Product {
   int? id;
   Subcategory? subcategory;
   int? subcategoryId;
+  int? taxId;
+  Tax? tax;
   String? name;
   String? sku;
   int price;
@@ -14,8 +17,10 @@ class Product {
 
   Product({
     this.id,
-    this.subcategoryId,
     this.subcategory,
+    this.subcategoryId,
+    this.taxId,
+    this.tax,
     this.name,
     this.sku,
     required this.price,
@@ -29,6 +34,8 @@ class Product {
       id: json['id'],
       subcategoryId: json['subcategory_id'],
       subcategory: Subcategory.fromJson(json['subcategory']),
+      taxId: Tax.fromJson(json['tax']).id,
+      tax: Tax.fromJson(json['tax']),
       name: json['name'],
       sku: json['sku'],
       price: json['price'],
@@ -37,17 +44,6 @@ class Product {
       image: json['image']
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'subcategoryId': subcategoryId,
-    'subcategory': subcategory!.toJson(),
-    'name': name,
-    'price': price,
-    'cost': cost,
-    'quantity': quantity,
-    'image': image,
-  };
 
   static List<Product> parseProducts(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
