@@ -28,7 +28,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: dotenv.env['APP_ENV'] == 'dev',
+        debugShowCheckedModeBanner: false,
         title: 'Fiskalna Blagajna',
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
