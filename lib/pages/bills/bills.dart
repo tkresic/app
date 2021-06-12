@@ -259,121 +259,120 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                               return AlertDialog(
                                   title: const Text('Pregled računa'),
                                   content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                bill.restoredBill != null ?
-                                                Padding(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        children: <Widget>[
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              bill.restoredBill != null ?
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(Icons.warning, size: 20.0, color: Colors.red),
+                                                    Text(" Ovaj račun je storno računa pod brojem: ${bill.restoredBill.number}.")
+                                                  ],
+                                                )
+                                              )
+                                              :
+                                              const SizedBox(height: 0),
+                                              bill.restoredByBill != null ?
+                                              Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Row(
                                                     children: [
                                                       const Icon(Icons.warning, size: 20.0, color: Colors.red),
-                                                      Text(" Ovaj račun je storno računa pod brojem: ${bill.restoredBill.number}.")
+                                                      Text(" Ovaj račun je storniran s računom pod brojem: ${bill.restoredByBill.number}.")
                                                     ],
                                                   )
-                                                )
-                                                :
-                                                const SizedBox(height: 0),
-                                                bill.restoredByBill != null ?
-                                                Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(Icons.warning, size: 20.0, color: Colors.red),
-                                                        Text(" Ovaj račun je storniran s računom pod brojem: ${bill.restoredByBill.number}.")
+                                              )
+                                              :
+                                              const SizedBox(height: 0),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("Način plaćanja: ${bill.paymentMethod.name}")
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("Izdao: ${bill.user.name} (${bill.createdAt})")
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("Broj: ${bill.number}")
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("Oznaka: ${bill.label}")
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text("Iznos: ${formatPrice(bill.gross)}")
+                                              ),
+                                              Container(
+                                                constraints: const BoxConstraints(minHeight: 100, maxHeight: 225),
+                                                child: Card(
+                                                  child: SingleChildScrollView(
+                                                    child: DataTable(
+                                                      columns: const [
+                                                        DataColumn(
+                                                          label: Text('Proizvod'),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text('Cijena'),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text('Količina'),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text('Ukupno'),
+                                                        ),
                                                       ],
+                                                      rows: [
+                                                        for (var product in bill.products)
+                                                          DataRow(
+                                                            cells: [
+                                                              DataCell(
+                                                                Row(
+                                                                  children: [
+                                                                    Image.network("${product.image}", width: 45),
+                                                                    const SizedBox(width: 10),
+                                                                    Text("${product.name}")
+                                                                  ],
+                                                                )
+                                                              ),
+                                                              DataCell(Text(formatPrice(product.price))),
+                                                              DataCell(Text("${product.quantity}")),
+                                                              DataCell(Text(formatPrice(product.price * product.quantity))),
+                                                            ],
+                                                          ),
+                                                      ]
                                                     )
-                                                )
-                                                :
-                                                const SizedBox(height: 0),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text("Način plaćanja: ${bill.paymentMethod.name}")
+                                                  )
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text("Izdao: ${bill.user.name} (${bill.createdAt})")
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text("Broj: ${bill.number}")
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text("Oznaka: ${bill.label}")
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text("Iznos: ${formatPrice(bill.gross)}")
-                                                ),
-                                                Container(
-                                                  constraints: const BoxConstraints(minHeight: 100, maxHeight: 225),
-                                                  child: Card(
-                                                    child: SingleChildScrollView(
-                                                      child: DataTable(
-                                                        columns: const [
-                                                          DataColumn(
-                                                            label: Text('Proizvod'),
-                                                          ),
-                                                          DataColumn(
-                                                            label: Text('Cijena'),
-                                                          ),
-                                                          DataColumn(
-                                                            label: Text('Količina'),
-                                                          ),
-                                                          DataColumn(
-                                                            label: Text('Ukupno'),
-                                                          ),
-                                                        ],
-                                                        rows: [
-                                                          for (var product in bill.products)
-                                                            DataRow(
-                                                              cells: [
-                                                                DataCell(
-                                                                  Row(
-                                                                    children: [
-                                                                      Image.network("${product.image}", width: 45),
-                                                                      const SizedBox(width: 10),
-                                                                      Text("${product.name}")
-                                                                    ],
-                                                                  )
-                                                                ),
-                                                                DataCell(Text(formatPrice(product.price))),
-                                                                DataCell(Text("${product.quantity}")),
-                                                                DataCell(Text(formatPrice(product.price * product.quantity))),
-                                                              ],
-                                                            ),
-                                                        ]
-                                                      )
-                                                    )
+                                              ),
+                                              const SizedBox(height: 10),
+                                              ClipRRect(
+                                                borderRadius: BorderRadius.circular(40),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: const Text('U redu'),
+                                                  style: TextButton.styleFrom(
+                                                    padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
+                                                    primary: Colors.white,
+                                                    backgroundColor: Colors.orange,
+                                                    textStyle: const TextStyle(fontSize: 18),
                                                   ),
                                                 ),
-                                                const SizedBox(height: 10),
-                                                ClipRRect(
-                                                  borderRadius: BorderRadius.circular(40),
-                                                  child: TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    child: const Text('U redu'),
-                                                    style: TextButton.styleFrom(
-                                                      padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
-                                                      primary: Colors.white,
-                                                      backgroundColor: Colors.orange,
-                                                      textStyle: const TextStyle(fontSize: 18),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        )
-                                      ]
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      )
+                                    ]
                                   )
                               );
                             });
