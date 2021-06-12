@@ -144,7 +144,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
-                  message: 'Pregledaj korisnika ${user.username}',
+                  message: 'Pregledaj korisnika ${user.name}',
                   textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -176,7 +176,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
-                  message: 'Uredi korisnika ${user.username}',
+                  message: 'Uredi korisnika ${user.name}',
                   textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -208,7 +208,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
-                  message: 'Obriši korisnika ${user.username}',
+                  message: 'Obriši korisnika ${user.name}',
                   textStyle: const TextStyle(color: Colors.black, fontSize: 12),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -226,8 +226,8 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
                     onPressed: () {
                       deleteDialog(
                           context,
-                          "Obriši korisnika ${user.username}",
-                          "Jeste li sigurni da želite obrisati korisnika ${user.username}?",
+                          "Obriši korisnika ${user.name}",
+                          "Jeste li sigurni da želite obrisati korisnika ${user.name}?",
                           "${dotenv.env['ACCOUNTS_API_URI']}/api/users/${user.id}",
                           "Uspješno izbrisan korisnik"
                       );

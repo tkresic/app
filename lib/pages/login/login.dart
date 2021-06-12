@@ -92,7 +92,7 @@ class _LoginState extends State<Login> {
                         enabled: !_loggingIn,
                         onSaved: (value) => _username = value!,
                         cursorColor: Colors.orange,
-                        initialValue: "tonikresic1997@gmail.com",
+                        initialValue: "tkresic",
                         decoration: InputDecoration(
                           hintText: "Unesite korisničko ime",
                           border: OutlineInputBorder(

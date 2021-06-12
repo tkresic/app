@@ -62,7 +62,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         children: <Widget>[
           const Icon(Icons.person, color: Colors.white),
           const SizedBox(width: 5),
-          Text(user.username, style: const TextStyle(color: Colors.white)),
+          Text(user.name, style: const TextStyle(color: Colors.white)),
         ]
       ),
       actions: <Widget>[

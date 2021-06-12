@@ -25,7 +25,7 @@ class AuthProvider with ChangeNotifier {
 
     // TODO => Send username instead of email
     final Map<String, dynamic> loginData = {
-      "email": username,
+      "email": "tonikresic1997@gmail.com",
       "password": password
     };
 
