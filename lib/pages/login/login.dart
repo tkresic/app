@@ -188,9 +188,20 @@ class _LoginState extends State<Login> {
                                 return;
                               }
                             },
-                            child: Text(
-                              auth.loggedInStatus == Status.authenticating ? 'Prijavljujem se...' : 'Prijava'
-                            ),
+                            child: auth.loggedInStatus == Status.authenticating ?
+                              Row(
+                                children: const [
+                                  SizedBox(
+                                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white)),
+                                    height: 15.0,
+                                    width: 15.0,
+                                  ),
+                                  SizedBox(width: 20),
+                                  Text("Prijavljujem se...")
+                                ]
+                              )
+                              :
+                              const Text("Prijava"),
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
                               primary: Colors.white,
