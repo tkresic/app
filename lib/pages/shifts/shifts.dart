@@ -22,11 +22,22 @@ class Shifts extends StatefulWidget {
   _ShiftsState createState() => _ShiftsState();
 }
 
-class _ShiftsState extends State<Shifts> {
+class _ShiftsState extends State<Shifts> with CurrentDateTimeString {
 
-  Future<List<Shift>> fetchShifts() async {
-    var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"));
-    return Shift.parseShifts(response.body);
+  Future<Map<dynamic, dynamic>> fetchData() async {
+    var shifts = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"));
+    var latestShift = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts/latest"));
+
+    Shift? shift;
+
+    if (latestShift.body != "false") {
+      shift = Shift.fromJson(jsonDecode(latestShift.body).cast<String,dynamic>());
+    }
+
+    return {
+      "shifts" : Shift.parseShifts(shifts.body),
+      "latestShift" : shift
+    };
   }
 
   void callback() {
@@ -50,8 +61,8 @@ class _ShiftsState extends State<Shifts> {
       body: Row(
         children: <Widget>[
           Expanded(
-            child: FutureBuilder<List<Shift>>(
-              future: fetchShifts(),
+            child: FutureBuilder<Map<dynamic, dynamic>>(
+              future: fetchData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   if (snapshot.error.runtimeType == SocketException) {
@@ -64,7 +75,7 @@ class _ShiftsState extends State<Shifts> {
                   return SingleChildScrollView(
                     child: Container(
                       margin: const EdgeInsets.all(25),
-                      child: ShiftsList(context: context, callback: callback, shifts: snapshot.data, user: user)
+                      child: ShiftsList(context: context, callback: callback, shifts: snapshot.data!["shifts"], latestShift: snapshot.data!["latestShift"], user: user)
                     )
                   );
                 } else {
@@ -85,16 +96,18 @@ class ShiftsList extends StatefulWidget {
     required this.context,
     required this.callback,
     this.shifts,
+    this.latestShift,
     required this.user,
   }) : super(key: key);
 
   final BuildContext context;
   final Function callback;
   final List<dynamic>? shifts;
+  final Shift? latestShift;
   final User user;
 
   @override
-  _ShiftsListState createState() => _ShiftsListState(context: context, callback: callback, shifts: shifts, user: user);
+  _ShiftsListState createState() => _ShiftsListState(context: context, callback: callback, shifts: shifts, latestShift: latestShift, user: user);
 }
 
 class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDateTimeString {
@@ -102,6 +115,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
     required this.context,
     required this.callback,
     required this.shifts,
+    required this.latestShift,
     required this.user,
   });
 
@@ -109,6 +123,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
   final BuildContext context;
   Function callback;
   List<dynamic>? shifts;
+  Shift? latestShift;
   User user;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
 
@@ -152,34 +167,11 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
     callback();
   }
 
-  Future <Widget> fetchLatestShift() async {
-    var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts/latest"));
-    if (response.body != "false") {
-      Shift shift = Shift.fromJson(jsonDecode(response.body).cast<String,dynamic>());
-      return Text("Smjena započeta u ${shift.start}", style: const TextStyle(fontSize: 14));
-    } else {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: TextButton(
-          onPressed: () {
-            startShift();
-          },
-          child: const Text('Započni smjenu'),
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
-            primary: Colors.white,
-            backgroundColor: Colors.orange,
-            textStyle: const TextStyle(fontSize: 14),
-          ),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
 
     shifts = widget.shifts;
+    latestShift = widget.latestShift;
     var dts = DTS(context: context, callback: callback, user: user, shifts: shifts);
 
     return PaginatedDataTable(
@@ -187,22 +179,23 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
           children: [
             const Text('Smjene'),
             const Spacer(),
-            FutureBuilder <dynamic> (
-                future: fetchLatestShift(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    if (snapshot.error.runtimeType == SocketException) {
-                      return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
-                    } else {
-                      return const Center(child: Text("Došlo je do greške."));
-                    }
-                  }
-                  if (snapshot.hasData) {
-                    return snapshot.data;
-                  } else {
-                    return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
-                  }
-                }
+            latestShift != null ?
+            Text("Smjena započeta u ${latestShift!.start}", style: const TextStyle(fontSize: 14))
+            :
+            ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: TextButton(
+                onPressed: () {
+                  startShift();
+                },
+                child: const Text('Započni smjenu'),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.fromLTRB(30, 15, 30, 15),
+                  primary: Colors.white,
+                  backgroundColor: Colors.orange,
+                  textStyle: const TextStyle(fontSize: 14),
+                ),
+              ),
             )
           ]
         ),
