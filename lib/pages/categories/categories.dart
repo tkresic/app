@@ -89,6 +89,18 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirana kategorija", Colors.green));
+    } else if (response.statusCode == 422) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+
+      String errors = "";
+
+      data.forEach((k,v) => {
+        for (final e in data[k]) {
+          errors += e
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške: $errors", Colors.deepOrange));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
@@ -550,6 +562,41 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButtonFormField(
+                                        value: subcategory.categoryId,
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                            borderRadius: BorderRadius.circular(25.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                            borderRadius: BorderRadius.circular(25.0),
+                                          ),
+                                        ),
+                                        focusColor: Colors.transparent,
+                                        hint: const Text('Odaberite kategoriju'),
+                                        isExpanded: true,
+                                        onChanged: (value) {
+                                          subcategory.categoryId = int.parse(value.toString());
+                                        },
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Molimo odaberite kategoriju';
+                                          }
+                                          return null;
+                                        },
+                                        items: categories!.map((category){
+                                          return DropdownMenuItem(
+                                              value: category.id.toString(),
+                                              child: Text(category.name)
+                                          );
+                                        }).toList(),
+                                      )
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextFormField(
                                       validator: (value) {
@@ -575,29 +622,6 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: DropdownButtonFormField(
-                                      value: subcategory.categoryId,
-                                      hint: const Text('Odaberite kategoriju'),
-                                      isExpanded: true,
-                                      onChanged: (value) {
-                                        subcategory.categoryId = int.parse(value.toString());
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Molimo odaberite kategoriju';
-                                        }
-                                        return null;
-                                      },
-                                      items: categories!.map((category){
-                                        return DropdownMenuItem(
-                                          value: category.id.toString(),
-                                          child: Text(category.name)
-                                        );
-                                      }).toList(),
-                                    )
                                   ),
                                   const SizedBox(height: 10),
                                   ClipRRect(
@@ -688,6 +712,18 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirana potkategorija", Colors.green));
+    } else if (response.statusCode == 422) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+
+      String errors = "";
+
+      data.forEach((k,v) => {
+        for (final e in data[k]) {
+          errors += e
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške: $errors", Colors.deepOrange));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
@@ -746,6 +782,41 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
+                                    child: DropdownButtonFormField(
+                                      value: subcategory.categoryId.toString(),
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                          borderRadius: BorderRadius.circular(25.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                          borderRadius: BorderRadius.circular(25.0),
+                                        ),
+                                      ),
+                                      focusColor: Colors.transparent,
+                                      hint: const Text('Odaberite kategoriju'),
+                                      isExpanded: true,
+                                      onChanged: (value) {
+                                        subcategory.categoryId = int.parse(value.toString());
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Molimo odaberite kategoriju';
+                                        }
+                                        return null;
+                                      },
+                                      items: categories!.map((category) {
+                                        return DropdownMenuItem(
+                                            value: category.id.toString(),
+                                            child: Text(category.name)
+                                        );
+                                      }).toList(),
+                                    )
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: TextFormField(
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
@@ -771,33 +842,6 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: DropdownButtonFormField(
-                                      value: subcategory.categoryId.toString(),
-                                      icon: const Icon(
-                                        Icons.category,
-                                        color: Colors.orange,
-                                      ),
-                                      hint: const Text('Odaberite kategoriju'),
-                                      isExpanded: true,
-                                      onChanged: (value) {
-                                        subcategory.categoryId = int.parse(value.toString());
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Molimo odaberite kategoriju';
-                                        }
-                                        return null;
-                                      },
-                                      items: categories!.map((category) {
-                                        return DropdownMenuItem(
-                                          value: category.id.toString(),
-                                          child: Text(category.name)
-                                        );
-                                      }).toList(),
-                                    )
                                   ),
                                   const SizedBox(height: 10),
                                   ClipRRect(

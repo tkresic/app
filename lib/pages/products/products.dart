@@ -163,9 +163,12 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodan novi proizvod", Colors.green));
+    } else if (response.statusCode == 422) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške: Ime ili inventarni broj proizvoda su vjerojatno već zauzeti", Colors.deepOrange));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
+
     callback("");
   }
 
@@ -220,6 +223,40 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
+                                    Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: DropdownButtonFormField(
+                                          value: product.subcategoryId,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                              borderRadius: BorderRadius.circular(25.0),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                              borderRadius: BorderRadius.circular(25.0),
+                                            ),
+                                          ),
+                                          focusColor: Colors.transparent,
+                                          hint: const Text('Odaberite potkategoriju'),
+                                          isExpanded: true,
+                                          onChanged: (value) {
+                                            product.subcategoryId = int.parse(value.toString());
+                                          },
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return 'Molimo odaberite potkategoriju';
+                                            }
+                                            return null;
+                                          },
+                                          items: subcategories!.map((subcategory){
+                                            return DropdownMenuItem(
+                                                value: subcategory.id.toString(),
+                                                child: Text(subcategory.name)
+                                            );
+                                          }).toList(),
+                                        )
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: TextFormField(
@@ -343,29 +380,6 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: DropdownButtonFormField(
-                                          value: product.subcategoryId,
-                                          hint: const Text('Odaberite potkategoriju'),
-                                          isExpanded: true,
-                                          onChanged: (value) {
-                                            product.subcategoryId = int.parse(value.toString());
-                                          },
-                                          validator: (value) {
-                                            if (value == null) {
-                                              return 'Molimo odaberite potkategoriju';
-                                            }
-                                            return null;
-                                          },
-                                          items: subcategories!.map((subcategory){
-                                            return DropdownMenuItem(
-                                                value: subcategory.id.toString(),
-                                                child: Text(subcategory.name)
-                                            );
-                                          }).toList(),
-                                        )
                                     ),
                                     const SizedBox(height: 10),
                                     ClipRRect(
@@ -524,7 +538,9 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodan novi proizvod", Colors.green));
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažuriran proizvod", Colors.green));
+    } else if (response.statusCode == 422) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške: Ime ili inventarni broj proizvoda su vjerojatno već zauzeti", Colors.deepOrange));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
@@ -690,6 +706,40 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DropdownButtonFormField(
+                                        value: product.subcategoryId.toString(),
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                            borderRadius: BorderRadius.circular(25.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                            borderRadius: BorderRadius.circular(25.0),
+                                          ),
+                                        ),
+                                        focusColor: Colors.transparent,
+                                        hint: const Text('Odaberite potkategoriju'),
+                                        isExpanded: true,
+                                        onChanged: (value) {
+                                          product.subcategoryId = int.parse(value.toString());
+                                        },
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Molimo odaberite potkategoriju';
+                                          }
+                                          return null;
+                                        },
+                                        items: subcategories!.map((subcategory){
+                                          return DropdownMenuItem(
+                                              value: subcategory.id.toString(),
+                                              child: Text(subcategory.name)
+                                          );
+                                        }).toList(),
+                                      )
+                                  ),
+                                  Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: TextFormField(
                                       validator: (value) {
@@ -816,29 +866,6 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: DropdownButtonFormField(
-                                      value: product.subcategoryId.toString(),
-                                      hint: const Text('Odaberite potkategoriju'),
-                                      isExpanded: true,
-                                      onChanged: (value) {
-                                        product.subcategoryId = int.parse(value.toString());
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Molimo odaberite potkategoriju';
-                                        }
-                                        return null;
-                                      },
-                                      items: subcategories!.map((subcategory){
-                                        return DropdownMenuItem(
-                                          value: subcategory.id.toString(),
-                                          child: Text(subcategory.name)
-                                        );
-                                      }).toList(),
-                                    )
                                   ),
                                   const SizedBox(height: 10),
                                   ClipRRect(
