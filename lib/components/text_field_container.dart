@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class TextFieldContainer extends StatelessWidget {
-  // TODO => This is used
 
   final Widget child;
   const TextFieldContainer({
