@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:app/models/user.dart';
 import 'package:app/pages/index/index.dart';
 import 'package:app/providers/user_provider.dart';
 import 'package:app/util/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'middleware.dart';
 
@@ -60,9 +60,25 @@ class _CustomAppBarState extends State<CustomAppBar> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          const Icon(Icons.person, color: Colors.white),
-          const SizedBox(width: 5),
-          Text(user.name, style: const TextStyle(color: Colors.white)),
+          Text("Blagajna ${dotenv.env['CASH_REGISTER_LABEL']}", style: const TextStyle(fontSize: 14, color: Colors.white), ),
+          const Spacer(),
+          Container(
+            child: const CircleAvatar(
+              backgroundColor: Colors.transparent,
+              radius: 12,
+              child: Icon(Icons.person_outlined, color: Colors.white, size: 20),
+            ),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white,
+                width: 2.0,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(user.name, style: const TextStyle(fontSize: 14, color: Colors.white)),
+          const SizedBox(width: 10),
         ]
       ),
       actions: <Widget>[
