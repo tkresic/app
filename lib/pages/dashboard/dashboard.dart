@@ -96,7 +96,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
 
   final List<Product> cart = <Product>[];
   int sum = 0;
-  int selectedPaymentMethodId = 1;
+  int selectedPaymentMethodId = 0;
 
   void _addToCart(Product product) {
     setState(() {
@@ -198,6 +198,9 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
 
   @override
   Widget build(BuildContext context) {
+
+    selectedPaymentMethodId = paymentMethods.isNotEmpty ? paymentMethods[0].id : 0;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -332,7 +335,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                               ),
                               DataColumn(
                                 label: Expanded(
-                                    child: Text('Ukupno', textAlign: TextAlign.right)
+                                  child: Text('Ukupno', textAlign: TextAlign.right)
                                 )
                               ),
                             ],
@@ -443,6 +446,12 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                           children: [
                             const Text('Način plaćanja'),
                             const Spacer(),
+                            paymentMethods.isEmpty ?
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                              child: const Text('Nema aktivnih načina plaćanja')
+                            )
+                            : const Text(""),
                             for (PaymentMethod pm in paymentMethods)
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
@@ -484,7 +493,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                               child: ElevatedButton(
-                                onPressed: (cart.isNotEmpty) ? () =>  createBill() : null,
+                                onPressed: (cart.isNotEmpty && selectedPaymentMethodId != 0) ? () =>  createBill() : null,
                                 child: const Text("Naplati"),
                                 style: ElevatedButton.styleFrom(primary: Colors.orange),
                               ),
