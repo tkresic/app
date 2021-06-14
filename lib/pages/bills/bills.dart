@@ -469,67 +469,79 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                       child: FloatingActionButton(
                         onPressed: () {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Storniraj račun'),
-                                  content: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return 'Molimo unesite razlog storniranja';
-                                              }
-                                              return null;
-                                            },
-                                            onSaved: (value) => restoringReason = value!,
-                                            cursorColor: Colors.orange,
-                                            decoration: InputDecoration(
-                                              hintText: "Razlog storniranja",
-                                              border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(25),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                borderRadius: BorderRadius.circular(25),
-                                              ),
-                                              prefixIcon: const Icon(
-                                                Icons.text_fields,
-                                                color: Colors.orange,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Storniraj račun'),
+                                content: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 300,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: TextFormField(
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'Molimo unesite razlog storniranja';
+                                                  }
+                                                  return null;
+                                                },
+                                                onSaved: (value) => restoringReason = value!,
+                                                cursorColor: Colors.orange,
+                                                decoration: InputDecoration(
+                                                  hintText: "Razlog storniranja",
+                                                  border: OutlineInputBorder(
+                                                    borderRadius: BorderRadius.circular(25),
+                                                  ),
+                                                  focusedBorder: OutlineInputBorder(
+                                                    borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                    borderRadius: BorderRadius.circular(25),
+                                                  ),
+                                                  prefixIcon: const Icon(
+                                                    Icons.text_fields,
+                                                    color: Colors.orange,
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(40),
-                                          child: TextButton(
-                                            onPressed: () {
-                                              if (_formKey.currentState!.validate()) {
-                                                _formKey.currentState!.save();
-                                                restoreBill(bill.id);
-                                                Navigator.of(context).pop();
-                                              }
-                                            },
-                                            child: const Text('Storniraj'),
-                                            style: TextButton.styleFrom(
-                                              padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                              primary: Colors.white,
-                                              backgroundColor: Colors.red,
-                                              textStyle: const TextStyle(fontSize: 18),
+                                          )
+                                        ]
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(40),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                if (_formKey.currentState!.validate()) {
+                                                  _formKey.currentState!.save();
+                                                  restoreBill(bill.id);
+                                                  Navigator.of(context).pop();
+                                                }
+                                              },
+                                              child: const Text('Storniraj'),
+                                              style: TextButton.styleFrom(
+                                                padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                                primary: Colors.white,
+                                                backgroundColor: Colors.red,
+                                                textStyle: const TextStyle(fontSize: 18),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                          )
+                                        ]
+                                      ),
+                                    ],
                                   ),
-                                );
-                              });
+                                ),
+                              );
+                            });
                         },
                         child: const Icon(Icons.restore, size: 15.0),
                         backgroundColor: Colors.red,
