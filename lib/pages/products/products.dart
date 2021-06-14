@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -29,20 +30,32 @@ class Products extends StatefulWidget {
 class _ProductsState extends State<Products> {
   String search = "";
 
+  List<dynamic> subcategories = [];
+  List<dynamic> taxes = [];
+
   Future<Map<String, List>> fetchData() async {
     String uri = "${dotenv.env['SHOP_API_URI']}/api/products";
     if (search.isNotEmpty) {
       uri += "?search=$search";
+      var products = await http.get(Uri.parse(uri));
+      return {
+        "products" : Product.parseProducts(products.body),
+        "subcategories" : subcategories,
+        "taxes" : taxes,
+      };
     }
 
     var products = await http.get(Uri.parse(uri));
-    var subcategories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
-    var taxes = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
+    var subctgrs = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
+    var txs = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
+
+    subcategories = Subcategory.parseSubcategories(subctgrs.body);
+    taxes = Tax.parseTaxes(txs.body);
 
     return {
       "products" : Product.parseProducts(products.body),
-      "subcategories" : Subcategory.parseSubcategories(subcategories.body),
-      "taxes" : Tax.parseTaxes(taxes.body),
+      "subcategories" : subcategories,
+      "taxes" : taxes,
     };
   }
 
@@ -189,6 +202,8 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
         fileExtension: 'png, jpg, jpeg, bmp'
     );
   }
+
+  final _debouncer = Debouncer(milliseconds: 250);
 
   @override
   Widget build(BuildContext context) {
@@ -508,8 +523,10 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
               child: TextFieldContainer(
                 child: TextFormField(
                   onChanged: (value) {
-                    setState(() {
-                      callback(value);
+                    _debouncer.run(() {
+                      setState(() {
+                        callback(value);
+                      });
                     });
                   },
                   cursorColor: Colors.orange,
@@ -1154,4 +1171,19 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
 
   @override
   int get selectedRowCount => 0;
+}
+
+class Debouncer {
+  final int milliseconds;
+  VoidCallback? action;
+  Timer? _timer;
+
+  Debouncer({required this.milliseconds});
+
+  run(VoidCallback action) {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
 }
