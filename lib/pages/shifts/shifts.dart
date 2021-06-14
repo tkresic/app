@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
+import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
 import 'package:app/mixins/current_date_time_string.dart';
 import 'package:app/mixins/format_price.dart';
@@ -79,7 +80,7 @@ class _ShiftsState extends State<Shifts> with CurrentDateTimeString {
                     )
                   );
                 } else {
-                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                  return const Loader(message: "Dohvaćam smjene...");
                 }
               }
             )

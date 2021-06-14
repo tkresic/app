@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
+import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
 import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/company.dart';
@@ -524,7 +525,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                     )
                   );
                 } else {
-                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                  return const Loader(message: "Dohvaćam postavke...");
                 }
               },
             )

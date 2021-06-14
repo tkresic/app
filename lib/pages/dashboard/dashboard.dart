@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:app/components/loader.dart';
 import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/payment_method.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
           if (snapshot.hasData) {
             return DashboardComponentWidget(products: snapshot.data!["products"], paymentMethods: snapshot.data!["paymentMethods"], user: user);
           } else {
-            return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+            return const Loader(message: "Dohvaćam proizvode...");
           }
         },
       )

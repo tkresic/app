@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
+import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
 import 'package:app/components/text_field_container.dart';
 import 'package:app/mixins/delete_dialog.dart';
@@ -100,7 +101,7 @@ class _ProductsState extends State<Products> {
                     )
                   );
                 } else {
-                  return const Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)));
+                  return const Loader(message: "Dohvaćam proizvode...");
                 }
               },
             )
