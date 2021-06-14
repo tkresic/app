@@ -215,53 +215,65 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                         child: Column(
                                                                           mainAxisSize: MainAxisSize.min,
                                                                           children: <Widget>[
-                                                                            Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
-                                                                              child: TextFormField(
-                                                                                validator: (value) {
-                                                                                  if (value == null || value.isEmpty) {
-                                                                                    return 'Molimo unesite ime kategorije';
-                                                                                  }
-                                                                                  return null;
-                                                                                },
-                                                                                onSaved: (value) => snapshot.data!['categories']![index].name = value!,
-                                                                                initialValue: snapshot.data!['categories']![index].name,
-                                                                                cursorColor: Colors.orange,
-                                                                                decoration: InputDecoration(
-                                                                                  hintText: "Ime kategorije",
-                                                                                  border: OutlineInputBorder(
-                                                                                    borderRadius: BorderRadius.circular(25),
+                                                                            Row(
+                                                                              children: [
+                                                                                Container(
+                                                                                  width: 280,
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.all(8.0),
+                                                                                    child: TextFormField(
+                                                                                      validator: (value) {
+                                                                                        if (value == null || value.isEmpty) {
+                                                                                          return 'Molimo unesite ime kategorije';
+                                                                                        }
+                                                                                        return null;
+                                                                                      },
+                                                                                      onSaved: (value) => snapshot.data!['categories']![index].name = value!,
+                                                                                      initialValue: snapshot.data!['categories']![index].name,
+                                                                                      cursorColor: Colors.orange,
+                                                                                      decoration: InputDecoration(
+                                                                                        hintText: "Ime kategorije",
+                                                                                        border: OutlineInputBorder(
+                                                                                          borderRadius: BorderRadius.circular(25),
+                                                                                        ),
+                                                                                        focusedBorder: OutlineInputBorder(
+                                                                                          borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                          borderRadius: BorderRadius.circular(25),
+                                                                                        ),
+                                                                                        prefixIcon: const Icon(
+                                                                                          Icons.category,
+                                                                                          color: Colors.orange,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
                                                                                   ),
-                                                                                  focusedBorder: OutlineInputBorder(
-                                                                                    borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                                                    borderRadius: BorderRadius.circular(25),
-                                                                                  ),
-                                                                                  prefixIcon: const Icon(
-                                                                                    Icons.category,
-                                                                                    color: Colors.orange,
-                                                                                  ),
-                                                                                ),
-                                                                              ),
+                                                                                )
+                                                                              ]
                                                                             ),
-                                                                            const SizedBox(height: 10),
-                                                                            ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(40),
-                                                                              child: TextButton(
-                                                                                onPressed: () {
-                                                                                  if (_formKey.currentState!.validate()) {
-                                                                                    _formKey.currentState!.save();
-                                                                                    updateCategory(snapshot.data!['categories']![index]);
-                                                                                    Navigator.of(context).pop();
-                                                                                  }
-                                                                                },
-                                                                                child: const Text('Spremi'),
-                                                                                style: TextButton.styleFrom(
-                                                                                  padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                                                                  primary: Colors.white,
-                                                                                  backgroundColor: Colors.orange,
-                                                                                  textStyle: const TextStyle(fontSize: 18),
-                                                                                ),
-                                                                              ),
+                                                                            const SizedBox(height: 20),
+                                                                            Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                              children: [
+                                                                                ClipRRect(
+                                                                                  borderRadius: BorderRadius.circular(40),
+                                                                                  child: TextButton(
+                                                                                    onPressed: () {
+                                                                                      if (_formKey.currentState!.validate()) {
+                                                                                        _formKey.currentState!.save();
+                                                                                        updateCategory(snapshot.data!['categories']![index]);
+                                                                                        Navigator.of(context).pop();
+                                                                                      }
+                                                                                    },
+                                                                                    child: const Text('Spremi'),
+                                                                                    style: TextButton.styleFrom(
+                                                                                      padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                                                                      primary: Colors.white,
+                                                                                      backgroundColor: Colors.orange,
+                                                                                      textStyle: const TextStyle(fontSize: 18),
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              ]
                                                                             ),
                                                                           ],
                                                                         ),
@@ -356,53 +368,65 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                           child: Column(
                                                             mainAxisSize: MainAxisSize.min,
                                                             children: <Widget>[
-                                                              Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: TextFormField(
-                                                                  validator: (value) {
-                                                                    if (value == null || value.isEmpty) {
-                                                                      return 'Molimo unesite ime kategorije';
-                                                                    }
-                                                                    return null;
-                                                                  },
-                                                                  onSaved: (value) => category.name = value!,
-                                                                  cursorColor: Colors.orange,
-                                                                  decoration: InputDecoration(
-                                                                    hintText: "Ime kategorije",
-                                                                    border: OutlineInputBorder(
-                                                                      borderRadius: BorderRadius.circular(25),
+                                                              Row(
+                                                                children: [
+                                                                  Container(
+                                                                    width: 280,
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.all(8.0),
+                                                                      child: TextFormField(
+                                                                        validator: (value) {
+                                                                          if (value == null || value.isEmpty) {
+                                                                            return 'Molimo unesite ime kategorije';
+                                                                          }
+                                                                          return null;
+                                                                        },
+                                                                        onSaved: (value) => category.name = value!,
+                                                                        cursorColor: Colors.orange,
+                                                                        decoration: InputDecoration(
+                                                                          hintText: "Ime kategorije",
+                                                                          border: OutlineInputBorder(
+                                                                            borderRadius: BorderRadius.circular(25),
+                                                                          ),
+                                                                          focusedBorder: OutlineInputBorder(
+                                                                            borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                            borderRadius: BorderRadius.circular(25),
+                                                                          ),
+                                                                          prefixIcon: const Icon(
+                                                                            Icons.category,
+                                                                            color: Colors.orange,
+                                                                          ),
+                                                                        ),
+                                                                      ),
                                                                     ),
-                                                                    focusedBorder: OutlineInputBorder(
-                                                                      borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                                      borderRadius: BorderRadius.circular(25),
-                                                                    ),
-                                                                    prefixIcon: const Icon(
-                                                                      Icons.category,
-                                                                      color: Colors.orange,
+                                                                  )
+                                                                ]
+                                                              ),
+                                                              const SizedBox(height: 20),
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                  ClipRRect(
+                                                                    borderRadius: BorderRadius.circular(40),
+                                                                    child: TextButton(
+                                                                      onPressed: () {
+                                                                        if (_formKey.currentState!.validate()) {
+                                                                          _formKey.currentState!.save();
+                                                                          createCategory(category);
+                                                                          Navigator.of(context).pop();
+                                                                        }
+                                                                      },
+                                                                      child: const Text('Dodaj'),
+                                                                      style: TextButton.styleFrom(
+                                                                        padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                                                        primary: Colors.white,
+                                                                        backgroundColor: Colors.orange,
+                                                                        textStyle: const TextStyle(fontSize: 18),
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                              const SizedBox(height: 10),
-                                                              ClipRRect(
-                                                                borderRadius: BorderRadius.circular(40),
-                                                                child: TextButton(
-                                                                  onPressed: () {
-                                                                    if (_formKey.currentState!.validate()) {
-                                                                      _formKey.currentState!.save();
-                                                                      createCategory(category);
-                                                                      Navigator.of(context).pop();
-                                                                    }
-                                                                  },
-                                                                  child: const Text('Dodaj'),
-                                                                  style: TextButton.styleFrom(
-                                                                    padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                                                    primary: Colors.white,
-                                                                    backgroundColor: Colors.orange,
-                                                                    textStyle: const TextStyle(fontSize: 18),
-                                                                  ),
-                                                                ),
-                                                              ),
+                                                                ]
+                                                              )
                                                             ],
                                                           ),
                                                         ),
@@ -561,88 +585,106 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DropdownButtonFormField(
-                                        value: subcategory.categoryId,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.orange, width: 2.0),
-                                            borderRadius: BorderRadius.circular(25.0),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(color: Colors.orange, width: 2.0),
-                                            borderRadius: BorderRadius.circular(25.0),
-                                          ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 275,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: DropdownButtonFormField(
+                                            value: subcategory.categoryId,
+                                            decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                borderRadius: BorderRadius.circular(25.0),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                borderRadius: BorderRadius.circular(25.0),
+                                              ),
+                                            ),
+                                            focusColor: Colors.transparent,
+                                            hint: const Text('Odaberite kategoriju'),
+                                            isExpanded: true,
+                                            onChanged: (value) {
+                                              subcategory.categoryId = int.parse(value.toString());
+                                            },
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return 'Molimo odaberite kategoriju';
+                                              }
+                                              return null;
+                                            },
+                                            items: categories!.map((category){
+                                              return DropdownMenuItem(
+                                                  value: category.id.toString(),
+                                                  child: Text(category.name)
+                                              );
+                                            }).toList(),
+                                          )
                                         ),
-                                        focusColor: Colors.transparent,
-                                        hint: const Text('Odaberite kategoriju'),
-                                        isExpanded: true,
-                                        onChanged: (value) {
-                                          subcategory.categoryId = int.parse(value.toString());
-                                        },
-                                        validator: (value) {
-                                          if (value == null) {
-                                            return 'Molimo odaberite kategoriju';
-                                          }
-                                          return null;
-                                        },
-                                        items: categories!.map((category){
-                                          return DropdownMenuItem(
-                                              value: category.id.toString(),
-                                              child: Text(category.name)
-                                          );
-                                        }).toList(),
                                       )
+                                    ]
                                   ),
-                                  const SizedBox(height: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Molimo unesite ime potkategorije';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (value) => subcategory.name = value!,
-                                      cursorColor: Colors.orange,
-                                      decoration: InputDecoration(
-                                        hintText: "Ime potkategorije",
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(25),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 275,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return 'Molimo unesite ime potkategorije';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (value) => subcategory.name = value!,
+                                            cursorColor: Colors.orange,
+                                            decoration: InputDecoration(
+                                              hintText: "Ime potkategorije",
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(25),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                borderRadius: BorderRadius.circular(25),
+                                              ),
+                                              prefixIcon: const Icon(
+                                                Icons.category_outlined,
+                                                color: Colors.orange,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                          borderRadius: BorderRadius.circular(25),
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.category_outlined,
-                                          color: Colors.orange,
+                                      )
+                                    ]
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState!.validate()) {
+                                              _formKey.currentState!.save();
+                                              createSubcategory(subcategory);
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: const Text('Dodaj'),
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.orange,
+                                            textStyle: const TextStyle(fontSize: 18),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          _formKey.currentState!.save();
-                                          createSubcategory(subcategory);
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                      child: const Text('Dodaj'),
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                        primary: Colors.white,
-                                        backgroundColor: Colors.orange,
-                                        textStyle: const TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                  ),
+                                    ]
+                                  )
                                 ],
                               ),
                             ),
@@ -780,95 +822,114 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: DropdownButtonFormField(
-                                      value: subcategory.categoryId.toString(),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.orange, width: 2.0),
-                                          borderRadius: BorderRadius.circular(25.0),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 275,
+                                        child:  Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DropdownButtonFormField(
+                                              value: subcategory.categoryId.toString(),
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                  borderRadius: BorderRadius.circular(25.0),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                  borderRadius: BorderRadius.circular(25.0),
+                                                ),
+                                              ),
+                                              focusColor: Colors.transparent,
+                                              hint: const Text('Odaberite kategoriju'),
+                                              isExpanded: true,
+                                              onChanged: (value) {
+                                                subcategory.categoryId = int.parse(value.toString());
+                                              },
+                                              validator: (value) {
+                                                if (value == null) {
+                                                  return 'Molimo odaberite kategoriju';
+                                                }
+                                                return null;
+                                              },
+                                              items: categories!.map((category) {
+                                                return DropdownMenuItem(
+                                                    value: category.id.toString(),
+                                                    child: Text(category.name)
+                                                );
+                                              }).toList(),
+                                            )
                                         ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.orange, width: 2.0),
-                                          borderRadius: BorderRadius.circular(25.0),
-                                        ),
-                                      ),
-                                      focusColor: Colors.transparent,
-                                      hint: const Text('Odaberite kategoriju'),
-                                      isExpanded: true,
-                                      onChanged: (value) {
-                                        subcategory.categoryId = int.parse(value.toString());
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Molimo odaberite kategoriju';
-                                        }
-                                        return null;
-                                      },
-                                      items: categories!.map((category) {
-                                        return DropdownMenuItem(
-                                            value: category.id.toString(),
-                                            child: Text(category.name)
-                                        );
-                                      }).toList(),
-                                    )
+                                      )
+                                    ]
                                   ),
                                   const SizedBox(height: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Molimo unesite ime potkategorije';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (value) => subcategory.name = value!,
-                                      initialValue: subcategory.name,
-                                      cursorColor: Colors.orange,
-                                      decoration: InputDecoration(
-                                        hintText: "Ime potkategorije",
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(25),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 275,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return 'Molimo unesite ime potkategorije';
+                                              }
+                                              return null;
+                                            },
+                                            onSaved: (value) => subcategory.name = value!,
+                                            initialValue: subcategory.name,
+                                            cursorColor: Colors.orange,
+                                            decoration: InputDecoration(
+                                              hintText: "Ime potkategorije",
+                                              border: OutlineInputBorder(
+                                                borderRadius: BorderRadius.circular(25),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                borderRadius: BorderRadius.circular(25),
+                                              ),
+                                              prefixIcon: const Icon(
+                                                Icons.category_outlined,
+                                                color: Colors.orange,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                          borderRadius: BorderRadius.circular(25),
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.category_outlined,
-                                          color: Colors.orange,
+                                      )
+                                    ]
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: TextButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState!.validate()) {
+                                              _formKey.currentState!.save();
+                                              updateSubcategory(subcategory);
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                          child: const Text('Spremi'),
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                            primary: Colors.white,
+                                            backgroundColor: Colors.orange,
+                                            textStyle: const TextStyle(fontSize: 18),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          _formKey.currentState!.save();
-                                          updateSubcategory(subcategory);
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                      child: const Text('Spremi'),
-                                      style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                        primary: Colors.white,
-                                        backgroundColor: Colors.orange,
-                                        textStyle: const TextStyle(fontSize: 18),
-                                      ),
-                                    ),
-                                  ),
+                                    ]
+                                  )
                                 ],
                               ),
                             ),
                           );
                         }
-                        );
+                      );
                     },
                     child: const Icon(Icons.edit, size: 15.0),
                     backgroundColor: Colors.blue,
