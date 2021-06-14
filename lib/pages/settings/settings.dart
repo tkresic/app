@@ -173,7 +173,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.business,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -210,7 +210,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.text_fields,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -247,7 +247,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.house,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -284,7 +284,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.local_post_office,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -297,14 +297,14 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Broj objekta'),
+                                            child: const Text('Ulični broj'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
                                             child: TextFormField(
                                               validator: (value) {
                                                 if (value == null || value.isEmpty) {
-                                                  return 'Molimo unesite broj objekta';
+                                                  return 'Molimo unesite Ulični broj';
                                                 }
                                                 return null;
                                               },
@@ -312,7 +312,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                               initialValue: snapshot.data!['company'].number,
                                               cursorColor: Colors.orange,
                                               decoration: InputDecoration(
-                                                hintText: "Unesite broj objekta",
+                                                hintText: "Unesite ulični broj",
                                                 border: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
@@ -321,7 +321,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.confirmation_number,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -358,7 +358,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.location_city,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -395,7 +395,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
                                                 prefixIcon: const Icon(
-                                                  Icons.person,
+                                                  Icons.phone,
                                                   color: Colors.orange,
                                                 ),
                                               ),
@@ -461,25 +461,30 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                 ]
                                               ),
                                               const SizedBox(height: 10),
-                                              DataTable(
-                                                columns: const [
-                                                  DataColumn(
-                                                    label: Text('Naziv'),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text('Iznos'),
-                                                  ),
-                                                ],
-                                                rows: [
-                                                  for (Tax tax in snapshot.data!['taxes'])
-                                                    DataRow(
-                                                      cells: [
-                                                        DataCell(Text("${tax.name}")),
-                                                        DataCell(Text("${tax.amount}%")),
-                                                      ],
-                                                    ),
+                                              Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  DataTable(
+                                                    columns: const [
+                                                      DataColumn(
+                                                        label: Text('Naziv'),
+                                                      ),
+                                                      DataColumn(
+                                                        label: Text('Iznos'),
+                                                      ),
+                                                    ],
+                                                    rows: [
+                                                      for (Tax tax in snapshot.data!['taxes'])
+                                                        DataRow(
+                                                          cells: [
+                                                            DataCell(Text("${tax.name}")),
+                                                            DataCell(Text("${tax.amount}%")),
+                                                          ],
+                                                        ),
+                                                    ]
+                                                  )
                                                 ]
-                                              )
+                                              ),
                                             ]
                                           ),
                                         ),
