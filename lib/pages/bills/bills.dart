@@ -315,6 +315,25 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                             width: 250,
                                             child: Padding(
                                               padding: const EdgeInsets.all(8.0),
+                                              child: Text("Broj poslovnice: ${bill.businessPlaceLabel}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Broj blagajne: ${bill.cashRegisterLabel}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Text("Oznaka: ${bill.label}")
                                             ),
                                           ),

@@ -15,6 +15,7 @@ class Bill {
   List<Product> products;
   int number;
   int businessPlaceLabel;
+  int cashRegisterLabel;
   String label;
   int gross;
   int net;
@@ -31,6 +32,7 @@ class Bill {
     required this.user,
     required this.products,
     required this.businessPlaceLabel,
+    required this.cashRegisterLabel,
     required this.label,
     required this.number,
     required this.gross,
@@ -50,6 +52,7 @@ class Bill {
       user: User.fromJson(json['user']),
       products: parseProducts(json["products"]),
       businessPlaceLabel: json['business_place_label'],
+      cashRegisterLabel: json['cash_register_label'],
       label: json['label'],
       number: json['number'],
       gross: json['gross'],

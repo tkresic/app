@@ -4,7 +4,7 @@ Cash register application for restaurants & coffee shops.
 
 ## Create .env file in assets/env with following setup
 ```
-APP_ENV=dev
+CASH_REGISTER_LABEL=1
 SHOP_API_URI=http://localhost:8000
 FINANCE_API_URI=http://localhost:8002
 CORPORATE_API_URI=http://localhost:8080

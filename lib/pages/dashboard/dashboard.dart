@@ -97,7 +97,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
 
   final List<Product> cart = <Product>[];
   int sum = 0;
-  int selectedPaymentMethodId = 0;
+  int selectedPaymentMethodId = 1;
 
   void _addToCart(Product product) {
     setState(() {
@@ -168,7 +168,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
         "user" : userData,
         "products" : cart,
         "payment_method_id" : selectedPaymentMethodId,
-        "business_place_label" : 1, // TODO => Update with real business place label
+        "cash_register_label" : dotenv.env['CASH_REGISTER_LABEL'],
       }),
       headers: {'Content-Type': 'application/json'},
     );
@@ -199,8 +199,6 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
 
   @override
   Widget build(BuildContext context) {
-
-    selectedPaymentMethodId = paymentMethods.isNotEmpty ? paymentMethods[0].id : 0;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
