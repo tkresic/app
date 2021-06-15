@@ -6,6 +6,7 @@ import 'package:app/components/drawer_list.dart';
 import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
 import 'package:app/mixins/snackbar.dart';
+import 'package:app/models/branch.dart';
 import 'package:app/models/company.dart';
 import 'package:app/models/payment_method.dart';
 import 'package:app/models/tax.dart';
@@ -27,14 +28,18 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> with CustomSnackBar {
 
   final companyFormKey = GlobalKey<FormState>();
+  final branchFormKey = GlobalKey<FormState>();
 
   Future<Map<dynamic, dynamic>> fetchData() async {
     var company = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
+    // TODO => Get branch ID
+    var branch = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/branches/1"));
     var paymentMethods = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods"));
     var taxes = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
 
     return {
       "company" : Company.fromJson(jsonDecode(company.body)),
+      "branch" : Branch.fromJson(jsonDecode(branch.body)),
       "paymentMethods" : PaymentMethod.parsePaymentMethods(paymentMethods.body),
       "taxes" : Tax.parseTaxes(taxes.body),
     };
@@ -45,23 +50,41 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
 
     // TODO => Append token for authentication/authorization check.
     http.Response response = await http.put(
-      Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company/${company.id}"),
+      Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"),
       body: json.encode({
         "name" : company.name,
+        "address" : company.address,
         "pidn" : company.pidn,
-        "street" : company.street,
-        "number" : company.number,
-        "postalCode" : company.postalCode,
-        "city" : company.city,
-        "phone" : company.phone,
+        "phone" : company.phone
       }),
       headers: {'Content-Type': 'application/json'},
     );
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirane postavke", Colors.green));
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirana tvrtka", Colors.green));
     } else {
-      print(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+  }
+
+  void updateBranch(Branch branch) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // TODO => Append token for authentication/authorization check.
+    http.Response response = await http.put(
+      Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/branches/${branch.id}"),
+      body: json.encode({
+        "name" : branch.name,
+        "address" : branch.address,
+        "phone" : branch.phone,
+        "businessPlaceLabel" : branch.businessPlaceLabel
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažurirana poslovnica", Colors.green));
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
   }
@@ -141,7 +164,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                     children: [
                                       Row(
                                         children: const [
-                                          Text("Postavke", style: TextStyle(fontSize: 20)),
+                                          Text("Tvrtka", style: TextStyle(fontSize: 20)),
                                         ]
                                       ),
                                       const SizedBox(height: 25),
@@ -149,7 +172,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Ime tvrtke'),
+                                            child: const Text('Ime'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -186,7 +209,44 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('OIB tvrtke'),
+                                            child: const Text('Adresa'),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null || value.isEmpty) {
+                                                  return 'Molimo unesite adresu tvrtke';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (value) => snapshot.data!['company'].address = value,
+                                              initialValue: snapshot.data!['company'].address,
+                                              cursorColor: Colors.orange,
+                                              decoration: InputDecoration(
+                                                hintText: "Unesite adresu tvrtke",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                prefixIcon: const Icon(
+                                                  Icons.house,
+                                                  color: Colors.orange,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ]
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.15,
+                                            child: const Text('OIB'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
@@ -223,162 +283,14 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                         children: [
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Ulica objekta'),
+                                            child: const Text('Telefonski broj'),
                                           ),
                                           Container(
                                             width: MediaQuery.of(context).size.width * 0.7,
                                             child: TextFormField(
                                               validator: (value) {
                                                 if (value == null || value.isEmpty) {
-                                                  return 'Molimo unesite ulicu objekta';
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (value) => snapshot.data!['company'].street = value,
-                                              initialValue: snapshot.data!['company'].street,
-                                              cursorColor: Colors.orange,
-                                              decoration: InputDecoration(
-                                                hintText: "Unesite ulicu objekta",
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                prefixIcon: const Icon(
-                                                  Icons.house,
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ]
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Poštanski broj objekta'),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.7,
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Molimo unesite poštanski broj objekta';
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (value) => snapshot.data!['company'].postalCode = value,
-                                              initialValue: snapshot.data!['company'].postalCode,
-                                              cursorColor: Colors.orange,
-                                              decoration: InputDecoration(
-                                                hintText: "Unesite poštanski broj objekta",
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                prefixIcon: const Icon(
-                                                  Icons.local_post_office,
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ]
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Ulični broj'),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.7,
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Molimo unesite Ulični broj';
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (value) => snapshot.data!['company'].number = value,
-                                              initialValue: snapshot.data!['company'].number,
-                                              cursorColor: Colors.orange,
-                                              decoration: InputDecoration(
-                                                hintText: "Unesite ulični broj",
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                prefixIcon: const Icon(
-                                                  Icons.confirmation_number,
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ]
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Grad objekta'),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.7,
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Molimo unesite grad objekta';
-                                                }
-                                                return null;
-                                              },
-                                              onChanged: (value) => snapshot.data!['company'].city = value,
-                                              initialValue: snapshot.data!['company'].city,
-                                              cursorColor: Colors.orange,
-                                              decoration: InputDecoration(
-                                                hintText: "Unesite ime grad objekta",
-                                                border: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                prefixIcon: const Icon(
-                                                  Icons.location_city,
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ]
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.15,
-                                            child: const Text('Telefonski broj objekta'),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width * 0.7,
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null || value.isEmpty) {
-                                                  return 'Molimo unesite telefonski broj objekta';
+                                                  return 'Molimo unesite telefonski broj tvrtke';
                                                 }
                                                 return null;
                                               },
@@ -386,7 +298,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                               initialValue: snapshot.data!['company'].phone,
                                               cursorColor: Colors.orange,
                                               decoration: InputDecoration(
-                                                hintText: "Unesite telefonski broj objekta",
+                                                hintText: "Unesite telefonski broj tvrtke",
                                                 border: OutlineInputBorder(
                                                   borderRadius: BorderRadius.circular(25),
                                                 ),
@@ -415,6 +327,163 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                   companyFormKey.currentState!.save();
                                                   setState(() {
                                                     updateCompany(snapshot.data!['company']);
+                                                  });
+                                                }
+                                              },
+                                              child: const Text('Spremi'),
+                                              style: TextButton.styleFrom(
+                                                padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                                primary: Colors.white,
+                                                backgroundColor: Colors.orange,
+                                                textStyle: const TextStyle(fontSize: 18),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ]
+                                  )
+                                )
+                              ]
+                            )
+                          ),
+                          const SizedBox(height: 25),
+                          Form(
+                            key: branchFormKey,
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: const [
+                                          Text("Poslovnica", style: TextStyle(fontSize: 20)),
+                                        ]
+                                      ),
+                                      const SizedBox(height: 25),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.15,
+                                            child: const Text('Ime'),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null || value.isEmpty) {
+                                                  return 'Molimo unesite ime poslovnice';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (value) => snapshot.data!['branch'].name = value,
+                                              initialValue: snapshot.data!['branch'].name,
+                                              cursorColor: Colors.orange,
+                                              decoration: InputDecoration(
+                                                hintText: "Unesite ime poslovnice",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                prefixIcon: const Icon(
+                                                  Icons.business,
+                                                  color: Colors.orange,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ]
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.15,
+                                            child: const Text('Adresa'),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null || value.isEmpty) {
+                                                  return 'Molimo unesite adresu poslovnice';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (value) => snapshot.data!['branch'].address = value,
+                                              initialValue: snapshot.data!['branch'].address,
+                                              cursorColor: Colors.orange,
+                                              decoration: InputDecoration(
+                                                hintText: "Unesite adresu poslovnice",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                prefixIcon: const Icon(
+                                                  Icons.house,
+                                                  color: Colors.orange,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ]
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.15,
+                                            child: const Text('Telefonski broj'),
+                                          ),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width * 0.7,
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null || value.isEmpty) {
+                                                  return 'Molimo unesite telefonski broj poslovnice';
+                                                }
+                                                return null;
+                                              },
+                                              onChanged: (value) => snapshot.data!['branch'].phone = value,
+                                              initialValue: snapshot.data!['branch'].phone,
+                                              cursorColor: Colors.orange,
+                                              decoration: InputDecoration(
+                                                hintText: "Unesite telefonski broj poslovnice",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                prefixIcon: const Icon(
+                                                  Icons.phone,
+                                                  color: Colors.orange,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ]
+                                      ),
+                                      const SizedBox(height: 25),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(40),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                if (branchFormKey.currentState!.validate()) {
+                                                  branchFormKey.currentState!.save();
+                                                  setState(() {
+                                                    updateBranch(snapshot.data!['branch']);
                                                   });
                                                 }
                                               },

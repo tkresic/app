@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:app/util/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:app/models/user.dart';
 
 enum Status {
@@ -30,7 +29,7 @@ class AuthProvider with ChangeNotifier {
     };
 
     // TODO => Replace URI with accounts ms
-    Response response = await post(
+    http.Response response = await http.post(
       Uri.parse("https://admin.fenjer.hr/api/auth/login"),
       body: json.encode(loginData),
       headers: {'Content-Type': 'application/json', 'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP'},
