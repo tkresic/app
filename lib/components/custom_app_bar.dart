@@ -60,7 +60,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text("Blagajna ${dotenv.env['CASH_REGISTER_LABEL']}", style: const TextStyle(fontSize: 14, color: Colors.white), ),
+          // TODO => Fetch cash register label from Corporate, storage it and display it here
+          Text("Blagajna ${dotenv.env['CASH_REGISTER_ID']}", style: const TextStyle(fontSize: 14, color: Colors.white)),
           const Spacer(),
           Container(
             child: const CircleAvatar(

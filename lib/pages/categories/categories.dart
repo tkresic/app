@@ -46,7 +46,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
   void createCategory(Category category) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // // TODO => Append token for authentication/authorization check.
+    // TODO => Append token for authentication/authorization check.
     http.Response response = await http.post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"),
       body: json.encode({
@@ -511,7 +511,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
   void createSubcategory(Subcategory subcategory) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // // TODO => Append token for authentication/authorization check.
+    // TODO => Append token for authentication/authorization check.
     http.Response response = await http.post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"),
       body: json.encode({

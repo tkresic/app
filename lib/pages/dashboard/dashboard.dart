@@ -168,7 +168,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
         "user" : userData,
         "products" : cart,
         "payment_method_id" : selectedPaymentMethodId,
-        "cash_register_label" : dotenv.env['CASH_REGISTER_LABEL'],
+        "cash_register_id" : dotenv.env['CASH_REGISTER_ID'],
       }),
       headers: {'Content-Type': 'application/json'},
     );

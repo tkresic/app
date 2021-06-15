@@ -4,7 +4,7 @@ Cash register application for restaurants & coffee shops.
 
 ## Create .env file in assets/env with following setup
 ```
-CASH_REGISTER_LABEL=1
+CASH_REGISTER_ID=1
 SHOP_API_URI=http://localhost:8000
 FINANCE_API_URI=http://localhost:8002
 CORPORATE_API_URI=http://localhost:8080
@@ -18,7 +18,10 @@ ACCOUNTS_API_URI=http://localhost:8081
 `php -S localhost:8002 -t public`
 
 ## Start the Corporate microservice
-`./mvnw spring-boot:run`
+`./gradlew bootRun`
+
+## Start the Accounts microservice
+`./gradlew bootRun`
 
 ## Run the app and choose the platform (Linux or Web)
 

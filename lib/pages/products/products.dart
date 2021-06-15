@@ -162,7 +162,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
       image = file!.toMultipartFile(filename: file!.fileName);
     }
 
-    // // TODO => Append token for authentication/authorization check.
+    // TODO => Append token for authentication/authorization check.
     var request = http.MultipartRequest(
         "POST",
         Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"),
@@ -611,7 +611,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
       image = file!.toMultipartFile(filename: file!.fileName);
     }
 
-    // // TODO => Append token for authentication/authorization check.
+    // TODO => Append token for authentication/authorization check.
     var request = http.MultipartRequest(
       "POST",
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products/${product.id}"),
