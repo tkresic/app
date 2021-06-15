@@ -32,7 +32,10 @@ class AuthProvider with ChangeNotifier {
     http.Response response = await http.post(
       Uri.parse("https://admin.fenjer.hr/api/auth/login"),
       body: json.encode(loginData),
-      headers: {'Content-Type': 'application/json', 'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP'},
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP' // TODO => Remove
+      },
     );
 
     // final Map<String, dynamic> responseProductsData = json.decode(responseProducts.body);
@@ -46,7 +49,10 @@ class AuthProvider with ChangeNotifier {
         "id": 1,
         "username": "tkresic",
         "name": "Toni Krešić",
-        "type": "employee",
+        "role": {
+          "id": 1,
+          "name": "Administrator"
+        },
         "token": "token_example",
         "renewalToken": "token_renewal_example"
       };

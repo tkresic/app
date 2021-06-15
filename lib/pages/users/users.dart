@@ -134,7 +134,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog {
             Text(user.username)
         ),
         DataCell(
-            Text('${user.type}')
+            Text(user.role.name)
         ),
         DataCell(
           Row(

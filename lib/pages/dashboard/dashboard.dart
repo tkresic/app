@@ -159,6 +159,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "role" : user.role,
     };
 
     // TODO => Append token for authentication/authorization check.

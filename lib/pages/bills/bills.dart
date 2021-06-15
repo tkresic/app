@@ -184,6 +184,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "role" : user.role,
     };
 
     // TODO => Append token for authentication/authorization check.

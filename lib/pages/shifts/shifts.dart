@@ -135,6 +135,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "role" : user.role,
     };
 
     // TODO => Append token for authentication/authorization check.
@@ -246,6 +247,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar, CurrentDateT
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "role" : user.role,
     };
 
     // TODO => Append token for authentication/authorization check.
