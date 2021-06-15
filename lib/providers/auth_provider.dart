@@ -48,7 +48,8 @@ class AuthProvider with ChangeNotifier {
       final Map<String, dynamic> userData = {
         "id": 1,
         "username": "tkresic",
-        "name": "Toni Krešić",
+        "name": "Toni",
+        "surname": "Krešić",
         "role": {
           "id": 1,
           "name": "Administrator"

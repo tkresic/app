@@ -135,6 +135,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "surname" : user.surname,
       "role" : user.role,
     };
 
@@ -247,6 +248,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar, CurrentDateT
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "surname" : user.surname,
       "role" : user.role,
     };
 
@@ -313,7 +315,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar, CurrentDateT
           Text('${shift.end}')
         ),
         DataCell(
-          Text(shift.user.name)
+          Text("${shift.user.name} ${shift.user.surname}")
         ),
         DataCell(
           Text(formatPrice(shift.gross))

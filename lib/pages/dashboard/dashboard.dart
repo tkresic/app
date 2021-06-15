@@ -159,6 +159,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "surname" : user.surname,
       "role" : user.role,
     };
 

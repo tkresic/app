@@ -184,6 +184,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
       "id" : user.id,
       "username" : user.username,
       "name" : user.name,
+      "surname" : user.surname,
       "role" : user.role,
     };
 
@@ -225,7 +226,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
             Text('${bill.paymentMethod.name}')
         ),
         DataCell(
-            Text('${bill.user.name}')
+            Text('${bill.user.name} ${bill.user.surname}')
         ),
         DataCell(
             Text('${bill.createdAt}')
@@ -305,7 +306,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                             width: 250,
                                             child: Padding(
                                               padding: const EdgeInsets.all(8.0),
-                                              child: Text("Izdao: ${bill.user.name}")
+                                              child: Text("Izdao: ${bill.user.name} ${bill.user.surname}")
                                             ),
                                           ),
                                         ]

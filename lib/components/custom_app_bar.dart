@@ -78,7 +78,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             ),
           ),
           const SizedBox(width: 10),
-          Text(user.name, style: const TextStyle(fontSize: 14, color: Colors.white)),
+          Text("${user.name} ${user.surname}", style: const TextStyle(fontSize: 14, color: Colors.white)),
           const SizedBox(width: 10),
         ]
       ),
