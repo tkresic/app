@@ -58,7 +58,7 @@ class _BillsState extends State<Bills> {
                   if (snapshot.error.runtimeType == SocketException) {
                     return const Center(child: Text("Došlo je do greške. Mikroservis vjerojatno nije u funkciji."));
                   } else {
-                    return const Center(child: Text("Došlo je do greške."));
+                    return const Center(child: Text("Došlo je do greške"));
                   }
                 }
                 if (snapshot.hasData) {

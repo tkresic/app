@@ -24,7 +24,8 @@ class Users extends StatefulWidget {
 class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
 
   final _formKey = GlobalKey<FormState>();
-  User user = User(id: null, roleId: null, role: null, surname: '', username: '', name: '');
+  User userCreate = User(id: null, roleId: null, role: null, surname: '', username: '', name: '');
+  List<dynamic>? roles;
 
   Future<Map<dynamic, dynamic>> fetchData() async {
     var users = await http.get(
@@ -32,15 +33,21 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
         headers: {'Content-Type': 'application/json; charset=utf-8'},
     );
     String source = const Utf8Decoder().convert(users.bodyBytes);
-    var roles = await http.get(Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/roles"));
+    var rls = await http.get(Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/roles"));
+
+    roles = Role.parseRoles(rls.body);
+
     return {
       "users" : User.parseUsers(source),
-      "roles" : Role.parseRoles(roles.body)
+      "roles" : roles
     };
   }
 
   void createUser(User user) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    Role findRole(int? id) => roles!.firstWhere((role) => role.id == id);
+    Role role = findRole(user.roleId);
 
     // TODO => Append token for authentication/authorization check.
     http.Response response = await http.post(
@@ -49,15 +56,40 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
         "username" : user.username,
         "name" : user.name,
         "surname" : user.surname,
-        "role" : user.role,
+        "role" : role,
       }),
       headers: {'Content-Type': 'application/json'},
     );
 
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodan novi korisnik", Colors.green));
-    } else if (response.statusCode == 422) {
-      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške", Colors.deepOrange));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške. Korisničko ime je vjerojatno već zauzeto", Colors.red));
+    }
+
+    setState(() {});
+  }
+
+  void updateUser(User user) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    Role findRole(int? id) => roles!.firstWhere((role) => role.id == id);
+    Role role = findRole(user.roleId);
+
+    // TODO => Append token for authentication/authorization check.
+    http.Response response = await http.put(
+      Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/users/${user.id}"),
+      body: json.encode({
+        "username" : user.username,
+        "name" : user.name,
+        "surname" : user.surname,
+        "role" : role,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažuriran korisnik", Colors.green));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
@@ -67,6 +99,8 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
 
   @override
   Widget build(BuildContext context) {
+
+    userCreate.roleId = null;
 
     User? user = Provider.of<UserProvider>(context).user;
 
@@ -150,40 +184,40 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                   children: <Widget>[
                                                     Row(
                                                       children: [
-                                                        // Container(
-                                                        //   width: 250,
-                                                        //   child: DropdownButtonFormField(
-                                                        //     value: user.roleId,
-                                                        //     decoration: InputDecoration(
-                                                        //       border: OutlineInputBorder(
-                                                        //         borderSide: const BorderSide(color: Colors.orange, width: 2.0),
-                                                        //         borderRadius: BorderRadius.circular(25.0),
-                                                        //       ),
-                                                        //       focusedBorder: OutlineInputBorder(
-                                                        //         borderSide: const BorderSide(color: Colors.orange, width: 2.0),
-                                                        //         borderRadius: BorderRadius.circular(25.0),
-                                                        //       ),
-                                                        //     ),
-                                                        //     focusColor: Colors.transparent,
-                                                        //     hint: const Text('Odaberite ulogu'),
-                                                        //     isExpanded: true,
-                                                        //     onChanged: (value) {
-                                                        //       user.roleId = int.parse(value.toString());
-                                                        //     },
-                                                        //     validator: (value) {
-                                                        //       if (value == null) {
-                                                        //         return 'Molimo odaberite ulogu';
-                                                        //       }
-                                                        //       return null;
-                                                        //     },
-                                                        //     items: snapshot.data!["roles"]!.map((role){
-                                                        //       return DropdownMenuItem(
-                                                        //         value: role.id.toString(),
-                                                        //         child: Text(role.name)
-                                                        //       );
-                                                        //     }).toList(),
-                                                        //   ),
-                                                        // ),
+                                                        Container(
+                                                          width: 250,
+                                                          child: DropdownButtonFormField(
+                                                            value: userCreate.roleId,
+                                                            decoration: InputDecoration(
+                                                              border: OutlineInputBorder(
+                                                                borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                                borderRadius: BorderRadius.circular(25.0),
+                                                              ),
+                                                              focusedBorder: OutlineInputBorder(
+                                                                borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                                borderRadius: BorderRadius.circular(25.0),
+                                                              ),
+                                                            ),
+                                                            focusColor: Colors.transparent,
+                                                            hint: const Text('Odaberite ulogu'),
+                                                            isExpanded: true,
+                                                            onChanged: (value) {
+                                                              userCreate.roleId = int.parse(value.toString());
+                                                            },
+                                                            validator: (value) {
+                                                              if (value == null) {
+                                                                return 'Molimo odaberite ulogu';
+                                                              }
+                                                              return null;
+                                                            },
+                                                            items: roles!.map((role){
+                                                              return DropdownMenuItem(
+                                                                value: role.id.toString(),
+                                                                child: Text(role.name)
+                                                              );
+                                                            }).toList(),
+                                                          ),
+                                                        ),
                                                         const SizedBox(width: 25),
                                                         Container(
                                                           width: 250,
@@ -194,7 +228,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                               }
                                                               return null;
                                                             },
-                                                            onSaved: (value) => user.username = value!,
+                                                            onSaved: (value) => userCreate.username = value!,
                                                             cursorColor: Colors.orange,
                                                             decoration: InputDecoration(
                                                               hintText: "Korisničko ime",
@@ -226,7 +260,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                               }
                                                               return null;
                                                             },
-                                                            onSaved: (value) => user.name = value!,
+                                                            onSaved: (value) => userCreate.name = value!,
                                                             cursorColor: Colors.orange,
                                                             decoration: InputDecoration(
                                                               hintText: "Ime korisnika",
@@ -254,7 +288,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                               }
                                                               return null;
                                                             },
-                                                            onSaved: (value) => user.surname = value!,
+                                                            onSaved: (value) => userCreate.surname = value!,
                                                             cursorColor: Colors.orange,
                                                             decoration: InputDecoration(
                                                               hintText: "Prezime korisnika",
@@ -285,7 +319,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                               onPressed: () {
                                                                 if (_formKey.currentState!.validate()) {
                                                                   _formKey.currentState!.save();
-                                                                  createUser(user);
+                                                                  createUser(userCreate);
                                                                   Navigator.of(context).pop();
                                                                 }
                                                               },
@@ -368,7 +402,178 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                     ),
                                                     child: FloatingActionButton(
                                                       onPressed: () {
-                                                        // TODO => Push to edit
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (BuildContext context) {
+                                                              return AlertDialog(
+                                                                title: const Text('Uredi korisnika'),
+                                                                content: Form(
+                                                                  key: _formKey,
+                                                                  child: Column(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    children: <Widget>[
+                                                                      Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width: 250,
+                                                                            child: DropdownButtonFormField(
+                                                                              value: user.roleId.toString(),
+                                                                              decoration: InputDecoration(
+                                                                                border: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                                                  borderRadius: BorderRadius.circular(25.0),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2.0),
+                                                                                  borderRadius: BorderRadius.circular(25.0),
+                                                                                ),
+                                                                              ),
+                                                                              focusColor: Colors.transparent,
+                                                                              hint: const Text('Odaberite ulogu'),
+                                                                              isExpanded: true,
+                                                                              onChanged: (value) {
+                                                                                user.roleId = int.parse(value.toString());
+                                                                              },
+                                                                              validator: (value) {
+                                                                                if (value == null) {
+                                                                                  return 'Molimo odaberite ulogu';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              items: roles!.map((role){
+                                                                                return DropdownMenuItem(
+                                                                                    value: role.id.toString(),
+                                                                                    child: Text(role.name)
+                                                                                );
+                                                                              }).toList(),
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(width: 25),
+                                                                          Container(
+                                                                            width: 250,
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return 'Molimo unesite korisničko ime';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              onSaved: (value) => user.username = value!,
+                                                                              initialValue: user.username,
+                                                                              cursorColor: Colors.orange,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Korisničko ime",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                prefixIcon: const Icon(
+                                                                                  Icons.person,
+                                                                                  color: Colors.orange,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]
+                                                                      ),
+                                                                      const SizedBox(height: 20),
+                                                                      Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width: 250,
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return 'Molimo unesite ime korisnika';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              onSaved: (value) => user.name = value!,
+                                                                              initialValue: user.name,
+                                                                              cursorColor: Colors.orange,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Ime korisnika",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                prefixIcon: const Icon(
+                                                                                  Icons.short_text,
+                                                                                  color: Colors.orange,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          const SizedBox(width: 25),
+                                                                          Container(
+                                                                            width: 250,
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return 'Molimo unesite prezime korisnika';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              onSaved: (value) => user.surname = value!,
+                                                                              initialValue: user.surname,
+                                                                              cursorColor: Colors.orange,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Prezime korisnika",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                prefixIcon: const Icon(
+                                                                                  Icons.text_fields,
+                                                                                  color: Colors.orange,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]
+                                                                      ),
+                                                                      const SizedBox(height: 20),
+                                                                      Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                        children: [
+                                                                          Container(
+                                                                            child: ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(40),
+                                                                              child: TextButton(
+                                                                                onPressed: () {
+                                                                                  if (_formKey.currentState!.validate()) {
+                                                                                    _formKey.currentState!.save();
+                                                                                    updateUser(user);
+                                                                                    Navigator.of(context).pop();
+                                                                                  }
+                                                                                },
+                                                                                child: const Text('Spremi'),
+                                                                                style: TextButton.styleFrom(
+                                                                                  padding: const EdgeInsets.fromLTRB(95, 20, 95, 20),
+                                                                                  primary: Colors.white,
+                                                                                  backgroundColor: Colors.orange,
+                                                                                  textStyle: const TextStyle(fontSize: 18),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }
+                                                        );
                                                       },
                                                       child: const Icon(Icons.edit, size: 15.0),
                                                       backgroundColor: Colors.blue,
