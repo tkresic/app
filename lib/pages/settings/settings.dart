@@ -136,6 +136,28 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
     setState(() {});
   }
 
+  void updateTax(Tax tax) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // TODO => Append token for authentication/authorization check.
+    http.Response response = await http.put(
+      Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes/${tax.id}"),
+      body: json.encode({
+        "name" : tax.name,
+        "amount" : tax.amount,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno ažuriran porez", Colors.green));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     User? user = Provider.of<UserProvider>(context).user;
@@ -748,6 +770,11 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                     DataColumn(
                                                       label: Text('Iznos'),
                                                     ),
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text('Akcije', textAlign: TextAlign.right)
+                                                      )
+                                                    )
                                                   ],
                                                   rows: [
                                                     for (Tax tax in snapshot.data!['taxes'])
@@ -755,6 +782,152 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                                         cells: [
                                                           DataCell(Text("${tax.name}")),
                                                           DataCell(Text("${tax.amount}%")),
+                                                          DataCell(
+                                                            Row(
+                                                              children: <Widget>[
+                                                                const Spacer(),
+                                                                SizedBox(
+                                                                  width: 30.0,
+                                                                  height: 30.0,
+                                                                  child: Tooltip(
+                                                                    message: 'Uredi porez ${tax.name}',
+                                                                    textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                                                                    decoration: BoxDecoration(
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.circular(5),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          color: Colors.grey.withOpacity(0.5),
+                                                                          spreadRadius: 1,
+                                                                          blurRadius: 1,
+                                                                          offset: const Offset(0, 1),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    child: FloatingActionButton(
+                                                                      onPressed: () {
+                                                                        showDialog(
+                                                                            context: context,
+                                                                            builder: (BuildContext context) {
+                                                                              return AlertDialog(
+                                                                                title: const Text('Uredi porez'),
+                                                                                content: Form(
+                                                                                  key: taxFormKey,
+                                                                                  child: Column(
+                                                                                    mainAxisSize: MainAxisSize.min,
+                                                                                    children: <Widget>[
+                                                                                      Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            width: 250,
+                                                                                            child: TextFormField(
+                                                                                              validator: (value) {
+                                                                                                if (value == null || value.isEmpty) {
+                                                                                                  return 'Molimo unesite naziv poreza';
+                                                                                                }
+                                                                                                return null;
+                                                                                              },
+                                                                                              onSaved: (value) => tax.name = value!,
+                                                                                              initialValue: tax.name,
+                                                                                              cursorColor: Colors.orange,
+                                                                                              decoration: InputDecoration(
+                                                                                                hintText: "Naziv poreza",
+                                                                                                border: OutlineInputBorder(
+                                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                                ),
+                                                                                                focusedBorder: OutlineInputBorder(
+                                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                                ),
+                                                                                                prefixIcon: const Icon(
+                                                                                                  Icons.person,
+                                                                                                  color: Colors.orange,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ]
+                                                                                      ),
+                                                                                      const SizedBox(height: 20),
+                                                                                      Row(
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            width: 250,
+                                                                                            child: TextFormField(
+                                                                                              validator: (value) {
+                                                                                                if (value == null || value.isEmpty) {
+                                                                                                  return 'Molimo unesite iznos poreza';
+                                                                                                } else if (int.parse(value) < 1 || int.parse(value) > 100) {
+                                                                                                  return 'Iznos poreza mora biti između 1 i 100';
+                                                                                                }
+                                                                                                return null;
+                                                                                              },
+                                                                                              keyboardType: TextInputType.number,
+                                                                                              onSaved: (value) => tax.amount = int.parse(value!),
+                                                                                              initialValue: tax.amount.toString(),
+                                                                                              cursorColor: Colors.orange,
+                                                                                              decoration: InputDecoration(
+                                                                                                hintText: "Iznos poreza",
+                                                                                                border: OutlineInputBorder(
+                                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                                ),
+                                                                                                focusedBorder: OutlineInputBorder(
+                                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                                ),
+                                                                                                prefixIcon: const Icon(
+                                                                                                  Icons.confirmation_number,
+                                                                                                  color: Colors.orange,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ]
+                                                                                      ),
+                                                                                      const SizedBox(height: 20),
+                                                                                      Row(
+                                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                        children: [
+                                                                                          Container(
+                                                                                            child: ClipRRect(
+                                                                                              borderRadius: BorderRadius.circular(40),
+                                                                                              child: TextButton(
+                                                                                                onPressed: () {
+                                                                                                  if (taxFormKey.currentState!.validate()) {
+                                                                                                    taxFormKey.currentState!.save();
+                                                                                                    updateTax(tax);
+                                                                                                    Navigator.of(context).pop();
+                                                                                                  }
+                                                                                                },
+                                                                                                child: const Text('Spremi'),
+                                                                                                style: TextButton.styleFrom(
+                                                                                                  padding: const EdgeInsets.fromLTRB(95, 20, 95, 20),
+                                                                                                  primary: Colors.white,
+                                                                                                  backgroundColor: Colors.orange,
+                                                                                                  textStyle: const TextStyle(fontSize: 18),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ]
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              );
+                                                                            }
+                                                                        );
+                                                                      },
+                                                                      child: const Icon(Icons.edit, size: 15.0),
+                                                                      backgroundColor: Colors.blue,
+                                                                      elevation: 3,
+                                                                      hoverElevation: 4,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          ),
                                                         ],
                                                       ),
                                                   ]
