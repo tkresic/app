@@ -11,6 +11,7 @@ import 'package:app/models/company.dart';
 import 'package:app/models/payment_method.dart';
 import 'package:app/models/tax.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -29,6 +30,9 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
 
   final companyFormKey = GlobalKey<FormState>();
   final branchFormKey = GlobalKey<FormState>();
+  final taxFormKey = GlobalKey<FormState>();
+
+  Tax tax = Tax(id: null, name: "", amount: 0);
 
   Future<Map<dynamic, dynamic>> fetchData() async {
     var company = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
@@ -106,6 +110,30 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
+  }
+
+  void createTax(Tax tax) async {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    // TODO => Append token for authentication/authorization check.
+    http.Response response = await http.post(
+      Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"),
+      body: json.encode({
+        "name" : tax.name,
+        "amount" : tax.amount,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Uspješno dodan novi porez", Colors.green));
+    } else if (response.statusCode == 422) {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do validacijske greške: Ime poreza je vjerojatno već zauzeto", Colors.deepOrange));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
+    }
+
+    setState(() {});
   }
 
   @override
@@ -567,9 +595,145 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: const [
-                                                Text("Porezi", style: TextStyle(fontSize: 20)),
+                                              children: [
+                                                const Text("Porezi", style: TextStyle(fontSize: 20)),
+                                                const SizedBox(width: 10),
+                                                SizedBox(
+                                                  width: 30,
+                                                  child: Tooltip(
+                                                    message: 'Dodaj novi porez',
+                                                    textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.circular(5),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey.withOpacity(0.5),
+                                                          spreadRadius: 1,
+                                                          blurRadius: 1,
+                                                          offset: const Offset(0, 1),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: FloatingActionButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            return AlertDialog(
+                                                              title: const Text('Dodaj novi porez'),
+                                                              content: Form(
+                                                                key: taxFormKey,
+                                                                child: Column(
+                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    children: <Widget>[
+                                                                      Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width: 250,
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return 'Molimo unesite ime poreza';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              onSaved: (value) => tax.name = value!,
+                                                                              cursorColor: Colors.orange,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Ime poreza",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                prefixIcon: const Icon(
+                                                                                  Icons.short_text,
+                                                                                  color: Colors.orange,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]
+                                                                      ),
+                                                                      const SizedBox(height: 20),
+                                                                      Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width: 250,
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return 'Molimo unesite iznos poreza';
+                                                                                } else if (int.parse(value) < 1 || int.parse(value) > 100) {
+                                                                                  return 'Iznos poreza mora biti između 1 i 100';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              keyboardType: TextInputType.number,
+                                                                              onSaved: (value) => tax.amount = int.parse(value!),
+                                                                              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                                                              cursorColor: Colors.orange,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Iznos poreza",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                prefixIcon: const Icon(
+                                                                                  Icons.confirmation_number,
+                                                                                  color: Colors.orange,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ]
+                                                                      ),
+                                                                      const SizedBox(height: 20),
+                                                                      Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                        children: [
+                                                                          Container(
+                                                                            child: ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(40),
+                                                                              child: TextButton(
+                                                                                onPressed: () {
+                                                                                  if (taxFormKey.currentState!.validate()) {
+                                                                                    taxFormKey.currentState!.save();
+                                                                                    createTax(tax);
+                                                                                    Navigator.of(context).pop();
+                                                                                  }
+                                                                                },
+                                                                                child: const Text('Dodaj'),
+                                                                                style: TextButton.styleFrom(
+                                                                                  padding: const EdgeInsets.fromLTRB(100, 20, 100, 20),
+                                                                                  primary: Colors.white,
+                                                                                  backgroundColor: Colors.orange,
+                                                                                  textStyle: const TextStyle(fontSize: 18),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ]
+                                                                      )
+                                                                    ]
+                                                                ),
+                                                              ),
+                                                            );
+                                                          });
+                                                      },
+                                                      child: const Text('+'),
+                                                      backgroundColor: Colors.orange,
+                                                      elevation: 3,
+                                                      hoverElevation: 4,
+                                                    )
+                                                  )
+                                                ),
                                               ]
                                             ),
                                             const SizedBox(height: 25),
@@ -620,18 +784,16 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: const [
                                                 Text("Načini plaćanja", style: TextStyle(fontSize: 20)),
                                               ]
                                             ),
                                             const SizedBox(height: 25),
                                             Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 const SizedBox(width: 25),
                                                 Container(
-                                                  width: 250,
+                                                  width: 200,
                                                   child: Column(
                                                     children: [
                                                       for (PaymentMethod pm in snapshot.data!['paymentMethods'])

@@ -58,7 +58,7 @@ class _DrawerListState extends State<DrawerList> {
           selectedTileColor: Colors.orange.withOpacity(0.75),
           title: Row(
             children: <Widget>[
-              Icon(Icons.money, color: widget.index == 0 ? Colors.white : Colors.black),
+              Icon(Icons.print, color: widget.index == 0 ? Colors.white : Colors.black),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text('Blagajna', style: TextStyle(color: widget.index == 0 ? Colors.white : Colors.black)),
