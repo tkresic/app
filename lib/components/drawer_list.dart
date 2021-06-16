@@ -18,6 +18,20 @@ class DrawerList extends StatefulWidget {
 
 class _DrawerListState extends State<DrawerList> {
 
+  Image? logo;
+
+  @override
+  void initState() {
+    super.initState();
+    logo = Image.asset("assets/images/Logo.png");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(logo!.image, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -35,7 +49,7 @@ class _DrawerListState extends State<DrawerList> {
               )
             ),
             child: Center(
-              child: Image.asset("assets/images/Logo.png"),
+              child: logo,
             )
           ),
         ),
