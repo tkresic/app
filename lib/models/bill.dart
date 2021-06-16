@@ -11,7 +11,6 @@ class Bill {
   Bill? restoredBill;
   Bill? restoredByBill;
   User user;
-  // // Branch branch
   List<Product> products;
   int number;
   int businessPlaceLabel;

@@ -292,7 +292,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                         Container(
                                           width: 250,
                                           child: DropdownButtonFormField(
-                                            value: product.subcategoryId,
+                                            value: product.taxId,
                                             decoration: InputDecoration(
                                               border: OutlineInputBorder(
                                                 borderSide: const BorderSide(color: Colors.orange, width: 2.0),
