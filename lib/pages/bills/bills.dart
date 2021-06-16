@@ -503,7 +503,102 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                       Row(
                                         children: [
                                           Container(
-                                            width: 300,
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Način plaćanja: ${bill.paymentMethod.name}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Izdao: ${bill.user.name} ${bill.user.surname}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Broj poslovnice: ${bill.businessPlaceLabel}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Broj blagajne: ${bill.cashRegisterLabel}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Oznaka: ${bill.label}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Broj: ${bill.number}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Datum: ${bill.createdAt}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Iznos: ${formatPrice(bill.gross)}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Neto: ${formatPrice(bill.net)}")
+                                            ),
+                                          ),
+                                          const SizedBox(width: 25),
+                                          Container(
+                                            width: 250,
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
+                                            ),
+                                          ),
+                                        ]
+                                      ),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 500,
                                             child: Padding(
                                               padding: const EdgeInsets.all(8.0),
                                               child: TextFormField(
