@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -22,10 +23,14 @@ class Users extends StatefulWidget {
 class _UsersState extends State<Users> with DeleteDialog {
 
   Future<Map<dynamic, dynamic>> fetchData() async {
-    var users = await http.get(Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/users"));
+    var users = await http.get(
+        Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/users"),
+        headers: {'Content-Type': 'application/json; charset=utf-8'},
+    );
+    String source = const Utf8Decoder().convert(users.bodyBytes);
     var roles = await http.get(Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/roles"));
     return {
-      "users" : User.parseUsers(users.body),
+      "users" : User.parseUsers(source),
       "roles" : Role.parseRoles(roles.body)
     };
   }
