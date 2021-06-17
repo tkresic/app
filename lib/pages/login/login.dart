@@ -63,6 +63,8 @@ class _LoginState extends State<Login> {
           }
           _loggingIn = false;
         });
+      } else {
+        _loggingIn = false;
       }
     }
 
