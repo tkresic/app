@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:app/providers/user_provider.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
 import 'package:http/http.dart' as http;
 
 class Users extends StatefulWidget {
@@ -23,17 +25,20 @@ class Users extends StatefulWidget {
 
 class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
 
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
   final _formKey = GlobalKey<FormState>();
   User userCreate = User(id: null, roleId: null, role: null, surname: '', username: '', name: '');
   List<dynamic>? roles;
 
   Future<Map<dynamic, dynamic>> fetchData() async {
-    var users = await http.get(
+    var users = await client.get(
         Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/users"),
         headers: {'Content-Type': 'application/json; charset=utf-8'},
     );
     String source = const Utf8Decoder().convert(users.bodyBytes);
-    var rls = await http.get(Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/roles"));
+    var rls = await client.get(Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/roles"));
 
     roles = Role.parseRoles(rls.body);
 
@@ -49,8 +54,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
     Role findRole(int? id) => roles!.firstWhere((role) => role.id == id);
     Role role = findRole(user.roleId);
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.post(
+    http.Response response = await client.post(
       Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/users"),
       body: json.encode({
         "username" : user.username,
@@ -76,8 +80,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
     Role findRole(int? id) => roles!.firstWhere((role) => role.id == id);
     Role role = findRole(user.roleId);
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/api/users/${user.id}"),
       body: json.encode({
         "username" : user.username,

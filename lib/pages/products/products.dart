@@ -16,10 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 import 'package:app/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/providers/user_provider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
+import 'package:http/http.dart' as http;
 
 class Products extends StatefulWidget {
   const Products({Key? key}) : super(key: key);
@@ -29,16 +32,20 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  String search = "";
+
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
 
   List<dynamic> subcategories = [];
   List<dynamic> taxes = [];
+  String search = "";
 
   Future<Map<String, List>> fetchData() async {
     String uri = "${dotenv.env['SHOP_API_URI']}/api/products";
     if (search.isNotEmpty) {
       uri += "?search=$search";
-      var products = await http.get(Uri.parse(uri));
+      var products = await client.get(Uri.parse(uri));
       return {
         "products" : Product.parseProducts(products.body),
         "subcategories" : subcategories,
@@ -46,9 +53,9 @@ class _ProductsState extends State<Products> {
       };
     }
 
-    var products = await http.get(Uri.parse(uri));
-    var subctgrs = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
-    var txs = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
+    var products = await client.get(Uri.parse(uri));
+    var subctgrs = await client.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
+    var txs = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
 
     subcategories = Subcategory.parseSubcategories(subctgrs.body);
     taxes = Tax.parseTaxes(txs.body);
@@ -162,11 +169,14 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
       image = file!.toMultipartFile(filename: file!.fileName);
     }
 
-    // TODO => Append token for authentication/authorization check.
     var request = http.MultipartRequest(
       "POST",
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"),
     );
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("accessToken");
+    request.headers["Authorization"] = "Bearer " + token!;
 
     Tax findTax(int? id) => taxes!.firstWhere((tax) => tax.id == id);
     Tax tax = findTax(product.taxId);
@@ -611,11 +621,14 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
       image = file!.toMultipartFile(filename: file!.fileName);
     }
 
-    // TODO => Append token for authentication/authorization check.
     var request = http.MultipartRequest(
       "POST",
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products/${product.id}"),
     );
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("accessToken");
+    request.headers["Authorization"] = "Bearer " + token!;
 
     Tax findTax(int? id) => taxes!.firstWhere((tax) => tax.id == id);
     Tax tax = findTax(product.taxId);

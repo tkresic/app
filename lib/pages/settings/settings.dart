@@ -14,10 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:app/models/user.dart';
 import 'package:app/providers/user_provider.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
+import 'package:http/http.dart' as http;
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -28,6 +29,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> with CustomSnackBar {
 
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
   final companyFormKey = GlobalKey<FormState>();
   final branchFormKey = GlobalKey<FormState>();
   final taxFormKey = GlobalKey<FormState>();
@@ -35,11 +39,11 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
   Tax tax = Tax(id: null, name: "", amount: 0);
 
   Future<Map<dynamic, dynamic>> fetchData() async {
-    var company = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
+    var company = await client.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
     // TODO => Get branch ID from storage
-    var branch = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/branches/1"));
-    var paymentMethods = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods"));
-    var taxes = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
+    var branch = await client.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/branches/1"));
+    var paymentMethods = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods"));
+    var taxes = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
 
     return {
       "company" : Company.fromJson(jsonDecode(company.body)),
@@ -52,8 +56,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
   void updateCompany(Company company) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"),
       body: json.encode({
         "name" : company.name,
@@ -74,8 +77,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
   void updateBranch(Branch branch) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/branches/${branch.id}"),
       body: json.encode({
         "name" : branch.name,
@@ -96,8 +98,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
   void updatePaymentMethod(int paymentMethodId, bool active) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods/$paymentMethodId"),
       body: json.encode({
         "active" : active,
@@ -115,8 +116,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
   void createTax(Tax tax) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.post(
+    http.Response response = await client.post(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"),
       body: json.encode({
         "name" : tax.name,
@@ -139,8 +139,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
   void updateTax(Tax tax) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes/${tax.id}"),
       body: json.encode({
         "name" : tax.name,

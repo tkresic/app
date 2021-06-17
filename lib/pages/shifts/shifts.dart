@@ -14,6 +14,8 @@ import 'package:app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
 import 'package:http/http.dart' as http;
 
 class Shifts extends StatefulWidget {
@@ -25,9 +27,13 @@ class Shifts extends StatefulWidget {
 
 class _ShiftsState extends State<Shifts> with CurrentDateTimeString {
 
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
+
   Future<Map<dynamic, dynamic>> fetchData() async {
-    var shifts = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"));
-    var latestShift = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts/latest"));
+    var shifts = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"));
+    var latestShift = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts/latest"));
 
     Shift? shift;
 
@@ -76,7 +82,7 @@ class _ShiftsState extends State<Shifts> with CurrentDateTimeString {
                   return SingleChildScrollView(
                     child: Container(
                       margin: const EdgeInsets.all(25),
-                      child: ShiftsList(context: context, callback: callback, shifts: snapshot.data!["shifts"], latestShift: snapshot.data!["latestShift"], user: user)
+                      child: ShiftsList(context: context, client: client, callback: callback, shifts: snapshot.data!["shifts"], latestShift: snapshot.data!["latestShift"], user: user)
                     )
                   );
                 } else {
@@ -95,6 +101,7 @@ class ShiftsList extends StatefulWidget {
   const ShiftsList({
     Key? key,
     required this.context,
+    required this.client,
     required this.callback,
     this.shifts,
     this.latestShift,
@@ -102,18 +109,20 @@ class ShiftsList extends StatefulWidget {
   }) : super(key: key);
 
   final BuildContext context;
+  final http.Client client;
   final Function callback;
   final List<dynamic>? shifts;
   final Shift? latestShift;
   final User user;
 
   @override
-  _ShiftsListState createState() => _ShiftsListState(context: context, callback: callback, shifts: shifts, latestShift: latestShift, user: user);
+  _ShiftsListState createState() => _ShiftsListState(context: context, client: client, callback: callback, shifts: shifts, latestShift: latestShift, user: user);
 }
 
 class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDateTimeString {
   _ShiftsListState({
     required this.context,
+    required this.client,
     required this.callback,
     required this.shifts,
     required this.latestShift,
@@ -122,6 +131,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
 
   @override
   final BuildContext context;
+  final http.Client client;
   Function callback;
   List<dynamic>? shifts;
   Shift? latestShift;
@@ -139,8 +149,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
       "role" : user.role,
     };
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.post(
+    http.Response response = await client.post(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts"),
       body: json.encode({
         "user" : userData,
@@ -175,7 +184,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
 
     shifts = widget.shifts;
     latestShift = widget.latestShift;
-    var dts = DTS(context: context, callback: callback, user: user, shifts: shifts);
+    var dts = DTS(context: context, client: client, callback: callback, user: user, shifts: shifts);
 
     return PaginatedDataTable(
         header: Row(
@@ -231,12 +240,14 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
 class DTS extends DataTableSource with FormatPrice, CustomSnackBar, CurrentDateTimeString {
   DTS({
     required this.context,
+    required this.client,
     required this.callback,
     required this.user,
     required this.shifts
   });
 
   final BuildContext context;
+  final http.Client client;
   final Function callback;
   final User user;
   final List<dynamic>? shifts;
@@ -252,8 +263,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar, CurrentDateT
       "role" : user.role,
     };
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/shifts/$shiftId"),
       body: json.encode({
         "user" : userData,

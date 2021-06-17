@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 
 import 'package:app/models/user.dart';
 import 'package:app/providers/user_provider.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
 import 'package:http/http.dart' as http;
 
 class Bills extends StatefulWidget {
@@ -25,8 +27,12 @@ class Bills extends StatefulWidget {
 
 class _BillsState extends State<Bills> {
 
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
+
   Future<List<Bill>> fetchBills() async {
-    var response = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"));
+    var response = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"));
     return Bill.parseBills(response.body);
   }
 
@@ -65,7 +71,7 @@ class _BillsState extends State<Bills> {
                   return SingleChildScrollView(
                     child: Container(
                       margin: const EdgeInsets.all(25),
-                      child: BillsList(context: context, callback: callback, bills: snapshot.data, user: user)
+                      child: BillsList(context: context, client: client, callback: callback, bills: snapshot.data, user: user)
                     )
                   );
                 } else {
@@ -84,23 +90,26 @@ class BillsList extends StatefulWidget {
   const BillsList({
     Key? key,
     required this.context,
+    required this.client,
     required this.callback,
     this.bills,
     required this.user,
   }) : super(key: key);
 
   final BuildContext context;
+  final http.Client client;
   final Function callback;
   final List<dynamic>? bills;
   final User user;
 
   @override
-  _BillsListState createState() => _BillsListState(context: context, callback: callback, bills: bills, user: user);
+  _BillsListState createState() => _BillsListState(context: context, client: client, callback: callback, bills: bills, user: user);
 }
 
 class _BillsListState extends State<BillsList> {
   _BillsListState({
     required this.context,
+    required this.client,
     required this.callback,
     required this.bills,
     required this.user,
@@ -108,6 +117,7 @@ class _BillsListState extends State<BillsList> {
 
   @override
   final BuildContext context;
+  final http.Client client;
   Function callback;
   List<dynamic>? bills;
   User user;
@@ -116,7 +126,7 @@ class _BillsListState extends State<BillsList> {
   @override
   Widget build(BuildContext context) {
     bills = widget.bills;
-    var dts = DTS(context: context, callback: callback, bills: bills, user: user);
+    var dts = DTS(context: context, client: client, callback: callback, bills: bills, user: user);
 
     return PaginatedDataTable(
         header: Row(
@@ -165,12 +175,14 @@ class _BillsListState extends State<BillsList> {
 class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
   DTS({
     required this.context,
+    required this.client,
     required this.callback,
     required this.bills,
     required this.user,
   });
 
   final BuildContext context;
+  final http.Client client;
   Function callback;
   final List<dynamic>? bills;
   final User user;
@@ -188,8 +200,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
       "role" : user.role,
     };
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills/$billId"),
       body: json.encode({
         "user" : userData,

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/loader.dart';
@@ -14,10 +13,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:app/models/user.dart';
 import 'package:app/providers/user_provider.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
+import 'package:http/http.dart' as http;
 
 class Categories extends StatefulWidget {
   const Categories({Key? key}) : super(key: key);
@@ -27,12 +27,16 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackBar {
+
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
   final _formKey = GlobalKey<FormState>();
   Category category = Category();
 
   Future<Map<String, List>> fetchData() async {
-    var categories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"));
-    var subcategories = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
+    var categories = await client.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"));
+    var subcategories = await client.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"));
     return {
       "categories" : Category.parseCategories(categories.body),
       "subcategories" : Subcategory.parseSubcategories(subcategories.body)
@@ -46,8 +50,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
   void createCategory(Category category) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.post(
+    http.Response response = await client.post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"),
       body: json.encode({
         "name" : category.name,
@@ -79,8 +82,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
   void updateCategory(Category category) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories/${category.id}"),
       body: json.encode({
         "name" : category.name,
@@ -449,7 +451,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                   Expanded(
                                     child: Container(
                                       margin: const EdgeInsets.all(25),
-                                      child: SubcategoriesList(context: context, categories: snapshot.data!['categories'], subcategories: snapshot.data!['subcategories'], callback: callback)
+                                      child: SubcategoriesList(context: context, client: client, categories: snapshot.data!['categories'], subcategories: snapshot.data!['subcategories'], callback: callback)
                                     )
                                   )
                                 ]
@@ -476,23 +478,26 @@ class SubcategoriesList extends StatefulWidget {
   const SubcategoriesList({
     Key? key,
     required this.context,
+    required this.client,
     required this.callback,
     this.categories,
     this.subcategories,
   }) : super(key: key);
 
   final BuildContext context;
+  final http.Client client;
   final List<dynamic>? categories;
   final List<dynamic>? subcategories;
   final Function callback;
 
   @override
-  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, categories: categories, subcategories: subcategories, callback: callback);
+  _SubcategoriesListState createState() => _SubcategoriesListState(context: context, client: client, categories: categories, subcategories: subcategories, callback: callback);
 }
 
 class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackBar {
   _SubcategoriesListState({
     required this.context,
+    required this.client,
     required this.callback,
     required this.categories,
     required this.subcategories,
@@ -503,6 +508,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
 
   @override
   final BuildContext context;
+  http.Client client;
   List<dynamic>? categories;
   List<dynamic>? subcategories;
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
@@ -511,8 +517,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
   void createSubcategory(Subcategory subcategory) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.post(
+    http.Response response = await client.post(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories"),
       body: json.encode({
         "category_id" : subcategory.categoryId,
@@ -548,7 +553,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
     subcategory.categoryId = null;
     subcategories = widget.subcategories;
     categories = widget.categories;
-    var dts = DTS(context: context, categories: categories, subcategories: subcategories, callback: callback);
+    var dts = DTS(context: context, client: client, categories: categories, subcategories: subcategories, callback: callback);
 
     return PaginatedDataTable(
         header: Row(
@@ -729,6 +734,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
 class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
   DTS({
     required this.context,
+    required this.client,
     required this.callback,
     required this.categories,
     required this.subcategories,
@@ -736,6 +742,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
 
   final _formKey = GlobalKey<FormState>();
   final BuildContext context;
+  http.Client client;
   Function callback;
   List<dynamic>? categories;
   final List<dynamic>? subcategories;
@@ -743,8 +750,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
   void updateSubcategory(Subcategory subcategory) async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.put(
+    http.Response response = await client.put(
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/subcategories/${subcategory.id}"),
       body: json.encode({
         "category_id" : subcategory.categoryId,

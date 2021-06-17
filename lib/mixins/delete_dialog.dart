@@ -1,14 +1,19 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
+import 'package:http/http.dart' as http;
 
 mixin DeleteDialog {
 
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
   bool error = false;
   bool success = false;
 
   Future<bool> deleteEntity(String uri) async {
-    var response = await http.delete(Uri.parse(uri));
+    var response = await client.delete(Uri.parse(uri));
     return jsonDecode(response.body);
   }
 

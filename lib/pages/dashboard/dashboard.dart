@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:app/components/loader.dart';
 import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/payment_method.dart';
-import 'package:app/util/http_interceptor.dart';
+import 'package:app/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http_interceptor/http/intercepted_client.dart';
 import 'package:provider/provider.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -14,7 +13,8 @@ import 'package:app/components/middleware.dart';
 import 'package:app/mixins/format_price.dart';
 import 'package:app/models/product.dart';
 import 'package:app/models/user.dart';
-import 'package:app/providers/user_provider.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
+import 'package:app/util/http_interceptor.dart';
 import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
