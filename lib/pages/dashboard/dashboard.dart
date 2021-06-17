@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:app/components/loader.dart';
 import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/payment_method.dart';
+import 'package:app/util/http_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http_interceptor/http/intercepted_client.dart';
 import 'package:provider/provider.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
@@ -24,9 +26,13 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with FormatPrice {
 
+  http.Client client = InterceptedClient.build(interceptors: [
+    ApiInterceptor(),
+  ]);
+
   Future<Map<dynamic, dynamic>> fetchData() async {
-    var products = await http.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/dashboard"));
-    var paymentMethods = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods?active=1"));
+    var products = await client.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/dashboard"));
+    var paymentMethods = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods?active=1"));
     return {
       "products" : Product.parseGroupedData(products.body),
       "paymentMethods" : PaymentMethod.parsePaymentMethods(paymentMethods.body)
@@ -58,7 +64,7 @@ class _DashboardState extends State<Dashboard> with FormatPrice {
             }
           }
           if (snapshot.hasData) {
-            return DashboardComponentWidget(products: snapshot.data!["products"], paymentMethods: snapshot.data!["paymentMethods"], user: user);
+            return DashboardComponentWidget(products: snapshot.data!["products"], paymentMethods: snapshot.data!["paymentMethods"], user: user, client: client);
           } else {
             return const Loader(message: "Dohvaćam proizvode...");
           }
@@ -74,14 +80,16 @@ class DashboardComponentWidget extends StatefulWidget {
     required this.products,
     required this.paymentMethods,
     required this.user,
+    required this.client,
   }) : super(key: key);
 
   Map<dynamic, dynamic> products;
   List<PaymentMethod> paymentMethods;
   User user;
+  http.Client client;
 
   @override
-  _DashboardComponentWidgetState createState() => _DashboardComponentWidgetState(products: products, paymentMethods: paymentMethods, user: user);
+  _DashboardComponentWidgetState createState() => _DashboardComponentWidgetState(products: products, paymentMethods: paymentMethods, user: user, client: client);
 }
 
 class _DashboardComponentWidgetState extends State<DashboardComponentWidget> with FormatPrice, CustomSnackBar {
@@ -89,11 +97,13 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
     required this.products,
     required this.paymentMethods,
     required this.user,
+    required this.client,
   });
 
   Map<dynamic, dynamic> products;
   List<PaymentMethod> paymentMethods;
   User user;
+  http.Client client;
 
   final List<Product> cart = <Product>[];
   int sum = 0;
@@ -163,16 +173,14 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
       "role" : user.role,
     };
 
-    // TODO => Append token for authentication/authorization check.
-    http.Response response = await http.post(
+    http.Response response = await client.post(
       Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/bills"),
       body: json.encode({
         "user" : userData,
         "products" : cart,
         "payment_method_id" : selectedPaymentMethodId,
         "cash_register_id" : dotenv.env['CASH_REGISTER_ID'],
-      }),
-      headers: {'Content-Type': 'application/json'},
+      })
     );
 
     if (response.statusCode == 200) {
