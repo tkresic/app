@@ -164,8 +164,8 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
 
     // TODO => Append token for authentication/authorization check.
     var request = http.MultipartRequest(
-        "POST",
-        Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"),
+      "POST",
+      Uri.parse("${dotenv.env['SHOP_API_URI']}/api/products"),
     );
 
     Tax findTax(int? id) => taxes!.firstWhere((tax) => tax.id == id);

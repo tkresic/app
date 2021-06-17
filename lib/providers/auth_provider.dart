@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app/util/shared_preference.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:app/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum Status {
   notLoggedIn,
@@ -22,29 +24,30 @@ class AuthProvider with ChangeNotifier {
 
     Map<String, dynamic> result;
 
-    // TODO => Send username instead of email
     final Map<String, dynamic> loginData = {
-      "email": "tonikresic1997@gmail.com",
-      "password": password
+      "grant_type": "password",
+      "username": username,
+      "password": password,
+      "audience": dotenv.env['AUTH0_AUDIENCE'],
+      "client_id": dotenv.env['AUTH0_CLIENT_ID'],
+      "client_secret": dotenv.env['AUTH0_CLIENT_SECRET']
     };
 
-    // TODO => Replace URI with accounts ms
     http.Response response = await http.post(
-      Uri.parse("https://admin.fenjer.hr/api/auth/login"),
+      Uri.parse("${dotenv.env['AUTH0_DOMAIN']}/oauth/token"),
       body: json.encode(loginData),
-      headers: {
-        'Content-Type': 'application/json',
-        'api-key': '4Nih8908KDKBfHBzyaMBcSGtjYfqOXON6xIlgxLJMU0Q6Lc9BUn6xBbdl3cOqNQ9w8TXTIYiB1MZImikAX7xbZGyjOz3LEb4mtsbLjupQqLEDurQDoTcwstVix4ffmMP' // TODO => Remove
-      },
+      headers: {'Content-Type': 'application/json'}
     );
 
-    // final Map<String, dynamic> responseProductsData = json.decode(responseProducts.body);
-
     if (response.statusCode == 200) {
-      // TODO => Replace with real data
-      // final Map<String, dynamic> responseData = json.decode(response.body);
-      // var userData = responseData['data'];
 
+      final Map<String, dynamic> responseData = json.decode(response.body);
+
+      // TODO => Switch to flutter secure storage
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('accessToken', responseData['access_token']);
+
+      // TODO => Get user data from accounts or transfer the login to accounts and return the user with login
       final Map<String, dynamic> userData = {
         "id": 1,
         "username": "tkresic",
@@ -54,12 +57,11 @@ class AuthProvider with ChangeNotifier {
           "id": 1,
           "name": "Administrator"
         },
-        "token": "token_example",
-        "renewalToken": "token_renewal_example"
+        "accessToken": responseData['access_token'],
+        "renewalToken": "token_renewal_example" // TODO => Remove
       };
 
       User authUser = User.fromJson(userData);
-
       SharedPref sharedPref = SharedPref();
       sharedPref.save("user", authUser);
 

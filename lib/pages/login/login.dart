@@ -92,7 +92,6 @@ class _LoginState extends State<Login> {
                         enabled: !_loggingIn,
                         onSaved: (value) => _username = value!,
                         cursorColor: Colors.orange,
-                        initialValue: "tkresic",
                         decoration: InputDecoration(
                           hintText: "Unesite korisničko ime",
                           border: OutlineInputBorder(
@@ -121,7 +120,6 @@ class _LoginState extends State<Login> {
                         obscureText: _obscurePassword,
                         onSaved: (value) => _password = value!,
                         cursorColor: Colors.orange,
-                        initialValue: "to102030ni",
                         decoration: InputDecoration(
                           hintText: "Unesite lozinku",
                           border: OutlineInputBorder(

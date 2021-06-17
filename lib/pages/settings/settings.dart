@@ -36,7 +36,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
 
   Future<Map<dynamic, dynamic>> fetchData() async {
     var company = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/company"));
-    // TODO => Get branch ID
+    // TODO => Get branch ID from storage
     var branch = await http.get(Uri.parse("${dotenv.env['CORPORATE_API_URI']}/api/branches/1"));
     var paymentMethods = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/payment-methods"));
     var taxes = await http.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));

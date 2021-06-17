@@ -8,7 +8,7 @@ class User {
   String surname;
   int? roleId;
   Role? role;
-  String? token;
+  String? accessToken;
   String? renewalToken;
 
   User({
@@ -18,7 +18,7 @@ class User {
     required this.surname,
     required this.roleId,
     required this.role,
-    this.token,
+    this.accessToken,
     this.renewalToken
   });
 
@@ -29,7 +29,7 @@ class User {
     'surname': surname,
     'roleId': roleId,
     'role': role!.toJson(),
-    'token': token,
+    'token': accessToken,
     'renewalToken': renewalToken,
   };
 
@@ -40,7 +40,7 @@ class User {
         surname = json['surname'],
         roleId = Role.fromJson(json['role']).id,
         role = Role.fromJson(json['role']),
-        token = json['token'],
+        accessToken = json['accessToken'],
         renewalToken = json['renewalToken'];
 
   static List<User> parseUsers(String responseBody) {
