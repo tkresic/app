@@ -9,6 +9,10 @@ SHOP_API_URI=http://localhost:8000
 FINANCE_API_URI=http://localhost:8002
 CORPORATE_API_URI=http://localhost:8080
 ACCOUNTS_API_URI=http://localhost:8081
+AUTH0_DOMAIN=<auth_domain>
+AUTH0_AUDIENCE=<auth_audience>
+AUTH0_CLIENT_ID=<auth_client_id>
+AUTH0_CLIENT_SECRET=<auth_client_secret>
 ```
 
 ## Start the Shop microservice
