@@ -274,6 +274,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                               Container(
                                 margin: const EdgeInsets.only(top: 10),
                                 child: GridView.count(
+                                  controller: ScrollController(initialScrollOffset: 0),
                                   crossAxisCount: 3,
                                   childAspectRatio: 2.5,
                                   children: List.generate(products[key][subKey].length, (index) {
@@ -331,6 +332,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                     children: [
                       Expanded(
                         child: cart.isNotEmpty ? SingleChildScrollView(
+                          controller: ScrollController(initialScrollOffset: 0),
                           child: DataTable(
                             columns: const <DataColumn>[
                               DataColumn(

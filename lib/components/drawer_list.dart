@@ -35,6 +35,7 @@ class _DrawerListState extends State<DrawerList> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      controller: ScrollController(initialScrollOffset: 0),
       padding: EdgeInsets.zero,
       children: <Widget>[
         Container(

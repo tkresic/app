@@ -29,4 +29,4 @@ ACCOUNTS_API_URI=http://localhost:8081
 
 ## Run the app directly on web with images enabled
 
-`flutter run -d chrome --web-renderer html`
+`flutter run -d chrome --web-port 5555 --web-renderer html`
