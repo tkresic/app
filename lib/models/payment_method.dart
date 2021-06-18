@@ -17,7 +17,7 @@ class PaymentMethod {
     return PaymentMethod(
       id: json['id'],
       name: json['name'],
-      active: json['active'] == 1
+      active: json['active']
     );
   }
 

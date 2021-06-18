@@ -1,6 +1,6 @@
 # App
 
-Cash register application for restaurants & coffee shops.
+Cash register application.
 
 ## Create .env file in assets/env with following setup
 ```
