@@ -93,6 +93,13 @@ class _LoginState extends State<Login> {
                         },
                         enabled: !_loggingIn,
                         onSaved: (value) => _username = value!,
+                        onFieldSubmitted: (value) {
+                          if (!_loggingIn) {
+                            doLogin();
+                          } else {
+                            return;
+                          }
+                        },
                         cursorColor: Colors.orange,
                         decoration: InputDecoration(
                           hintText: "Unesite korisničko ime",
@@ -121,6 +128,13 @@ class _LoginState extends State<Login> {
                         enabled: !_loggingIn,
                         obscureText: _obscurePassword,
                         onSaved: (value) => _password = value!,
+                        onFieldSubmitted: (value) {
+                          if (!_loggingIn) {
+                            doLogin();
+                          } else {
+                            return;
+                          }
+                        },
                         cursorColor: Colors.orange,
                         decoration: InputDecoration(
                           hintText: "Unesite lozinku",
