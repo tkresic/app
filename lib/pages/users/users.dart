@@ -29,7 +29,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
     ApiInterceptor(),
   ]);
   final _formKey = GlobalKey<FormState>();
-  User userCreate = User(id: null, roleId: null, role: null, surname: '', username: '', name: '');
+  User userCreate = User(id: null, roleId: null, role: null, email: '', surname: '', username: '', name: '');
   List<dynamic>? roles;
 
   Future<Map<dynamic, dynamic>> fetchData() async {

@@ -197,6 +197,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
       "username" : user.username,
       "name" : user.name,
       "surname" : user.surname,
+      "email" : user.email,
       "role" : user.role,
     };
 

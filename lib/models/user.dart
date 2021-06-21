@@ -6,6 +6,7 @@ class User {
   String username;
   String name;
   String surname;
+  String email;
   int? roleId;
   Role? role;
   String? accessToken;
@@ -16,6 +17,7 @@ class User {
     required this.username,
     required this.name,
     required this.surname,
+    required this.email,
     required this.roleId,
     required this.role,
     this.accessToken,
@@ -27,6 +29,7 @@ class User {
     'username': username,
     'name': name,
     'surname': surname,
+    'email': email,
     'roleId': roleId,
     'role': role!.toJson(),
     'token': accessToken,
@@ -38,6 +41,7 @@ class User {
         username = json['username'],
         name = json['name'],
         surname = json['surname'],
+        email = json['email'],
         roleId = Role.fromJson(json['role']).id,
         role = Role.fromJson(json['role']),
         accessToken = json['accessToken'],

@@ -45,7 +45,6 @@ class _LoginState extends State<Login> {
               ),
             );
           } else {
-            // TODO => If invalid data display the snackbar. If error, something else
             final snackBar = SnackBar(
               action: SnackBarAction(
                 textColor: Colors.white,

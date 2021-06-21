@@ -24,57 +24,63 @@ class AuthProvider with ChangeNotifier {
 
     Map<String, dynamic> result;
 
-    final Map<String, dynamic> loginData = {
-      "grant_type": "password",
-      "username": username,
-      "password": password,
-      "audience": dotenv.env['AUTH0_AUDIENCE'],
-      "client_id": dotenv.env['AUTH0_CLIENT_ID'],
-      "client_secret": dotenv.env['AUTH0_CLIENT_SECRET']
-    };
-
     http.Response response = await http.post(
-      Uri.parse("${dotenv.env['AUTH0_DOMAIN']}/oauth/token"),
-      body: json.encode(loginData),
-      headers: {'Content-Type': 'application/json'}
+        Uri.parse("${dotenv.env['ACCOUNTS_API_URI']}/login"),
+        body: json.encode({
+          "username": username
+        }),
+        headers: {'Content-Type': 'application/json'}
     );
 
     if (response.statusCode == 200) {
 
-      final Map<String, dynamic> responseData = json.decode(response.body);
+      User authUser = User.fromJson(json.decode(const Utf8Decoder().convert(response.bodyBytes)));
 
-      // TODO => Switch to flutter secure storage
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('accessToken', responseData['access_token']);
-
-      // TODO => Get user data from accounts or transfer the login to accounts and return the user with login
-      final Map<String, dynamic> userData = {
-        "id": 1,
-        "username": "tkresic",
-        "name": "Toni",
-        "surname": "Krešić",
-        "role": {
-          "id": 1,
-          "name": "Administrator"
-        },
-        "accessToken": responseData['access_token'],
-        "renewalToken": "token_renewal_example" // TODO => Remove
+      final Map<String, dynamic> loginData = {
+        "grant_type": "password",
+        "username": authUser.email,
+        "password": password,
+        "audience": dotenv.env['AUTH0_AUDIENCE'],
+        "client_id": dotenv.env['AUTH0_CLIENT_ID'],
+        "client_secret": dotenv.env['AUTH0_CLIENT_SECRET']
       };
 
-      User authUser = User.fromJson(userData);
-      SharedPref sharedPref = SharedPref();
-      sharedPref.save("user", authUser);
+      http.Response login = await http.post(
+          Uri.parse("${dotenv.env['AUTH0_DOMAIN']}/oauth/token"),
+          body: json.encode(loginData),
+          headers: {'Content-Type': 'application/json'}
+      );
 
-      _loggedInStatus = Status.loggedIn;
-      notifyListeners();
+      if (login.statusCode == 200) {
 
-      result = {'status': true, 'message': 'Successful', 'user': authUser};
+        final Map<String, dynamic> loginData = json.decode(login.body);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('accessToken', loginData['access_token']);
+
+        authUser.accessToken = loginData['access_token'];
+
+        SharedPref sharedPref = SharedPref();
+        sharedPref.save("user", authUser);
+
+        _loggedInStatus = Status.loggedIn;
+        notifyListeners();
+
+        result = {'status': true, 'message': 'Successful', 'user': authUser};
+      } else {
+        _loggedInStatus = Status.notLoggedIn;
+        notifyListeners();
+        result = {
+          'status': false,
+          'message': json.decode(login.body)
+        };
+      }
     } else {
       _loggedInStatus = Status.notLoggedIn;
       notifyListeners();
       result = {
         'status': false,
-        'message': json.decode(response.body)
+        'message': "Nepostojeće korisničko ime"
       };
     }
     return result;

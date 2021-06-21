@@ -146,6 +146,7 @@ class _ShiftsListState extends State<ShiftsList> with CustomSnackBar, CurrentDat
       "username" : user.username,
       "name" : user.name,
       "surname" : user.surname,
+      "email" : user.email,
       "role" : user.role,
     };
 
@@ -260,6 +261,7 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar, CurrentDateT
       "username" : user.username,
       "name" : user.name,
       "surname" : user.surname,
+      "email" : user.email,
       "role" : user.role,
     };
 
