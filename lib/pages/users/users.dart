@@ -60,6 +60,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
         "username" : user.username,
         "name" : user.name,
         "surname" : user.surname,
+        "email" : user.email,
         "role" : role,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -86,6 +87,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
         "username" : user.username,
         "name" : user.name,
         "surname" : user.surname,
+        "email" : user.email,
         "role" : role,
       }),
       headers: {'Content-Type': 'application/json'},
@@ -309,6 +311,38 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                             ),
                                                           ),
                                                         )
+                                                      ]
+                                                    ),
+                                                    const SizedBox(height: 20),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          width: 528,
+                                                          child: TextFormField(
+                                                            validator: (value) {
+                                                              if (value == null || value.isEmpty) {
+                                                                return 'Molimo unesite email korisnika';
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved: (value) => userCreate.email = value!,
+                                                            cursorColor: Colors.orange,
+                                                            decoration: InputDecoration(
+                                                              hintText: "Email korisnika",
+                                                              border: OutlineInputBorder(
+                                                                borderRadius: BorderRadius.circular(25),
+                                                              ),
+                                                              focusedBorder: OutlineInputBorder(
+                                                                borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                borderRadius: BorderRadius.circular(25),
+                                                              ),
+                                                              prefixIcon: const Icon(
+                                                                Icons.email,
+                                                                color: Colors.orange,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ]
                                                     ),
                                                     const SizedBox(height: 20),
@@ -537,6 +571,39 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                                                 ),
                                                                                 prefixIcon: const Icon(
                                                                                   Icons.text_fields,
+                                                                                  color: Colors.orange,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ]
+                                                                      ),
+                                                                      const SizedBox(height: 20),
+                                                                      Row(
+                                                                        children: [
+                                                                          Container(
+                                                                            width: 528,
+                                                                            child: TextFormField(
+                                                                              validator: (value) {
+                                                                                if (value == null || value.isEmpty) {
+                                                                                  return 'Molimo unesite email korisnika';
+                                                                                }
+                                                                                return null;
+                                                                              },
+                                                                              onSaved: (value) => user.email = value!,
+                                                                              initialValue: user.email,
+                                                                              cursorColor: Colors.orange,
+                                                                              decoration: InputDecoration(
+                                                                                hintText: "Email korisnika",
+                                                                                border: OutlineInputBorder(
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                                  borderRadius: BorderRadius.circular(25),
+                                                                                ),
+                                                                                prefixIcon: const Icon(
+                                                                                  Icons.email,
                                                                                   color: Colors.orange,
                                                                                 ),
                                                                               ),
