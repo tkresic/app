@@ -204,6 +204,9 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
       ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Došlo je do greške", Colors.red));
     }
 
+    image = null;
+    file = null;
+
     callback("");
   }
 
