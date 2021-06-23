@@ -19,7 +19,6 @@ Future main() async {
 }
 
 class App extends StatelessWidget {
-  // TODO => Study this, especially the provider package and the notifyListeners method
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

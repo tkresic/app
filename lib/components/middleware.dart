@@ -1,5 +1,6 @@
 import 'package:app/pages/index/components/background.dart';
 import 'package:app/pages/index/index.dart';
+import 'package:app/util/shared_preference.dart';
 import 'package:flutter/material.dart';
 
 class Middleware extends StatelessWidget {
@@ -18,8 +19,8 @@ class Middleware extends StatelessWidget {
                 borderRadius: BorderRadius.circular(40),
                 child: TextButton(
                   onPressed: () {
-                    // TODO => Delete user from app state, storage
-                    // SharedPref().remove("user");
+                    SharedPref().remove("user");
+                    SharedPref().remove("access_token");
                     Navigator.push(
                       context,
                       PageRouteBuilder(

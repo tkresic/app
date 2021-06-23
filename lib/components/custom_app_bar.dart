@@ -60,7 +60,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          // TODO => Fetch cash register label from Corporate, storage it and display it here
           Text("Blagajna ${dotenv.env['CASH_REGISTER_ID']}", style: const TextStyle(fontSize: 14, color: Colors.white)),
           const Spacer(),
           Container(
@@ -101,8 +100,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
           child: IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
-              // TODO => Remove user from app state and notify listeners. Implement logout
               SharedPref().remove("user");
+              SharedPref().remove("access_token");
               Navigator.push(
                 context,
                 PageRouteBuilder(
