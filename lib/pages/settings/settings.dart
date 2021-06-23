@@ -45,8 +45,8 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
     var taxes = await client.get(Uri.parse("${dotenv.env['FINANCE_API_URI']}/api/taxes"));
 
     return {
-      "company" : Company.fromJson(jsonDecode(company.body)),
-      "branch" : Branch.fromJson(jsonDecode(branch.body)),
+      "company" : Company.fromJson(json.decode(const Utf8Decoder().convert(company.bodyBytes))),
+      "branch" : Branch.fromJson(json.decode(const Utf8Decoder().convert(branch.bodyBytes))),
       "paymentMethods" : PaymentMethod.parsePaymentMethods(paymentMethods.body),
       "taxes" : Tax.parseTaxes(taxes.body),
     };
