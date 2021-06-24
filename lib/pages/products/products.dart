@@ -675,7 +675,16 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
         DataCell(
           Row(
             children: <Widget>[
-              Image.network("${product.image}", width: 50),
+              Image.network(
+                "${product.image}",
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset("assets/images/Logo.png");
+                },
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  return Image.asset("assets/images/Logo.png");
+                },
+                width: 50,
+              ),
               const SizedBox(width: 10),
               Text("${product.name}")
             ],
@@ -723,7 +732,16 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Image.network("${product.image}", width: 200)
+                                    Image.network(
+                                      "${product.image}",
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Image.asset("assets/images/Logo.png");
+                                      },
+                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        return Image.asset("assets/images/Logo.png");
+                                      },
+                                      width: 200,
+                                    ),
                                   ]
                                 ),
                                 const SizedBox(height: 10),

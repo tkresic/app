@@ -286,12 +286,21 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                       child: Container(
                                         margin: const EdgeInsets.all(5),
                                         child: ListTile(
-                                            leading: ClipRRect(
-                                                borderRadius: BorderRadius.circular(8.0),
-                                                child: Image.network(products[key][subKey][index].image, width: 50)
+                                          leading: ClipRRect(
+                                            borderRadius: BorderRadius.circular(8.0),
+                                            child: Image.network(
+                                              "https://friendlyfire.gamebay.io/images/logo_gfamebay.png",
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Image.asset("assets/images/Logo.png");
+                                              },
+                                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                                return Image.asset("assets/images/Logo.png");
+                                              },
+                                              width: 50,
                                             ),
-                                            title: Text('${products[key][subKey][index].name}'),
-                                            subtitle: Text(formatPrice(products[key][subKey][index].price))
+                                          ),
+                                          title: Text('${products[key][subKey][index].name}'),
+                                          subtitle: Text(formatPrice(products[key][subKey][index].price))
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
@@ -357,7 +366,16 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                   DataCell(
                                     Row(
                                       children: <Widget>[
-                                        Image.network("${product.image}", width: 50),
+                                        Image.network(
+                                          "${product.image}",
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Image.asset("assets/images/Logo.png");
+                                          },
+                                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                            return Image.asset("assets/images/Logo.png");
+                                          },
+                                          width: 50,
+                                        ),
                                         const SizedBox(width: 10),
                                         Text("${product.name}")
                                       ],

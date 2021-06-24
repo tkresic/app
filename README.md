@@ -4,11 +4,11 @@ Cash register application.
 
 ## Create .env file in assets/env with following setup
 ```
-CASH_REGISTER_ID=1
-SHOP_API_URI=http://localhost:8000
-FINANCE_API_URI=http://localhost:8002
-CORPORATE_API_URI=http://localhost:8080
-ACCOUNTS_API_URI=http://localhost:8081
+CASH_REGISTER_ID=<cash_register_id>
+SHOP_API_URI=<shop_api_uri>
+FINANCE_API_URI=<finance_api_uri>
+CORPORATE_API_URI=<corporate_api_uri>
+ACCOUNTS_API_URI=<accounts_api_uri>
 AUTH0_DOMAIN=<auth_domain>
 AUTH0_AUDIENCE=<auth_audience>
 AUTH0_CLIENT_ID=<auth_client_id>
