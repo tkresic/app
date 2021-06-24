@@ -427,7 +427,19 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                                           DataCell(
                                                             Row(
                                                               children: [
-                                                                Image.network("${product.image}", width: 45),
+                                                                Image.network(
+                                                                  "${product.image}",
+                                                                  errorBuilder: (context, error, stackTrace) {
+                                                                    return Image.asset("assets/images/Logo.png");
+                                                                  },
+                                                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                                                    if (loadingProgress == null) {
+                                                                      return child;
+                                                                    }
+                                                                    return Image.asset("assets/images/Logo.png");
+                                                                  },
+                                                                  width: 45,
+                                                                ),
                                                                 const SizedBox(width: 10),
                                                                 Text("${product.name}")
                                                               ],

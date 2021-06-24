@@ -681,6 +681,9 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                   return Image.asset("assets/images/Logo.png");
                 },
                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  }
                   return Image.asset("assets/images/Logo.png");
                 },
                 width: 50,
@@ -738,6 +741,9 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                         return Image.asset("assets/images/Logo.png");
                                       },
                                       loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
                                         return Image.asset("assets/images/Logo.png");
                                       },
                                       width: 200,

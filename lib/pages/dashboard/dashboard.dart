@@ -289,11 +289,14 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                           leading: ClipRRect(
                                             borderRadius: BorderRadius.circular(8.0),
                                             child: Image.network(
-                                              "https://friendlyfire.gamebay.io/images/logo_gfamebay.png",
+                                              products[key][subKey][index].image,
                                               errorBuilder: (context, error, stackTrace) {
                                                 return Image.asset("assets/images/Logo.png");
                                               },
                                               loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
                                                 return Image.asset("assets/images/Logo.png");
                                               },
                                               width: 50,
@@ -372,6 +375,9 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                             return Image.asset("assets/images/Logo.png");
                                           },
                                           loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            }
                                             return Image.asset("assets/images/Logo.png");
                                           },
                                           width: 50,
