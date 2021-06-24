@@ -436,7 +436,11 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                                                     if (loadingProgress == null) {
                                                                       return child;
                                                                     }
-                                                                    return Image.asset("assets/images/Logo.png");
+                                                                    return const SizedBox(
+                                                                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                                                                      height: 25.0,
+                                                                      width: 25.0,
+                                                                    );
                                                                   },
                                                                   width: 45,
                                                                 ),

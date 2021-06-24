@@ -297,7 +297,11 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                                 if (loadingProgress == null) {
                                                   return child;
                                                 }
-                                                return Image.asset("assets/images/Logo.png");
+                                                return const SizedBox(
+                                                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                                                  height: 25.0,
+                                                  width: 25.0,
+                                                );
                                               },
                                               width: 50,
                                             ),
@@ -378,7 +382,11 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                             if (loadingProgress == null) {
                                               return child;
                                             }
-                                            return Image.asset("assets/images/Logo.png");
+                                            return const SizedBox(
+                                              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                                              height: 25.0,
+                                              width: 25.0,
+                                            );
                                           },
                                           width: 50,
                                         ),
