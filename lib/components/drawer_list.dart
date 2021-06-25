@@ -5,6 +5,7 @@ import 'package:app/pages/settings/settings.dart';
 import 'package:app/pages/shifts/shifts.dart';
 import 'package:app/pages/categories/categories.dart';
 import 'package:app/pages/users/users.dart';
+import 'package:app/pages/analytics/analytics.dart';
 import 'package:flutter/material.dart';
 
 class DrawerList extends StatefulWidget {
@@ -191,10 +192,32 @@ class _DrawerListState extends State<DrawerList> {
           selectedTileColor: Colors.orange.withOpacity(0.75),
           title: Row(
             children: <Widget>[
-              Icon(Icons.settings, color: widget.index == 6 ? Colors.white : Colors.black),
+              Icon(Icons.bar_chart, color: widget.index == 6 ? Colors.white : Colors.black),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Text('Postavke', style: TextStyle(color: widget.index == 6 ? Colors.white : Colors.black)),
+                child: Text('Analitika', style: TextStyle(color: widget.index == 6 ? Colors.white : Colors.black)),
+              )
+            ],
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation1, animation2) => const Analytics(),
+                transitionDuration: const Duration(seconds: 0),
+              ),
+            );
+          },
+        ),
+        ListTile(
+          selected: widget.index == 7,
+          selectedTileColor: Colors.orange.withOpacity(0.75),
+          title: Row(
+            children: <Widget>[
+              Icon(Icons.settings, color: widget.index == 7 ? Colors.white : Colors.black),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text('Postavke', style: TextStyle(color: widget.index == 7 ? Colors.white : Colors.black)),
               )
             ],
           ),

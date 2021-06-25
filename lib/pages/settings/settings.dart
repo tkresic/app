@@ -167,7 +167,7 @@ class _SettingsState extends State<Settings> with CustomSnackBar {
     return Scaffold(
       drawerScrimColor: Colors.transparent,
       drawer: const Drawer(
-        child: DrawerList(index: 6),
+        child: DrawerList(index: 7),
       ),
       appBar: const CustomAppBar(),
       body: Row(

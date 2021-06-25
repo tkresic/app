@@ -3,7 +3,6 @@ import 'package:app/pages/index/index.dart';
 import 'package:app/providers/user_provider.dart';
 import 'package:app/util/shared_preference.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'middleware.dart';
 
