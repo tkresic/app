@@ -684,10 +684,13 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                   if (loadingProgress == null) {
                     return child;
                   }
-                  return const SizedBox(
-                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
-                    height: 25.0,
-                    width: 25.0,
+                  return const Padding(
+                    padding: EdgeInsets.only(left: 15.0),
+                    child: SizedBox(
+                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                      height: 20.0,
+                      width: 20.0,
+                    )
                   );
                 },
                 width: 50,

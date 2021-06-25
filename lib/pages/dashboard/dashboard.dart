@@ -286,25 +286,25 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                       child: Container(
                                         margin: const EdgeInsets.all(5),
                                         child: ListTile(
-                                          leading: ClipRRect(
-                                            borderRadius: BorderRadius.circular(8.0),
-                                            child: Image.network(
-                                              products[key][subKey][index].image,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Image.asset("assets/images/Logo.png");
-                                              },
-                                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return const SizedBox(
+                                          leading: Image.network(
+                                            products[key][subKey][index].image,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Image.asset("assets/images/Logo.png");
+                                            },
+                                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const Padding(
+                                                padding: EdgeInsets.only(left: 15.0),
+                                                child: SizedBox(
                                                   child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
-                                                  height: 25.0,
-                                                  width: 25.0,
-                                                );
-                                              },
-                                              width: 50,
-                                            ),
+                                                  height: 20.0,
+                                                  width: 20.0,
+                                                )
+                                              );
+                                            },
+                                            width: 50,
                                           ),
                                           title: Text('${products[key][subKey][index].name}'),
                                           subtitle: Text(formatPrice(products[key][subKey][index].price))
@@ -382,10 +382,13 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                             if (loadingProgress == null) {
                                               return child;
                                             }
-                                            return const SizedBox(
-                                              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
-                                              height: 25.0,
-                                              width: 25.0,
+                                            return const Padding(
+                                              padding: EdgeInsets.only(left: 15.0),
+                                              child: SizedBox(
+                                                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                                                height: 20.0,
+                                                width: 20.0,
+                                              )
                                             );
                                           },
                                           width: 50,
