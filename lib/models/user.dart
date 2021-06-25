@@ -10,7 +10,6 @@ class User {
   int? roleId;
   Role? role;
   String? accessToken;
-  String? renewalToken;
 
   User({
     required this.id,
@@ -21,7 +20,6 @@ class User {
     required this.roleId,
     required this.role,
     this.accessToken,
-    this.renewalToken
   });
 
   Map<String, dynamic> toJson() => {
@@ -33,7 +31,6 @@ class User {
     'roleId': roleId,
     'role': role!.toJson(),
     'token': accessToken,
-    'renewalToken': renewalToken,
   };
 
   User.fromJson(Map<String, dynamic> json)
@@ -44,8 +41,7 @@ class User {
         email = json['email'],
         roleId = Role.fromJson(json['role']).id,
         role = Role.fromJson(json['role']),
-        accessToken = json['accessToken'],
-        renewalToken = json['renewalToken'];
+        accessToken = json['accessToken'];
 
   static List<User> parseUsers(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
