@@ -211,10 +211,14 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
   }
 
   void uploadFile() async {
-    file = await FilePickerCross.importFromStorage(
-        type: FileTypeCross.image,
-        fileExtension: 'png, jpg, jpeg, bmp'
-    );
+    try {
+      file = await FilePickerCross.importFromStorage(
+          type: FileTypeCross.image,
+          fileExtension: 'png, jpg, jpeg, bmp'
+      );
+    } on Exception {
+      file = null;
+    }
   }
 
   final _debouncer = Debouncer(milliseconds: 250);
@@ -609,10 +613,14 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
   FilePickerCross? file;
 
   void uploadFile() async {
-    file = await FilePickerCross.importFromStorage(
-        type: FileTypeCross.image,
-        fileExtension: 'png, jpg, jpeg, bmp'
-    );
+    try {
+      file = await FilePickerCross.importFromStorage(
+          type: FileTypeCross.image,
+          fileExtension: 'png, jpg, jpeg, bmp'
+      );
+    } on Exception {
+      file = null;
+    }
   }
 
   void updateProduct(Product product) async {
