@@ -660,7 +660,38 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                 )
                               ),
                             ],
-                          )
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            children: const [
+                               Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: Text('Uloge', style: TextStyle(color: Colors.black, fontSize: 20))
+                              ),
+                            ]
+                          ),
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(
+                                      label: Text('Ime'),
+                                    ),
+                                  ],
+                                  rows: [
+                                    for (Role role in snapshot.data!['roles'])
+                                      DataRow(
+                                        cells: [
+                                          DataCell(Text(role.name)),
+                                        ],
+                                      ),
+                                  ]
+                                )
+                              ),
+                            ],
+                          ),
                         ]
                       )
                     )
