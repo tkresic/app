@@ -283,8 +283,23 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
                                               children: [
-                                                const Icon(Icons.warning, size: 20.0, color: Colors.red),
-                                                Text(" Ovaj račun je storno računa pod brojem ${bill.restoredBill.number}.")
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        const Icon(Icons.warning, size: 20.0, color: Colors.red),
+                                                        Text(" Ovaj račun je storno računa pod brojem ${bill.restoredBill.number}.")
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 15),
+                                                    Row(
+                                                      children: [
+                                                        Text("Razlog storniranja je: ${bill.restoringReason}")
+                                                      ],
+                                                    )
+                                                  ],
+                                                )
                                               ],
                                             )
                                           )
