@@ -550,7 +550,6 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
   @override
   Widget build(BuildContext context) {
 
-    subcategory.categoryId = null;
     subcategories = widget.subcategories;
     categories = widget.categories;
     var dts = DTS(context: context, client: client, categories: categories, subcategories: subcategories, callback: callback);
@@ -581,6 +580,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                 ),
                   child: FloatingActionButton(
                     onPressed: () {
+                      subcategory.categoryId = null;
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -623,8 +623,8 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                             },
                                             items: categories!.map((category){
                                               return DropdownMenuItem(
-                                                  value: category.id.toString(),
-                                                  child: Text(category.name)
+                                                value: category.id.toString(),
+                                                child: Text(category.name)
                                               );
                                             }).toList(),
                                           )
@@ -861,8 +861,8 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                               },
                                               items: categories!.map((category) {
                                                 return DropdownMenuItem(
-                                                    value: category.id.toString(),
-                                                    child: Text(category.name)
+                                                  value: category.id.toString(),
+                                                  child: Text(category.name)
                                                 );
                                               }).toList(),
                                             )

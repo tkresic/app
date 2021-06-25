@@ -226,8 +226,6 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
   @override
   Widget build(BuildContext context) {
 
-    product.subcategoryId = null;
-    product.taxId = null;
     subcategories = widget.subcategories;
     products = widget.products;
     taxes = widget.taxes;
@@ -259,6 +257,8 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                 ),
                   child: FloatingActionButton(
                     onPressed: () {
+                      product.subcategoryId = null;
+                      product.taxId = null;
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -299,8 +299,8 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             },
                                             items: subcategories!.map((subcategory){
                                               return DropdownMenuItem(
-                                                  value: subcategory.id.toString(),
-                                                  child: Text(subcategory.name)
+                                                value: subcategory.id.toString(),
+                                                child: Text(subcategory.name)
                                               );
                                             }).toList(),
                                           ),
@@ -334,8 +334,8 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             },
                                             items: taxes!.map((tax){
                                               return DropdownMenuItem(
-                                                  value: tax.id.toString(),
-                                                  child: Text(tax.name)
+                                                value: tax.id.toString(),
+                                                child: Text(tax.name)
                                               );
                                             }).toList(),
                                           ),
@@ -934,8 +934,8 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           },
                                           items: subcategories!.map((subcategory){
                                             return DropdownMenuItem(
-                                                value: subcategory.id.toString(),
-                                                child: Text(subcategory.name)
+                                              value: subcategory.id.toString(),
+                                              child: Text(subcategory.name)
                                             );
                                           }).toList(),
                                         ),
@@ -969,8 +969,8 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           },
                                           items: taxes!.map((tax){
                                             return DropdownMenuItem(
-                                                value: tax.id.toString(),
-                                                child: Text(tax.name)
+                                              value: tax.id.toString(),
+                                              child: Text(tax.name)
                                             );
                                           }).toList(),
                                         )

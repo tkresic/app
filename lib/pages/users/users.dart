@@ -105,8 +105,6 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
   @override
   Widget build(BuildContext context) {
 
-    userCreate.roleId = null;
-
     User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
@@ -177,6 +175,7 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                   ),
                                   child: FloatingActionButton(
                                     onPressed: () {
+                                      userCreate.roleId = null;
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
@@ -479,8 +478,8 @@ class _UsersState extends State<Users> with DeleteDialog, CustomSnackBar {
                                                                               },
                                                                               items: roles!.map((role){
                                                                                 return DropdownMenuItem(
-                                                                                    value: role.id.toString(),
-                                                                                    child: Text(role.name)
+                                                                                  value: role.id.toString(),
+                                                                                  child: Text(role.name)
                                                                                 );
                                                                               }).toList(),
                                                                             ),
