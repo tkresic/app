@@ -144,8 +144,8 @@ class _LoginState extends State<Login> {
                             borderSide: const BorderSide(color: Colors.orange, width: 2),
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          prefixIcon: const Icon(
-                            Icons.lock,
+                          prefixIcon: Icon(
+                            _obscurePassword ? Icons.lock : Icons.lock_open,
                             color: Colors.orange,
                           ),
                           suffixIcon: GestureDetector(
