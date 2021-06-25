@@ -107,7 +107,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
 
   final List<Product> cart = <Product>[];
   int sum = 0;
-  int selectedPaymentMethodId = 1;
+  int selectedPaymentMethodId = 0;
 
   void _addToCart(Product product) {
     setState(() {
