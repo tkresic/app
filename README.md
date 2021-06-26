@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://raw.githubusercontent.com/tkresic/app/main/web/icons/Icon-192.png">
+</p>
+
 # App
 
 Desktop cash register application which is supported by four microservices:
