@@ -11,4 +11,4 @@ Desktop cash register application which is supported by four microservices:
 - [Corporate](https://github.com/tkresic/corporate)
 - [Accounts](https://github.com/tkresic/accounts)
 
-The app build for Windows can be found at [app-build](https://github.com/tkresic/app-build).
+The build for Windows can be found at [app-build](https://github.com/tkresic/app-build).

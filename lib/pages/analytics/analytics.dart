@@ -4,7 +4,6 @@ import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
-import 'package:app/mixins/snackbar.dart';
 import 'package:intl/intl.dart';
 import 'package:app/models/user.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +22,7 @@ class Analytics extends StatefulWidget {
   _AnalyticsState createState() => _AnalyticsState();
 }
 
-class _AnalyticsState extends State<Analytics> with CustomSnackBar {
+class _AnalyticsState extends State<Analytics> {
 
   @override
   http.Client client = InterceptedClient.build(interceptors: [
@@ -41,7 +40,9 @@ class _AnalyticsState extends State<Analytics> with CustomSnackBar {
     );
 
     if (response.statusCode == 403) {
-      ScaffoldMessenger.of(context).showSnackBar(getCustomSnackBar("Nedovoljne ovlasti za pristup", Colors.orange));
+      return {
+        "data": "unauthorized"
+      };
     }
 
     Map<String, dynamic> data = jsonDecode(response.body);
@@ -92,7 +93,18 @@ class _AnalyticsState extends State<Analytics> with CustomSnackBar {
                   }
                 }
                 if (snapshot.hasData) {
-                  return SingleChildScrollView(
+                  return snapshot.data!["data"] == 'unauthorized' ?
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.warning, size: 20.0, color: Colors.red),
+                        Text(" Neovlašteni pristup.")
+                      ],
+                    )
+                  )
+                  :
+                  SingleChildScrollView(
                     child: Container(
                       margin: const EdgeInsets.all(25),
                       padding: const EdgeInsets.all(25),
