@@ -279,12 +279,25 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                   crossAxisCount: 3,
                                   childAspectRatio: 2.5,
                                   children: List.generate(products[key][subKey].length, (index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        _addToCart(products[key][subKey][index]);
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.all(5),
+                                    return Container(
+                                      margin: const EdgeInsets.all(5),
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 1,
+                                            blurRadius: 1,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          _addToCart(products[key][subKey][index]);
+                                        },
                                         child: ListTile(
                                           leading: Image.network(
                                             products[key][subKey][index].image,
@@ -309,19 +322,7 @@ class _DashboardComponentWidgetState extends State<DashboardComponentWidget> wit
                                           title: Text('${products[key][subKey][index].name}'),
                                           subtitle: Text(formatPrice(products[key][subKey][index].price))
                                         ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(5),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 2,
-                                              blurRadius: 2,
-                                              offset: const Offset(0, 1),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      )
                                     );
                                   }),
                                 ),
