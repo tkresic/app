@@ -148,14 +148,16 @@ class _LoginState extends State<Login> {
                             _obscurePassword ? Icons.lock : Icons.lock_open,
                             color: Colors.orange,
                           ),
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
-                            child:
-                            Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off,  color: Colors.orange),
+                          suffixIcon: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                              child: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off,  color: Colors.orange),
+                            ),
                           ),
                         ),
                       )
