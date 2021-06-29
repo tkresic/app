@@ -34,7 +34,7 @@ class Background extends StatelessWidget {
           const Positioned(
             bottom: 5,
             right: 5,
-            child: Text('v0.1.2', style: TextStyle(fontSize: 11)),
+            child: Text('v0.1.3', style: TextStyle(fontSize: 11)),
           ),
           child,
         ],
