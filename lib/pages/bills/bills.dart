@@ -227,496 +227,501 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
 
     return DataRow.byIndex(
       index: index,
+      color: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        return bill.gross < 0 ? Colors.red : Colors.white;
+      }),
       cells: [
         DataCell(
-            Text('${bill.number}')
+          Text('${bill.number}', style: TextStyle(color: bill.gross < 0 ? Colors.white : Colors.black))
         ),
         DataCell(
-            Text(formatPrice(bill.gross))
+          Text(formatPrice(bill.gross), style: TextStyle(color: bill.gross < 0 ? Colors.white : Colors.black))
         ),
         DataCell(
-            Text('${bill.paymentMethod.name}')
+          Text('${bill.paymentMethod.name}', style: TextStyle(color: bill.gross < 0 ? Colors.white : Colors.black))
         ),
         DataCell(
-            Text('${bill.user.name} ${bill.user.surname}')
+          Text('${bill.user.name} ${bill.user.surname}', style: TextStyle(color: bill.gross < 0 ? Colors.white : Colors.black))
         ),
         DataCell(
-            Text('${bill.createdAt}')
+          Text('${bill.createdAt}', style: TextStyle(color: bill.gross < 0 ? Colors.white : Colors.black))
         ),
         DataCell(
-            Row(
-              children: <Widget>[
-                const Spacer(),
+          Row(
+            children: <Widget>[
+              const Spacer(),
+              SizedBox(
+                width: 30.0,
+                height: 30.0,
+                child: Tooltip(
+                    message: 'Pregledaj račun ${bill.number}',
+                    textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context)
+                          {
+                            return AlertDialog(
+                                title: const Text('Pregled računa'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        bill.restoredBill != null ?
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      const Icon(Icons.warning, size: 20.0, color: Colors.red),
+                                                      Text(" Ovaj račun je storno računa pod brojem ${bill.restoredBill.number}.")
+                                                    ],
+                                                  ),
+                                                  const SizedBox(height: 15),
+                                                  Row(
+                                                    children: [
+                                                      Text("Razlog storniranja je: ${bill.restoringReason}")
+                                                    ],
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          )
+                                        )
+                                        :
+                                        const SizedBox(height: 0),
+                                        bill.restoredByBill != null ?
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: [
+                                              const Icon(Icons.warning, size: 20.0, color: Colors.red),
+                                              Text(" Ovaj račun je storniran s računom pod brojem ${bill.restoredByBill.number}.")
+                                            ],
+                                          )
+                                        )
+                                        :
+                                        const SizedBox(height: 0),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Način plaćanja: ${bill.paymentMethod.name}")
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Izdao: ${bill.user.name} ${bill.user.surname}")
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Broj poslovnice: ${bill.businessPlaceLabel}")
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Broj blagajne: ${bill.cashRegisterLabel}")
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Oznaka: ${bill.label}")
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Broj: ${bill.number}")
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Datum: ${bill.createdAt}")
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Iznos: ${formatPrice(bill.gross)}")
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Neto: ${formatPrice(bill.net)}")
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
+                                          ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                         child: Container(
+                                           constraints: const BoxConstraints(minHeight: 100, maxHeight: 225),
+                                           child: Card(
+                                             child: SingleChildScrollView(
+                                               child: DataTable(
+                                                   columns: const [
+                                                     DataColumn(
+                                                       label: Text('Proizvod'),
+                                                     ),
+                                                     DataColumn(
+                                                       label: Text('Cijena'),
+                                                     ),
+                                                     DataColumn(
+                                                       label: Text('Količina'),
+                                                     ),
+                                                     DataColumn(
+                                                       label: Text('Ukupno'),
+                                                     ),
+                                                   ],
+                                                   rows: [
+                                                     for (var product in bill.products)
+                                                       DataRow(
+                                                         cells: [
+                                                           DataCell(
+                                                               Row(
+                                                                 children: [
+                                                                   Image.network(
+                                                                     "${product.image}",
+                                                                     errorBuilder: (context, error, stackTrace) {
+                                                                       return Image.asset("assets/images/Logo.png");
+                                                                     },
+                                                                     loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                                                       if (loadingProgress == null) {
+                                                                         return child;
+                                                                       }
+                                                                       return const Padding(
+                                                                           padding: EdgeInsets.only(left: 15.0),
+                                                                           child: SizedBox(
+                                                                             child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
+                                                                             height: 20.0,
+                                                                             width: 20.0,
+                                                                           )
+                                                                       );
+                                                                     },
+                                                                     width: 45,
+                                                                   ),
+                                                                   const SizedBox(width: 10),
+                                                                   Text("${product.name}")
+                                                                 ],
+                                                               )
+                                                           ),
+                                                           DataCell(Text(formatPrice(product.price))),
+                                                           DataCell(Text("${product.quantity}")),
+                                                           DataCell(Text(formatPrice(product.price * product.quantity))),
+                                                         ],
+                                                       ),
+                                                   ]
+                                               )
+                                             )
+                                           ),
+                                         ),
+                                        )
+                                      ]
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(40),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('U redu'),
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
+                                              primary: Colors.white,
+                                              backgroundColor: Colors.orange,
+                                              textStyle: const TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                        )
+                                      ]
+                                    ),
+                                  ]
+                                )
+                              );
+                          });
+                      },
+                      child: const Icon(Icons.preview, size: 15.0),
+                      backgroundColor: Colors.orange,
+                      elevation: 3,
+                      hoverElevation: 4,
+                    )
+                ),
+              ),
+              const SizedBox(
+                width: 5.0
+              ),
+              bill.gross > 0 && bill.restoredByBill == null ?
                 SizedBox(
                   width: 30.0,
                   height: 30.0,
                   child: Tooltip(
-                      message: 'Pregledaj račun ${bill.number}',
-                      textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context)
-                            {
-                              return AlertDialog(
-                                  title: const Text('Pregled računa'),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Row(
-                                        children: [
-                                          bill.restoredBill != null ?
-                                          Padding(
+                    message: 'Storniraj račun ${bill.number}',
+                    textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Storniraj račun'),
+                              content: Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        const Icon(Icons.warning, size: 20.0, color: Colors.red),
-                                                        Text(" Ovaj račun je storno računa pod brojem ${bill.restoredBill.number}.")
-                                                      ],
-                                                    ),
-                                                    const SizedBox(height: 15),
-                                                    Row(
-                                                      children: [
-                                                        Text("Razlog storniranja je: ${bill.restoringReason}")
-                                                      ],
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            )
-                                          )
-                                          :
-                                          const SizedBox(height: 0),
-                                          bill.restoredByBill != null ?
-                                          Padding(
+                                            child: Text("Način plaćanja: ${bill.paymentMethod.name}")
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                const Icon(Icons.warning, size: 20.0, color: Colors.red),
-                                                Text(" Ovaj račun je storniran s računom pod brojem ${bill.restoredByBill.number}.")
-                                              ],
-                                            )
-                                          )
-                                          :
-                                          const SizedBox(height: 0),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Način plaćanja: ${bill.paymentMethod.name}")
-                                            ),
+                                            child: Text("Izdao: ${bill.user.name} ${bill.user.surname}")
                                           ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Izdao: ${bill.user.name} ${bill.user.surname}")
-                                            ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Broj poslovnice: ${bill.businessPlaceLabel}")
                                           ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Broj poslovnice: ${bill.businessPlaceLabel}")
-                                            ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Broj blagajne: ${bill.cashRegisterLabel}")
                                           ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Broj blagajne: ${bill.cashRegisterLabel}")
-                                            ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Oznaka: ${bill.label}")
                                           ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Oznaka: ${bill.label}")
-                                            ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Broj: ${bill.number}")
                                           ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Broj: ${bill.number}")
-                                            ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Datum: ${bill.createdAt}")
                                           ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Datum: ${bill.createdAt}")
-                                            ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Iznos: ${formatPrice(bill.gross)}")
                                           ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Iznos: ${formatPrice(bill.gross)}")
-                                            ),
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Neto: ${formatPrice(bill.net)}")
                                           ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text("Neto: ${formatPrice(bill.net)}")
-                                            ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
+                                          width: 250,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
                                           ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            constraints: const BoxConstraints(minHeight: 100, maxHeight: 225),
-                                            child: Card(
-                                              child: SingleChildScrollView(
-                                                child: DataTable(
-                                                  columns: const [
-                                                    DataColumn(
-                                                      label: Text('Proizvod'),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Text('Cijena'),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Text('Količina'),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Text('Ukupno'),
-                                                    ),
-                                                  ],
-                                                  rows: [
-                                                    for (var product in bill.products)
-                                                      DataRow(
-                                                        cells: [
-                                                          DataCell(
-                                                            Row(
-                                                              children: [
-                                                                Image.network(
-                                                                  "${product.image}",
-                                                                  errorBuilder: (context, error, stackTrace) {
-                                                                    return Image.asset("assets/images/Logo.png");
-                                                                  },
-                                                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                                                    if (loadingProgress == null) {
-                                                                      return child;
-                                                                    }
-                                                                    return const Padding(
-                                                                      padding: EdgeInsets.only(left: 15.0),
-                                                                      child: SizedBox(
-                                                                        child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.orange)),
-                                                                        height: 20.0,
-                                                                        width: 20.0,
-                                                                      )
-                                                                    );
-                                                                  },
-                                                                  width: 45,
-                                                                ),
-                                                                const SizedBox(width: 10),
-                                                                Text("${product.name}")
-                                                              ],
-                                                            )
-                                                          ),
-                                                          DataCell(Text(formatPrice(product.price))),
-                                                          DataCell(Text("${product.quantity}")),
-                                                          DataCell(Text(formatPrice(product.price * product.quantity))),
-                                                        ],
-                                                      ),
-                                                  ]
-                                                )
-                                              )
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(40),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
+                                        ),
+                                      ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 500,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null || value.isEmpty) {
+                                                  return 'Molimo unesite razlog storniranja';
+                                                }
+                                                return null;
                                               },
-                                              child: const Text('U redu'),
-                                              style: TextButton.styleFrom(
-                                                padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
-                                                primary: Colors.white,
-                                                backgroundColor: Colors.orange,
-                                                textStyle: const TextStyle(fontSize: 18),
-                                              ),
-                                            ),
-                                          )
-                                        ]
-                                      ),
-                                    ]
-                                  )
-                                );
-                            });
-                        },
-                        child: const Icon(Icons.preview, size: 15.0),
-                        backgroundColor: Colors.orange,
-                        elevation: 3,
-                        hoverElevation: 4,
-                      )
-                  ),
-                ),
-                const SizedBox(
-                  width: 5.0
-                ),
-                bill.gross > 0 && bill.restoredByBill == null ?
-                  SizedBox(
-                    width: 30.0,
-                    height: 30.0,
-                    child: Tooltip(
-                      message: 'Storniraj račun ${bill.number}',
-                      textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Storniraj račun'),
-                                content: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Način plaćanja: ${bill.paymentMethod.name}")
-                                            ),
-                                          ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Izdao: ${bill.user.name} ${bill.user.surname}")
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Broj poslovnice: ${bill.businessPlaceLabel}")
-                                            ),
-                                          ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Broj blagajne: ${bill.cashRegisterLabel}")
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Oznaka: ${bill.label}")
-                                            ),
-                                          ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Broj: ${bill.number}")
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Datum: ${bill.createdAt}")
-                                            ),
-                                          ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Iznos: ${formatPrice(bill.gross)}")
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Neto: ${formatPrice(bill.net)}")
-                                            ),
-                                          ),
-                                          const SizedBox(width: 25),
-                                          Container(
-                                            width: 250,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
-                                            ),
-                                          ),
-                                        ]
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 500,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: TextFormField(
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'Molimo unesite razlog storniranja';
-                                                  }
-                                                  return null;
-                                                },
-                                                onSaved: (value) => restoringReason = value!,
-                                                cursorColor: Colors.orange,
-                                                decoration: InputDecoration(
-                                                  hintText: "Razlog storniranja",
-                                                  border: OutlineInputBorder(
-                                                    borderRadius: BorderRadius.circular(25),
-                                                  ),
-                                                  focusedBorder: OutlineInputBorder(
-                                                    borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                    borderRadius: BorderRadius.circular(25),
-                                                  ),
-                                                  prefixIcon: const Icon(
-                                                    Icons.text_fields,
-                                                    color: Colors.orange,
-                                                  ),
+                                              onSaved: (value) => restoringReason = value!,
+                                              cursorColor: Colors.orange,
+                                              decoration: InputDecoration(
+                                                hintText: "Razlog storniranja",
+                                                border: OutlineInputBorder(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                  borderRadius: BorderRadius.circular(25),
+                                                ),
+                                                prefixIcon: const Icon(
+                                                  Icons.text_fields,
+                                                  color: Colors.orange,
                                                 ),
                                               ),
                                             ),
-                                          )
-                                        ]
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(40),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                if (_formKey.currentState!.validate()) {
-                                                  _formKey.currentState!.save();
-                                                  restoreBill(bill.id);
-                                                  Navigator.of(context).pop();
-                                                }
-                                              },
-                                              child: const Text('Storniraj'),
-                                              style: TextButton.styleFrom(
-                                                padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                                primary: Colors.white,
-                                                backgroundColor: Colors.red,
-                                                textStyle: const TextStyle(fontSize: 18),
-                                              ),
+                                          ),
+                                        )
+                                      ]
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(40),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!.validate()) {
+                                                _formKey.currentState!.save();
+                                                restoreBill(bill.id);
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: const Text('Storniraj'),
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                              primary: Colors.white,
+                                              backgroundColor: Colors.red,
+                                              textStyle: const TextStyle(fontSize: 18),
                                             ),
-                                          )
-                                        ]
-                                      ),
-                                    ],
-                                  ),
+                                          ),
+                                        )
+                                      ]
+                                    ),
+                                  ],
                                 ),
-                              );
-                            });
-                        },
-                        child: const Icon(Icons.restore, size: 15.0),
-                        backgroundColor: Colors.red,
-                        elevation: 3,
-                        hoverElevation: 4,
-                      ),
+                              ),
+                            );
+                          });
+                      },
+                      child: const Icon(Icons.restore, size: 15.0),
+                      backgroundColor: Colors.red,
+                      elevation: 3,
+                      hoverElevation: 4,
                     ),
-                  )
-                  :
-                  const SizedBox(width: 0)
-              ],
-            )
+                  ),
+                )
+                :
+                const SizedBox(width: 0)
+            ],
+          )
         ),
       ],
     );
