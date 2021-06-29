@@ -10,6 +10,7 @@ class Product {
   Tax? tax;
   String? name;
   String? sku;
+  bool active;
   int price;
   int? cost;
   int quantity;
@@ -23,6 +24,7 @@ class Product {
     this.tax,
     this.name,
     this.sku,
+    required this.active,
     required this.price,
     this.cost,
     required this.quantity,
@@ -38,6 +40,7 @@ class Product {
       tax: Tax.fromJson(json['tax']),
       name: json['name'],
       sku: json['sku'],
+      active: json['active'],
       price: json['price'],
       cost: json['cost'],
       quantity: 0,
@@ -51,6 +54,7 @@ class Product {
     'subcategory': subcategory!.toJson(),
     'tax': tax!.toJson(),
     'name': name,
+    'active': active,
     'price': price,
     'cost': cost,
     'quantity': quantity,

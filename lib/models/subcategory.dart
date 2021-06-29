@@ -7,9 +7,10 @@ class Subcategory {
   Category? category;
   int? categoryId;
   String? name;
+  bool active;
   List<Product>? products;
 
-  Subcategory({this.id, this.categoryId, this.name, this.category, this.products});
+  Subcategory({this.id, this.categoryId, this.name, required this.active, this.category, this.products});
 
   factory Subcategory.fromJson(Map<String, dynamic> json) {
     return Subcategory(
@@ -17,6 +18,7 @@ class Subcategory {
       category: Category.fromJson(json['category']),
       categoryId: json['category_id'],
       name: json['name'],
+      active: json['active'],
     );
   }
 
@@ -25,6 +27,7 @@ class Subcategory {
     'categoryId': categoryId,
     'category': category!.toJson(),
     'name': name,
+    'active': active,
   };
 
   static List<Subcategory> parseSubcategories(String responseBody) {

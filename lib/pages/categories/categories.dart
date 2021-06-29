@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:app/components/chip.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
+import 'package:app/components/switch.dart';
 import 'package:app/mixins/delete_dialog.dart';
 import 'package:app/mixins/snackbar.dart';
 import 'package:app/models/category.dart';
@@ -32,7 +34,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
     ApiInterceptor(),
   ]);
   final _formKey = GlobalKey<FormState>();
-  Category category = Category();
+  Category category = Category(active: true);
 
   Future<Map<String, List>> fetchData() async {
     var categories = await client.get(Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"));
@@ -54,6 +56,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories"),
       body: json.encode({
         "name" : category.name,
+        "active" : category.active,
       }),
       headers: {'Content-Type': 'application/json'},
     );
@@ -86,6 +89,7 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
       Uri.parse("${dotenv.env['SHOP_API_URI']}/api/categories/${category.id}"),
       body: json.encode({
         "name" : category.name,
+        "active" : category.active,
       }),
       headers: {'Content-Type': 'application/json'},
     );
@@ -159,66 +163,77 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                               Row(
                                 children: [
                                   Container(
-                                    height: 80,
+                                    height: 90,
                                     margin: const EdgeInsets.only(left: 25),
                                     child: ListView.builder(
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: snapshot.data!['categories']!.length,
                                       itemBuilder: (BuildContext context, int index) {
-                                        return Container(
-                                          margin: const EdgeInsets.all(5),
-                                          padding: const EdgeInsets.only(top: 5),
-                                          width: 120,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(5),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.withOpacity(0.5),
-                                                spreadRadius: 1,
-                                                blurRadius: 1,
-                                                offset: const Offset(0, 1),
+                                        return Center(
+                                          child: Container(
+                                            margin: const EdgeInsets.all(5),
+                                            padding: const EdgeInsets.only(top: 5),
+                                            height: 90,
+                                            alignment: Alignment.center,
+                                            constraints: const BoxConstraints(maxWidth: 140),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.circular(5),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.5),
+                                                  spreadRadius: 1,
+                                                  blurRadius: 1,
+                                                  offset: const Offset(0, 1),
+                                                ),
+                                              ],
+                                            ),
+                                            child: ListTile(
+                                              title: Row(
+                                                children: <Widget>[
+                                                  Text('${snapshot.data!['categories']![index].name}'),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left: 8.0),
+                                                    child: Icon(snapshot.data!['categories']![index].active ? Icons.check_circle : Icons.remove_circle, color: snapshot.data!['categories']![index].active ? Colors.green : Colors.red),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                          child: ListTile(
-                                              title: Text('${snapshot.data!['categories']![index].name}'),
                                               subtitle: Container(
-                                                  margin: const EdgeInsets.only(top: 7),
-                                                  child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 25.0,
-                                                          height: 25.0,
-                                                          child: Tooltip(
-                                                            message: 'Uredi kategoriju ${snapshot.data!['categories']![index].name}',
-                                                            textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              borderRadius: BorderRadius.circular(5),
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  color: Colors.grey.withOpacity(0.5),
-                                                                  spreadRadius: 1,
-                                                                  blurRadius: 1,
-                                                                  offset: const Offset(0, 1),
-                                                                ),
-                                                              ],
+                                                margin: const EdgeInsets.only(top: 7),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 25.0,
+                                                      height: 25.0,
+                                                      child: Tooltip(
+                                                        message: 'Uredi kategoriju ${snapshot.data!['categories']![index].name}',
+                                                        textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.circular(5),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors.grey.withOpacity(0.5),
+                                                              spreadRadius: 1,
+                                                              blurRadius: 1,
+                                                              offset: const Offset(0, 1),
                                                             ),
-                                                            child: FloatingActionButton(
-                                                              onPressed: () {
-                                                                showDialog(
-                                                                  context: context,
-                                                                  builder: (BuildContext context) {
-                                                                    return AlertDialog(
-                                                                      title: const Text('Uredi kategoriju'),
-                                                                      content: Form(
-                                                                        key: _formKey,
-                                                                        child: Column(
-                                                                          mainAxisSize: MainAxisSize.min,
-                                                                          children: <Widget>[
-                                                                            Row(
+                                                          ],
+                                                        ),
+                                                        child: FloatingActionButton(
+                                                          onPressed: () {
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (BuildContext context) {
+                                                                  return AlertDialog(
+                                                                    title: const Text('Uredi kategoriju'),
+                                                                    content: Form(
+                                                                      key: _formKey,
+                                                                      child: Column(
+                                                                        mainAxisSize: MainAxisSize.min,
+                                                                        children: <Widget>[
+                                                                          Row(
                                                                               children: [
                                                                                 Container(
                                                                                   width: 280,
@@ -252,197 +267,214 @@ class _CategoriesState extends State<Categories> with DeleteDialog, CustomSnackB
                                                                                   ),
                                                                                 )
                                                                               ]
-                                                                            ),
-                                                                            const SizedBox(height: 20),
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                              children: [
-                                                                                ClipRRect(
-                                                                                  borderRadius: BorderRadius.circular(40),
-                                                                                  child: TextButton(
-                                                                                    onPressed: () {
-                                                                                      if (_formKey.currentState!.validate()) {
-                                                                                        _formKey.currentState!.save();
-                                                                                        updateCategory(snapshot.data!['categories']![index]);
-                                                                                        Navigator.of(context).pop();
-                                                                                      }
-                                                                                    },
-                                                                                    child: const Text('Spremi'),
-                                                                                    style: TextButton.styleFrom(
-                                                                                      padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                                                                      primary: Colors.white,
-                                                                                      backgroundColor: Colors.orange,
-                                                                                      textStyle: const TextStyle(fontSize: 18),
-                                                                                    ),
+                                                                          ),
+                                                                          const SizedBox(height: 20),
+                                                                          Row(
+                                                                            children: [
+                                                                              const SizedBox(width: 15),
+                                                                              const Text('Aktivna'),
+                                                                              SwitchState(entity: snapshot.data!['categories']![index])
+                                                                            ]
+                                                                          ),
+                                                                          const SizedBox(height: 20),
+                                                                          Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                            children: [
+                                                                              ClipRRect(
+                                                                                borderRadius: BorderRadius.circular(40),
+                                                                                child: TextButton(
+                                                                                  onPressed: () {
+                                                                                    if (_formKey.currentState!.validate()) {
+                                                                                      _formKey.currentState!.save();
+                                                                                      updateCategory(snapshot.data!['categories']![index]);
+                                                                                      Navigator.of(context).pop();
+                                                                                    }
+                                                                                  },
+                                                                                  child: const Text('Spremi'),
+                                                                                  style: TextButton.styleFrom(
+                                                                                    padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                                                                    primary: Colors.white,
+                                                                                    backgroundColor: Colors.orange,
+                                                                                    textStyle: const TextStyle(fontSize: 18),
                                                                                   ),
-                                                                                )
-                                                                              ]
-                                                                            ),
-                                                                          ],
-                                                                        ),
+                                                                                ),
+                                                                              )
+                                                                            ]
+                                                                          ),
+                                                                        ],
                                                                       ),
-                                                                    );
-                                                                  });
-                                                              },
-                                                              child: const Icon(Icons.edit, size: 12.0),
-                                                              backgroundColor: Colors.blue,
-                                                              elevation: 3,
-                                                              hoverElevation: 4,
-                                                            ),
-                                                          ),
+                                                                    ),
+                                                                  );
+                                                                });
+                                                          },
+                                                          child: const Icon(Icons.edit, size: 12.0),
+                                                          backgroundColor: Colors.blue,
+                                                          elevation: 3,
+                                                          hoverElevation: 4,
                                                         ),
-                                                        const SizedBox(
-                                                            width: 5.0
-                                                        ),
-                                                        SizedBox(
-                                                          width: 25.0,
-                                                          height: 25.0,
-                                                          child: Tooltip(
-                                                            message: 'Obriši kategoriju ${snapshot.data!['categories']![index].name}',
-                                                            textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.white,
-                                                              borderRadius: BorderRadius.circular(5),
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  color: Colors.grey.withOpacity(0.5),
-                                                                  spreadRadius: 1,
-                                                                  blurRadius: 1,
-                                                                  offset: const Offset(0, 1),
-                                                                ),
-                                                              ],
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 5.0
+                                                    ),
+                                                    SizedBox(
+                                                      width: 25.0,
+                                                      height: 25.0,
+                                                      child: Tooltip(
+                                                        message: 'Obriši kategoriju ${snapshot.data!['categories']![index].name}',
+                                                        textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.circular(5),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors.grey.withOpacity(0.5),
+                                                              spreadRadius: 1,
+                                                              blurRadius: 1,
+                                                              offset: const Offset(0, 1),
                                                             ),
-                                                            child: FloatingActionButton(
-                                                              onPressed: () async {
-                                                                bool fetchAgain = await deleteDialog(
-                                                                  context,
-                                                                  "Obriši kategoriju ${snapshot.data!['categories']![index].name}",
-                                                                  "Jeste li sigurni da želite obrisati kategoriju ${snapshot.data!['categories']![index].name}?",
-                                                                  "${dotenv.env['SHOP_API_URI']}/api/categories/${snapshot.data!['categories']![index].id}",
-                                                                  "Uspješno izbrisana kategorija",
-                                                                );
-                                                                if (fetchAgain) {
-                                                                  setState(() {});
-                                                                }
-                                                              },
-                                                              child: const Icon(Icons.delete, size: 12.0),
-                                                              backgroundColor: Colors.red,
-                                                              elevation: 3,
-                                                              hoverElevation: 4,
-                                                            ),
-                                                          ),
+                                                          ],
                                                         ),
-                                                      ]
-                                                  )
+                                                        child: FloatingActionButton(
+                                                          onPressed: () async {
+                                                            bool fetchAgain = await deleteDialog(
+                                                              context,
+                                                              "Obriši kategoriju ${snapshot.data!['categories']![index].name}",
+                                                              "Jeste li sigurni da želite obrisati kategoriju ${snapshot.data!['categories']![index].name}?",
+                                                              "${dotenv.env['SHOP_API_URI']}/api/categories/${snapshot.data!['categories']![index].id}",
+                                                              "Uspješno izbrisana kategorija",
+                                                            );
+                                                            if (fetchAgain) {
+                                                              setState(() {});
+                                                            }
+                                                          },
+                                                          child: const Icon(Icons.delete, size: 12.0),
+                                                          backgroundColor: Colors.red,
+                                                          elevation: 3,
+                                                          hoverElevation: 4,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ]
+                                                )
                                               )
-                                          ),
+                                            ),
+                                          )
                                         );
                                       },
                                     )
                                   ),
                                   Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: SizedBox(
-                                        width: 30,
-                                        child: Tooltip(
-                                            message: 'Dodaj novu kategoriju',
-                                            textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(5),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey.withOpacity(0.5),
-                                                  spreadRadius: 1,
-                                                  blurRadius: 1,
-                                                  offset: const Offset(0, 1),
-                                                ),
-                                              ],
+                                    margin: const EdgeInsets.only(left: 10),
+                                    child: SizedBox(
+                                      width: 30,
+                                      child: Tooltip(
+                                        message: 'Dodaj novu kategoriju',
+                                        textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(5),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 1,
+                                              blurRadius: 1,
+                                              offset: const Offset(0, 1),
                                             ),
-                                            child: FloatingActionButton(
-                                              onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text('Dodaj novu kategoriju'),
-                                                        content: Form(
-                                                          key: _formKey,
-                                                          child: Column(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            children: <Widget>[
-                                                              Row(
-                                                                children: [
-                                                                  Container(
-                                                                    width: 280,
-                                                                    child: Padding(
-                                                                      padding: const EdgeInsets.all(8.0),
-                                                                      child: TextFormField(
-                                                                        validator: (value) {
-                                                                          if (value == null || value.isEmpty) {
-                                                                            return 'Molimo unesite ime kategorije';
-                                                                          }
-                                                                          return null;
-                                                                        },
-                                                                        onSaved: (value) => category.name = value!,
-                                                                        cursorColor: Colors.orange,
-                                                                        decoration: InputDecoration(
-                                                                          hintText: "Ime kategorije",
-                                                                          border: OutlineInputBorder(
-                                                                            borderRadius: BorderRadius.circular(25),
-                                                                          ),
-                                                                          focusedBorder: OutlineInputBorder(
-                                                                            borderSide: const BorderSide(color: Colors.orange, width: 2),
-                                                                            borderRadius: BorderRadius.circular(25),
-                                                                          ),
-                                                                          prefixIcon: const Icon(
-                                                                            Icons.category,
-                                                                            color: Colors.orange,
-                                                                          ),
-                                                                        ),
+                                          ],
+                                        ),
+                                        child: FloatingActionButton(
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Text('Dodaj novu kategoriju'),
+                                                    content: Form(
+                                                      key: _formKey,
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                width: 280,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: TextFormField(
+                                                                    validator: (value) {
+                                                                      if (value == null || value.isEmpty) {
+                                                                        return 'Molimo unesite ime kategorije';
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                    onSaved: (value) => category.name = value!,
+                                                                    cursorColor: Colors.orange,
+                                                                    decoration: InputDecoration(
+                                                                      hintText: "Ime kategorije",
+                                                                      border: OutlineInputBorder(
+                                                                        borderRadius: BorderRadius.circular(25),
                                                                       ),
-                                                                    ),
-                                                                  )
-                                                                ]
-                                                              ),
-                                                              const SizedBox(height: 20),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                children: [
-                                                                  ClipRRect(
-                                                                    borderRadius: BorderRadius.circular(40),
-                                                                    child: TextButton(
-                                                                      onPressed: () {
-                                                                        if (_formKey.currentState!.validate()) {
-                                                                          _formKey.currentState!.save();
-                                                                          createCategory(category);
-                                                                          Navigator.of(context).pop();
-                                                                        }
-                                                                      },
-                                                                      child: const Text('Dodaj'),
-                                                                      style: TextButton.styleFrom(
-                                                                        padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
-                                                                        primary: Colors.white,
-                                                                        backgroundColor: Colors.orange,
-                                                                        textStyle: const TextStyle(fontSize: 18),
+                                                                      focusedBorder: OutlineInputBorder(
+                                                                        borderSide: const BorderSide(color: Colors.orange, width: 2),
+                                                                        borderRadius: BorderRadius.circular(25),
+                                                                      ),
+                                                                      prefixIcon: const Icon(
+                                                                        Icons.category,
+                                                                        color: Colors.orange,
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ]
+                                                                ),
                                                               )
-                                                            ],
+                                                            ]
                                                           ),
-                                                        ),
-                                                      );
-                                                    });
-                                              },
-                                              child: const Icon(Icons.add, size: 15.0),
-                                              backgroundColor: Colors.orange,
-                                              elevation: 3,
-                                              hoverElevation: 4,
-                                            )
-                                        ),
-                                      )
+                                                          const SizedBox(height: 20),
+                                                          Row(
+                                                            children: [
+                                                              const SizedBox(width: 15),
+                                                              const Text('Aktivna'),
+                                                              SwitchState(entity: category)
+                                                            ]
+                                                          ),
+                                                          const SizedBox(height: 20),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                            children: [
+                                                              ClipRRect(
+                                                                borderRadius: BorderRadius.circular(40),
+                                                                child: TextButton(
+                                                                  onPressed: () {
+                                                                    if (_formKey.currentState!.validate()) {
+                                                                      _formKey.currentState!.save();
+                                                                      createCategory(category);
+                                                                      Navigator.of(context).pop();
+                                                                    }
+                                                                  },
+                                                                  child: const Text('Dodaj'),
+                                                                  style: TextButton.styleFrom(
+                                                                    padding: const EdgeInsets.fromLTRB(105, 20, 105, 20),
+                                                                    primary: Colors.white,
+                                                                    backgroundColor: Colors.orange,
+                                                                    textStyle: const TextStyle(fontSize: 18),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                });
+                                          },
+                                          child: const Icon(Icons.add, size: 15.0),
+                                          backgroundColor: Colors.orange,
+                                          elevation: 3,
+                                          hoverElevation: 4,
+                                        )
+                                      ),
+                                    )
                                   )
                                 ]
                               ),
@@ -504,7 +536,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
   });
 
   final _formKey = GlobalKey<FormState>();
-  Subcategory subcategory = Subcategory();
+  Subcategory subcategory = Subcategory(active: true);
 
   @override
   final BuildContext context;
@@ -522,6 +554,7 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
       body: json.encode({
         "category_id" : subcategory.categoryId,
         "name" : subcategory.name,
+        "active" : subcategory.active,
       }),
       headers: {'Content-Type': 'application/json'},
     );
@@ -668,6 +701,14 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
                                   ),
                                   const SizedBox(height: 20),
                                   Row(
+                                    children: [
+                                      const SizedBox(width: 15),
+                                      const Text('Aktivna'),
+                                      SwitchState(entity: subcategory)
+                                    ]
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ClipRRect(
@@ -709,6 +750,9 @@ class _SubcategoriesListState extends State<SubcategoriesList> with CustomSnackB
       columns: const [
         DataColumn(
           label: Text('Naziv'),
+        ),
+        DataColumn(
+          label: Text('Aktivna'),
         ),
         DataColumn(
           label: Text('Kategorija'),
@@ -755,6 +799,7 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
       body: json.encode({
         "category_id" : subcategory.categoryId,
         "name" : subcategory.name,
+        "active" : subcategory.active,
       }),
       headers: {'Content-Type': 'application/json'},
     );
@@ -791,6 +836,9 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
       cells: [
         DataCell(
           Text(subcategory.name)
+        ),
+        DataCell(
+          ChipState(active: subcategory.active)
         ),
         DataCell(
           Text('${subcategory.category.name}')
@@ -904,6 +952,14 @@ class DTS extends DataTableSource with DeleteDialog, CustomSnackBar {
                                           ),
                                         ),
                                       )
+                                    ]
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      const SizedBox(width: 15),
+                                      const Text('Aktivna'),
+                                      SwitchState(entity: subcategory)
                                     ]
                                   ),
                                   const SizedBox(height: 20),

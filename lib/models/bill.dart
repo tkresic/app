@@ -68,6 +68,7 @@ class Bill {
         subcategoryId: json['subcategory_id'],
         name: json['name'],
         sku: json['sku'],
+        active: json['active'],
         price: json['price'],
         cost: json['cost'],
         quantity: json['quantity'],

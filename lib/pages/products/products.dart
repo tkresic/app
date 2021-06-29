@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:app/components/chip.dart';
 import 'package:app/components/custom_app_bar.dart';
 import 'package:app/components/drawer_list.dart';
 import 'package:app/components/loader.dart';
 import 'package:app/components/middleware.dart';
+import 'package:app/components/switch.dart';
 import 'package:app/components/text_field_container.dart';
 import 'package:app/mixins/delete_dialog.dart';
 import 'package:app/mixins/format_price.dart';
@@ -149,7 +151,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
   });
 
   final _formKey = GlobalKey<FormState>();
-  Product product = Product(price: 0, cost: 0, quantity: 0);
+  Product product = Product(price: 0, cost: 0, quantity: 0, active: true);
 
   @override
   final BuildContext context;
@@ -186,6 +188,7 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
     request.fields['tax[amount]'] = "${tax.amount}";
     request.fields["name"] = product.name!;
     request.fields["sku"] = product.sku!;
+    request.fields["active"] = product.active ? "1" : "0";
     request.fields["price"] = product.price.toString();
     request.fields["cost"] = product.cost.toString();
     request.fields["subcategory_id"] = product.subcategoryId.toString();
@@ -482,6 +485,17 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                     Row(
                                       children: [
                                         Container(
+                                          width: 250,
+                                          child: Row(
+                                            children: [
+                                            const SizedBox(width: 15),
+                                            const Text('Aktivan'),
+                                            SwitchState(entity: product)
+                                          ]
+                                          ),
+                                        ),
+                                        const SizedBox(width: 25),
+                                        Container(
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(40),
                                             child: TextButton(
@@ -498,7 +512,12 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
                                             ),
                                           ),
                                         ),
-                                        SizedBox(width: 25),
+                                      ]
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
                                         Container(
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(40),
@@ -573,6 +592,9 @@ class _ProductsListState extends State<ProductsList> with CustomSnackBar, Format
           ),
           DataColumn(
             label: Text('Cijena'),
+          ),
+          DataColumn(
+            label: Text('Aktivan'),
           ),
           DataColumn(
             label: Text('Potkategorija'),
@@ -650,6 +672,7 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
 
     request.fields["name"] = product.name!;
     request.fields["sku"] = product.sku!;
+    request.fields["active"] = product.active ? "1" : "0";
     request.fields["price"] = product.price.toString();
     request.fields["cost"] = product.cost.toString();
     request.fields["subcategory_id"] = product.subcategoryId.toString();
@@ -710,6 +733,9 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
         ),
         DataCell(
           Text(formatPrice(product.price))
+        ),
+        DataCell(
+          ChipState(active: product.active)
         ),
         DataCell(
           Text("${product.subcategory!.name}")
@@ -836,6 +862,10 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                         child: Text("Porez: ${product.tax.name} (${product.tax.amount}%)")
                                       ),
                                     ),
+                                    const SizedBox(width: 33),
+                                    const Text("Aktivan:"),
+                                    const SizedBox(width: 10),
+                                    ChipState(active: product.active)
                                   ]
                                 ),
                                 const SizedBox(height: 10),
@@ -1121,6 +1151,17 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                   Row(
                                     children: [
                                       Container(
+                                        width: 250,
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(width: 15),
+                                            const Text('Aktivan'),
+                                            SwitchState(entity: product)
+                                          ]
+                                        ),
+                                      ),
+                                      const SizedBox(width: 25),
+                                      Container(
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(40),
                                           child: TextButton(
@@ -1137,7 +1178,12 @@ class DTS extends DataTableSource with FormatPrice, DeleteDialog, CustomSnackBar
                                           ),
                                         )
                                       ),
-                                      const SizedBox(width: 25),
+                                    ]
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
                                       Container(
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(40),

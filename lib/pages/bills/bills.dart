@@ -254,21 +254,21 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                 width: 30.0,
                 height: 30.0,
                 child: Tooltip(
-                    message: 'Pregledaj račun ${bill.number}',
-                    textStyle: const TextStyle(color: Colors.black, fontSize: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: FloatingActionButton(
+                  message: 'Pregledaj račun ${bill.number}',
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: FloatingActionButton(
                       onPressed: () {
                         showDialog(
                           context: context,
@@ -403,16 +403,16 @@ class DTS extends DataTableSource with FormatPrice, CustomSnackBar {
                                         Container(
                                           width: 250,
                                           child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Neto: ${formatPrice(bill.net)}")
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Neto: ${formatPrice(bill.net)}")
                                           ),
                                         ),
                                         const SizedBox(width: 25),
                                         Container(
                                           width: 250,
                                           child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("PDV: ${formatPrice(bill.gross - bill.net)}")
                                           ),
                                         ),
                                       ]
